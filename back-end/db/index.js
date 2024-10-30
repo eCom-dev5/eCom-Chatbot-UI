@@ -52,28 +52,32 @@ const updateUserPassword = async (id, hashed_pw) => {
 
 
 // Products
-const getProducts = async (category_id=undefined, search_term=undefined) => {
-  const baseQuery = 'SELECT id, name, price, available_stock_count, short_description, long_description, avg_rating, rating_count FROM products';
-  let res;
-  if (category_id) {
-    res = await query(
-      baseQuery + ' JOIN product_categories ON products.id=product_categories.product_id WHERE product_categories.category_id=$1',
-      [category_id]
-    );
-  } else if (search_term) {
-    res = await query(
-      baseQuery + ' WHERE LOWER(name) LIKE $1',
-      ['%' + search_term.toLowerCase() + '%']
-    );
-  } else {
-    res = await query(baseQuery);
-  }
-  return res.rows;
-};
+
+  const getProducts = async (category_id = undefined, search_term = undefined) => {
+    const baseQuery = 'SELECT productmetadata.parent_asin, title, price, features, description, average_rating, rating_number, thumb FROM productmetadata JOIN productimages ON productimages.parent_asin = productmetadata.parent_asin';
+    let res;
+    
+    if (category_id) {
+      res = await query(
+        baseQuery + ' WHERE main_category LIKE $1 LIMIT 10',
+        [category_id]
+      );
+    } else if (search_term) {
+      res = await query(
+        baseQuery + ' WHERE LOWER(title) LIKE $1 LIMIT 10',
+        ['%' + search_term.toLowerCase() + '%']
+      );
+    } else {
+      res = await query(baseQuery + ' LIMIT 10');
+    }
+    
+    return res.rows;
+  };
+  
 
 const getProductById = async (id) => {
-  const baseQuery = 'SELECT id, name, price, available_stock_count, short_description, long_description, avg_rating, rating_count FROM products';
-  const res = await query(baseQuery + ' WHERE id=$1', [id]);
+  const baseQuery = 'SELECT productmetadata.parent_asin, title, price, features, description, average_rating, rating_number, large_res as thumb FROM productmetadata JOIN productimages ON productimages.parent_asin = productmetadata.parent_asin';
+  const res = await query(baseQuery + ' WHERE productmetadata.parent_asin LIKE $1', [id]);
   return res.rows[0];
 };
 
@@ -87,8 +91,8 @@ const getCategories = async () => {
 
 // Cart
 const getCartItems = async (user_id) => {
-  const select = 'SELECT product_id, name AS product_name, price AS product_price, quantity AS product_quantity FROM cart_products';
-  const join = 'JOIN products ON cart_products.product_id = products.id';
+  const select = 'SELECT product_id, title AS product_name, price AS product_price, quantity AS product_quantity FROM cart_products';
+  const join = 'JOIN productmetadata ON cart_products.product_id = productmetadata.parent_asin';
   res = await query(`${select} ${join} WHERE user_id=$1`, [user_id]);
   return res.rows;
 };
@@ -101,17 +105,24 @@ const cartItemExists = async (user_id, product_id) => {
   return res.rowCount > 0;
 };
 
-const addCartItem = async (user_id, product_id, product_quantity=1) => {
-  const insert = 'INSERT INTO cart_products(user_id, product_id, quantity) VALUES($1, $2, $3)';
-  const update = 'UPDATE products SET available_stock_count = (available_stock_count - $3) WHERE id=$2 RETURNING name, price';
-  const res = await query(
-    `WITH product AS (${insert}) ${update}`,
-    [user_id, product_id, product_quantity]
-  );
-  const product_name = res.rows[0].name;
-  const product_price = res.rows[0].price;
+const addCartItem = async (user_id, product_id, product_quantity = 1) => {
+  // Insert the new cart item
+  const insert = 'INSERT INTO cart_products(user_id, product_id, quantity) VALUES($1, $2, $3) RETURNING *';
+  const resInsert = await query(insert, [user_id, product_id, product_quantity]);
+
+  // Get the product details
+  const productDetails = await query('SELECT name, price FROM products WHERE id = $1', [product_id]);
+  
+  if (productDetails.rows.length === 0) {
+    throw new Error(`Product with ID '${product_id}' not found.`);
+  }
+  
+  const product_name = productDetails.rows[0].name;
+  const product_price = productDetails.rows[0].price;
+
   return { product_id, product_name, product_price, product_quantity };
 };
+
 
 const deleteCartItem = async (user_id, product_id) => {
   const deleteRes = await query(
@@ -182,7 +193,7 @@ const createPendingOrder = async (user_id, address_id) => {
 
       // Add product to order_products table
       await client.query(
-        'INSERT INTO order_products(order_id, product_id, product_quantity) VALUES($1, $2, $3)',
+        'INSERT INTO order_products(order_id, parent_asin, product_quantity) VALUES($1, $2, $3)',
         [order_id, product_id, product_quantity]
       );
 
@@ -304,8 +315,8 @@ const getOrderById = async (id) => {
     [id]
   );
 
-  const orderItemsSelect = 'SELECT product_id, name AS product_name, price AS product_price, product_quantity';
-  const productsJoin = 'JOIN products ON order_products.product_id = products.id'
+  const orderItemsSelect = 'SELECT parent_asin, name AS product_name, price AS product_price, product_quantity';
+  const productsJoin = 'JOIN productmetadata ON order_products.parent_asin = productmetadata.parent_asin'
   const orderItemsRes = await query(
     `${orderItemsSelect} FROM order_products ${productsJoin} WHERE order_id=$1`,
     [id]
