@@ -8,7 +8,7 @@ export default function UpperHeader() {
   return (
     <div className={styles.header}>
       <div className={styles.logoContainer}>
-        <Link to="/" className={styles.logo}>Pern<span className={styles.orange}>ecom</span></Link>
+        <Link to="/" className={styles.logo}>Ver<span className={styles.orange}>ta</span></Link>
       </div>
       <MainNav />
     </div>

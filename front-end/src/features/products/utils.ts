@@ -32,7 +32,7 @@ function slugify(str: string) {
  * @param name - The product's name
  * @returns A product's detail page URL path, including the "slugified" product name
  */
-export function getProductDetailPath(id: number | string, name: string) {
+export function getProductDetailPath(id: string, name: string) {
   const nameSlug = slugify(name);
   return `/products/${id}/${nameSlug}`;
 }
@@ -45,7 +45,7 @@ export function getProductDetailPath(id: number | string, name: string) {
  * @param name - The product's name
  * @returns A product's image URL path, including the "slugified" product name
  */
-export function getProductImagePath(id: number | string, name: string) {
-  const nameSlug = slugify(name);
-  return `/product-images/${id}-${nameSlug}.jpg`;
-}
+// export function getProductImagePath(id: string, name: string, tumb: string) {
+//   const nameSlug = slugify(name);
+//   return `/product-images/${id}-${nameSlug}.jpg`;
+// }

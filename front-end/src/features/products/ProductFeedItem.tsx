@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 import { ProductData } from "./productData";
-import { getProductDetailPath, getProductImagePath } from "./utils";
+import { getProductDetailPath } from "./utils";
 import StarRating from "../../components/StarRating/StarRating";
 
 import utilStyles from "../../App/utilStyles.module.css";
@@ -15,32 +15,35 @@ type ProductFeedItemProps = {
 
 export default function ProductFeedItem({ productData }: ProductFeedItemProps) {
 
-  const detailPath = getProductDetailPath(productData.id, productData.name);
-  const imagePath = getProductImagePath(productData.id, productData.name);
-  const { avg_rating, rating_count, price } = productData;
+  const detailPath = getProductDetailPath(productData.parent_asin, productData.title);
+  // const imagePath = getProductImagePath(productData.parent_asin, productData.title);
+  const { average_rating, rating_number, price, thumb } = productData;
+
+
 
   return (
     <article className={styles.feedItem}>
       <Link to={detailPath}>
-        <img
-          src={imagePath}
-          alt={productData.name}
-          height="500"
-          width="500"
-          className={styles.image}
-        ></img>
+      <div className={styles.imageContainer}>
+          <img
+            src={thumb}
+            alt={productData.title}
+            height="500"
+            width="500"
+            className={styles.image}></img>
+        </div>
       </Link>
       <div className={styles.textContainer}>
         <div className={utilStyles.mb1rem}>
           <Link to={detailPath} className={styles.nameLink}>
-            <strong className={`${utilStyles.regularWeight} ${utilStyles.XLText}`}>{productData.name}</strong>
+            <strong className={`${utilStyles.regularWeight} ${utilStyles.XLText}`}>{productData.title}</strong>
           </Link>
         </div>
-        {avg_rating ?
+        {average_rating ?
         <div className={styles.ratingContainer}>
-          <StarRating rating={avg_rating} />
-          <span className={styles.ratingCount}>{rating_count}
-          {rating_count > 1 ? " ratings" : " rating"}
+          <StarRating rating={average_rating} />
+          <span className={styles.rating_number}>{rating_number}
+          {parseFloat(rating_number) > 1 ? " ratings" : " rating"}
           </span>
         </div>
         : null}

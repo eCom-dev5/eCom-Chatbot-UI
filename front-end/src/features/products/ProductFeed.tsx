@@ -109,7 +109,7 @@ export function ProductFeed({ isSearchResults }: ProductFeedProps) {
     } else if (categoryData) {
       return categoryData.name;
     } else {
-      return "All Products";
+      return "Random Picks";
     }
   }
 
@@ -123,7 +123,7 @@ export function ProductFeed({ isSearchResults }: ProductFeedProps) {
       return categoryData.description;
 
     } else {
-      return "Browse our full range of products.";
+      return "";
     }
   }
 
@@ -131,7 +131,7 @@ export function ProductFeed({ isSearchResults }: ProductFeedProps) {
     if (productsData.length === 0) {
       return <p className={utilStyles.emptyFeedMessage}>Sorry, no products were found.</p>;
     }
-    const feedItems = productsData.map(p => <ProductFeedItem key={p.id} productData={p} />);
+    const feedItems = productsData.map(p => <ProductFeedItem key={p.parent_asin} productData={p} />);
     return <div className={styles.productGrid}>{feedItems}</div>;
   }
 

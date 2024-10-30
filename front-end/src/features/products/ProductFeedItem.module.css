@@ -2,13 +2,17 @@
   border: 1px solid rgb(240, 240, 240);
 }
 
+.imageContainer {
+  width: 500px;
+  max-width: 100%;
+}
+
 .image {
-  /* https://web.dev/articles/aspect-ratio#example_preventing_layout_shift */
   width: 100%;
   height: auto;
-  max-width: 550px;
   aspect-ratio: 1 / 1;
 }
+
 
 .textContainer {
   padding: 0.8em 6% 1.4em 6%;
@@ -25,7 +29,7 @@
   display: flex;
 }
 
-.ratingCount {
+.rating_number {
   margin-top: 0.1em;
   margin-left: 0.5em;
   font-size: 0.95em;

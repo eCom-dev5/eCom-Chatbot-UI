@@ -29,7 +29,7 @@ export default function SearchBar() {
       <input
         type="search"
         maxLength={60}
-        placeholder="Search Pernecom"
+        placeholder="Search Products"
         value={searchTerm}
         onChange={handleChange}
         className={styles.input}   

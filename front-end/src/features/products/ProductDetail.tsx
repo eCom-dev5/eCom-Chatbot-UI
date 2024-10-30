@@ -5,7 +5,7 @@ import { ProductData } from "./productData";
 import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage";
 import InlineLink from "../../components/InlineLink/InlineLink";
 import StarRating from "../../components/StarRating/StarRating";
-import { getProductDetailPath, getProductImagePath } from "./utils";
+import { getProductDetailPath } from "./utils";
 
 import utilStyles from "../../App/utilStyles.module.css";
 import styles from "./ProductDetail.module.css";
@@ -20,6 +20,7 @@ type LoaderData = {
 export async function addToCartAction({ params }) {
   // https://reactrouter.com/en/main/start/tutorial#data-writes--html-forms
   // https://reactrouter.com/en/main/route/action
+  
   try {
     const res = await fetch(
       `${process.env.REACT_APP_API_BASE_URL}/cart/items/${params.id}`,
@@ -63,7 +64,7 @@ export async function productDetailLoader({ params }) {
 
     // Redirect non-canonical matched paths to the canonical path
     const currentPath = `/products/${params.id}/${params.productNameSlug}`;
-    const canonicalPath = getProductDetailPath(productData.id, productData.name);
+    const canonicalPath = getProductDetailPath(productData.parent_asin, productData.title);
     if (currentPath !== canonicalPath) {
       return redirect(canonicalPath);
     }
@@ -88,16 +89,12 @@ export function ProductDetail() {
     return <InlineErrorPage pageName="Error" message={errMsg} />;
   }
 
-  const { short_description, long_description, avg_rating, rating_count, price } = productData;
-  const stock_count = productData.available_stock_count;
-  const imagePath = getProductImagePath(productData.id, productData.name);
+  const { features, description, average_rating, rating_number, price, thumb } = productData;
+  // const imagePath = getProductImagePath(productData.parent_asin, productData.title, productData.tumb);
 
   function renderButton() {
     const buttonStyles = `${utilStyles.button} ${styles.button}`;
-    if (stock_count < 1) {
-      return <p className={utilStyles.largeText}><em>Out of stock</em></p>;
-
-    } else if (authData.logged_in) {
+    if (authData.logged_in) {
       return (
         <Form method="post">
           <button type="submit" className={buttonStyles}>Add to cart</button>
@@ -105,7 +102,7 @@ export function ProductDetail() {
       );
 
     } else {
-      const currentPath = getProductDetailPath(productData.id, productData.name);
+      const currentPath = getProductDetailPath(productData.parent_asin, productData.title);
       const linkPath = `/login?redirect=${currentPath}`;
       return <Link to={linkPath} className={buttonStyles}>Log in to buy</Link>;
     }
@@ -116,33 +113,32 @@ export function ProductDetail() {
       <section className={styles.summarySection}>
         <div className={styles.imageContainer}>
           <img
-            src={imagePath}
-            alt={productData.name}
+            src={thumb}
+            alt={productData.title}
             height="500"
             width="500"
             className={styles.image}></img>
         </div>
         <div className={styles.summaryTextContent}>
-          <h1 className={styles.productName}>{productData.name}</h1>
+          <h1 className={styles.productName}>{productData.title}</h1>
           <p className={styles.price}>{price}</p>
           <hr />
-          <p>{short_description}</p>
+          <p>{description}</p>
           <hr />
-          {(stock_count >= 1 && stock_count <= 5) ? <p><strong>Only {stock_count} left in stock!</strong></p> : null }
           {renderButton()}
           {addToCartMessage ? <p className={styles.buttonMessage}>{addToCartMessage}</p> : null}
-          {avg_rating ?
+          {average_rating ?
           <div>
-            <StarRating rating={avg_rating} />
-            <div className={styles.ratingText}>Rated {avg_rating}/5.00 based on {rating_count} ratings</div>
+            <StarRating rating={average_rating} />
+            <div className={styles.ratingText}>Rated {average_rating}/5.00 based on {rating_number} ratings</div>
           </div>
           : null}
         </div>
       </section>
       <section className={styles.descriptionSection}>
         <h2>Description</h2>
-        <p className={utilStyles.XLText}>{short_description}</p>
-        <p>{long_description}</p>
+        <p className={utilStyles.XLText}>{features}</p>
+        <p>{description}</p>
       </section>
     </div>
   );

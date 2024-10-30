@@ -1,5 +1,5 @@
-# Ecommerce PERN App <!-- omit in toc -->
-Pernecom is a simplified ecommerce website built with the PERN (PostgreSQL, Express, React, Node) stack. It includes front-end routing (React Router), authentication (Passport.js), and checkout/payment integration (Stripe Checkout).
+# Ecommerce App <!-- omit in toc -->
+This is a simplified ecommerce website built with the PERN (PostgreSQL, Express, React, Node) stack. It includes front-end routing (React Router), authentication (Passport.js), and checkout/payment integration (Stripe Checkout).
 
 Take a look: https://ecommerce-pern-app-z9pn.onrender.com/.
 

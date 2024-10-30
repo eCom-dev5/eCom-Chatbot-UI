@@ -5,7 +5,7 @@
 }
 
 .searchBar:has(.input:focus) {
-  outline: solid rgb(255, 153, 0);
+  outline: solid rgb(252, 248, 239);
 }
 
 .input {
@@ -24,13 +24,13 @@
   flex-shrink: 0;
   height: 3em;
   width: 3em;
-  background-color: rgb(254, 189, 105);
+  background-color: rgb(163, 201, 188);
   border: none;
   border-radius: 0 5px 5px 0;
 }
 
 .btn:hover {
-  background-color: rgb(243, 168, 71);
+  background-color: rgb(115, 161, 145);
   cursor: pointer;
 }
 

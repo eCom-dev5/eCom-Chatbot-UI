@@ -1,10 +1,10 @@
 export type ProductData = {
-  available_stock_count: number, 
-  avg_rating: string,
-  id: number,
-  long_description: string,
-  name: string,
+  average_rating: string,
+  parent_asin: string,
+  description: string,
+  title: string,
   price: string,
-  rating_count: number,
-  short_description: string,
+  rating_number: string,
+  features: string,
+  thumb: string,
 }
