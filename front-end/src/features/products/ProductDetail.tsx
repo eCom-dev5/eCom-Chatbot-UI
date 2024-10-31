@@ -1,3 +1,5 @@
+// Import necessary modules and dependencies
+import React, { useState, useEffect } from "react";
 import { Form, Link, redirect, useActionData, useLoaderData, useRouteLoaderData } from "react-router-dom";
 
 import { AuthData } from "../auth/authData";
@@ -10,17 +12,14 @@ import { getProductDetailPath } from "./utils";
 import utilStyles from "../../App/utilStyles.module.css";
 import styles from "./ProductDetail.module.css";
 
-
+// Type definition for Loader Data
 type LoaderData = {
   productData: ProductData,
   errMsg: string | null
 }
 
-
+// Action to add a product to the cart
 export async function addToCartAction({ params }) {
-  // https://reactrouter.com/en/main/start/tutorial#data-writes--html-forms
-  // https://reactrouter.com/en/main/route/action
-  
   try {
     const res = await fetch(
       `${process.env.REACT_APP_API_BASE_URL}/cart/items/${params.id}`,
@@ -43,18 +42,14 @@ export async function addToCartAction({ params }) {
   }
 }
 
-
+// Loader function to fetch product details
 export async function productDetailLoader({ params }) {
-  // https://reactrouter.com/en/main/start/tutorial#loading-data
-  // https://reactrouter.com/en/main/route/loader
-
   let { productData, errMsg } = { productData: {}, errMsg: null } as LoaderData;
 
   try {
     const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/products/${params.id}`);
 
     if (res.status === 404) {
-      // https://reactrouter.com/en/main/route/error-element#throwing-manually
       throw new Response("Not Found", { status: 404 });
     } else if (!res.ok) {
       throw new Error("Unsuccessful product fetch.");
@@ -62,7 +57,7 @@ export async function productDetailLoader({ params }) {
 
     productData = await res.json();
 
-    // Redirect non-canonical matched paths to the canonical path
+    // Redirect to the canonical path if necessary
     const currentPath = `/products/${params.id}/${params.productNameSlug}`;
     const canonicalPath = getProductDetailPath(productData.parent_asin, productData.title);
     if (currentPath !== canonicalPath) {
@@ -71,7 +66,7 @@ export async function productDetailLoader({ params }) {
 
   } catch (error) {
     if (error.status === 404) {
-      throw error;  // Serve 404 error page
+      throw error;
     }
     errMsg = "Sorry, this product could not be loaded.";
   }
@@ -79,18 +74,62 @@ export async function productDetailLoader({ params }) {
   return { productData, errMsg };
 }
 
-
 export function ProductDetail() {
   const { productData, errMsg } = useLoaderData() as LoaderData;
   const authData = useRouteLoaderData("app") as AuthData;
   const addToCartMessage = useActionData() as string | undefined;
 
+  // State to store unique clicked products by the user
+  const [clickedProducts, setClickedProducts] = useState<string[]>([]);
+
+  // Function to handle product click and log interaction
+  const handleProductClick = (productId: string) => {
+    // Ensure the product is added only once to avoid duplicates
+    if (!clickedProducts.includes(productId)) {
+      const updatedClickedProducts = [...clickedProducts, productId];
+      setClickedProducts(updatedClickedProducts);
+
+      // Send updated clicked products to the backend
+      sendClickedProductsToBackend(updatedClickedProducts);
+    }
+  };
+
+  // Function to send clicked products to the backend API endpoint
+// Function to send clicked products to the backend
+const sendClickedProductsToBackend = async (clickedProductsArray: string[]) => {
+  try {
+    console.log("clicked products testing", clickedProductsArray);
+    
+    // Send the array of clicked products to the backend API endpoint
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user-click`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: authData.id, // Assuming `authData` contains the user ID
+        clicked_products: clickedProductsArray,
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Error! Status: ${res.status}`);
+    }
+
+    console.log('User click data logged successfully.');
+
+  } catch (error) {
+    console.error("Failed to send clicked products to backend:", error);
+  }
+};
+
+
+  // Render error page if product fails to load
   if (errMsg) {
     return <InlineErrorPage pageName="Error" message={errMsg} />;
   }
 
-  const { features, description, average_rating, rating_number, price, thumb,hi_res } = productData;
-  // const imagePath = getProductImagePath(productData.parent_asin, productData.title, productData.tumb);
+  const { features, description, average_rating, rating_number, price, thumb, parent_asin } = productData;
 
   function renderButton() {
     const buttonStyles = `${utilStyles.button} ${styles.button}`;
@@ -100,7 +139,6 @@ export function ProductDetail() {
           <button type="submit" className={buttonStyles}>Add to cart</button>
         </Form>
       );
-
     } else {
       const currentPath = getProductDetailPath(productData.parent_asin, productData.title);
       const linkPath = `/login?redirect=${currentPath}`;
@@ -108,8 +146,9 @@ export function ProductDetail() {
     }
   }
 
+  // Main product detail render
   return (
-    <div className={utilStyles.pagePadding}>
+    <div className={utilStyles.pagePadding} onClick={() => handleProductClick(parent_asin)}>
       <section className={styles.summarySection}>
         <div className={styles.imageContainer}>
           <img
