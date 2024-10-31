@@ -4,9 +4,9 @@ const cors = require('cors');
 const logging = require('morgan');
 const passport = require('passport');
 const session = require('express-session');
+const userClicksRouter = require('./routes/userClicks'); // Import the new route file
 
 const auth = require('./auth');
-
 const authRouter = require('./routes/auth');
 const cartRouter = require('./routes/cart');
 const categoriesRouter = require('./routes/categories');
@@ -83,7 +83,7 @@ api.use('/docs', docsRouter);
 api.use('/orders', ordersRouter);
 api.use('/products', productsRouter);
 api.use('/users', usersRouter);
-
+api.use('/api', userClicksRouter);
 api.server = api.listen(port, () => {
   console.log(`Server listening on port ${port} in the ${process.env.NODE_ENV} environment.`);
 });
