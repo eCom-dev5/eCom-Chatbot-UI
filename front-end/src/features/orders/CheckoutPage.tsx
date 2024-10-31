@@ -54,7 +54,8 @@ export function CheckoutPage() {
   function getTotalCost() {
     let totalCost = 0;
     cartData.forEach(item => {
-      totalCost += Number(item.product_price.substring(1)) * item.product_quantity;
+      console.log("price for each product",item.product_price)
+      totalCost += Number(item.product_price) * item.product_quantity;
     });
     return totalCost;
   }
