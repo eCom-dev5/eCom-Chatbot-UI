@@ -53,34 +53,61 @@ const updateUserPassword = async (id, hashed_pw) => {
 
 // Products
 
-  const getProducts = async (category_id = undefined, search_term = undefined) => {
-    const baseQuery = 'SELECT productmetadata.parent_asin, title, price, features, description, average_rating, rating_number, thumb FROM productmetadata JOIN productimages ON productimages.parent_asin = productmetadata.parent_asin';
-    let res;
-    
-    if (category_id) {
-      res = await query(
-        baseQuery + ' WHERE main_category LIKE $1 LIMIT 10',
-        [category_id]
-      );
-    } else if (search_term) {
-      res = await query(
-        baseQuery + ' WHERE LOWER(title) LIKE $1 LIMIT 10',
-        ['%' + search_term.toLowerCase() + '%']
-      );
-    } else {
-      res = await query(baseQuery + ' LIMIT 10');
-    }
-    
-    return res.rows;
-  };
-  
+const getProducts = async (category_id = undefined, search_term = undefined) => {
+  const baseQuery = `
+    SELECT productmetadata.parent_asin, title, price, features, description,
+           average_rating, rating_number, thumb 
+    FROM productmetadata 
+    JOIN productimages 
+    ON productimages.parent_asin = productmetadata.parent_asin
+    WHERE productmetadata.parent_asin IS NOT NULL 
+    AND title IS NOT NULL 
+    AND price IS NOT NULL 
+    AND features IS NOT NULL 
+    AND description IS NOT NULL 
+    AND average_rating IS NOT NULL 
+    AND rating_number IS NOT NULL 
+    AND thumb IS NOT NULL
+  `;
 
-const getProductById = async (id) => {
-  const baseQuery = 'SELECT productmetadata.parent_asin, title, price, features, description, average_rating, rating_number, large_res as thumb FROM productmetadata JOIN productimages ON productimages.parent_asin = productmetadata.parent_asin';
-  const res = await query(baseQuery + ' WHERE productmetadata.parent_asin LIKE $1', [id]);
-  return res.rows[0];
+  let res;
+  
+  if (category_id) {
+    res = await query(
+      baseQuery + ' AND main_category LIKE $1 LIMIT 10',
+      [category_id]
+    );
+  } else if (search_term) {
+    res = await query(
+      baseQuery + ' AND LOWER(title) LIKE $1 LIMIT 10',
+      ['%' + search_term.toLowerCase() + '%']
+    );
+  } else {
+    res = await query(baseQuery + ' LIMIT 10');
+  }
+  
+  return res.rows;
 };
 
+const getProductById = async (id) => {
+  const baseQuery = `
+    SELECT productmetadata.parent_asin, title, price, features, description,
+           average_rating, rating_number, large_res as thumb 
+    FROM productmetadata 
+    JOIN productimages 
+    ON productimages.parent_asin = productmetadata.parent_asin
+    WHERE productmetadata.parent_asin IS NOT NULL 
+    AND title IS NOT NULL 
+    AND price IS NOT NULL 
+    AND features IS NOT NULL 
+    AND description IS NOT NULL 
+    AND average_rating IS NOT NULL 
+    AND rating_number IS NOT NULL 
+    AND large_res IS NOT NULL
+  `;
+  const res = await query(baseQuery + ' AND productmetadata.parent_asin LIKE $1', [id]);
+  return res.rows.length > 0 ? res.rows[0] : null;
+};
 
 // Categories
 const getCategories = async () => {
