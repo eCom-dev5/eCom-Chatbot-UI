@@ -56,7 +56,7 @@ const updateUserPassword = async (id, hashed_pw) => {
 const getProducts = async (category_id = undefined, search_term = undefined) => {
   const baseQuery = `
     SELECT productmetadata.parent_asin, title, price, features, description,
-           average_rating, rating_number, thumb 
+           average_rating, rating_number, thumb,hi_res
     FROM productmetadata 
     JOIN productimages 
     ON productimages.parent_asin = productmetadata.parent_asin
@@ -68,6 +68,7 @@ const getProducts = async (category_id = undefined, search_term = undefined) => 
     AND average_rating IS NOT NULL 
     AND rating_number IS NOT NULL 
     AND thumb IS NOT NULL
+    AND hi_res IS NOT NULL
   `;
 
   let res;

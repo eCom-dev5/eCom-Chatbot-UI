@@ -89,7 +89,7 @@ export function ProductDetail() {
     return <InlineErrorPage pageName="Error" message={errMsg} />;
   }
 
-  const { features, description, average_rating, rating_number, price, thumb } = productData;
+  const { features, description, average_rating, rating_number, price, thumb,hi_res } = productData;
   // const imagePath = getProductImagePath(productData.parent_asin, productData.title, productData.tumb);
 
   function renderButton() {
