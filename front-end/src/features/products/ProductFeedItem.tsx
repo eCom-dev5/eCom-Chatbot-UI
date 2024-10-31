@@ -17,7 +17,7 @@ export default function ProductFeedItem({ productData }: ProductFeedItemProps) {
 
   const detailPath = getProductDetailPath(productData.parent_asin, productData.title);
   // const imagePath = getProductImagePath(productData.parent_asin, productData.title);
-  const { average_rating, rating_number, price, thumb } = productData;
+  const { average_rating, rating_number, price, thumb,hi_res } = productData;
 
 
 
@@ -26,7 +26,7 @@ export default function ProductFeedItem({ productData }: ProductFeedItemProps) {
       <Link to={detailPath}>
       <div className={styles.imageContainer}>
           <img
-            src={thumb}
+            src={hi_res}
             alt={productData.title}
             height="500"
             width="500"

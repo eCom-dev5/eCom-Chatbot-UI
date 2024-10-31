@@ -7,4 +7,5 @@ export type ProductData = {
   rating_number: string,
   features: string,
   thumb: string,
+  hi_res:string,
 }
