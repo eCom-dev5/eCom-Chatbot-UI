@@ -124,54 +124,51 @@ export function ProductFeed({ isSearchResults }: ProductFeedProps) {
     }
   }
 
-  // NEW: Function to handle product click and update the state
+  // Function to handle product click and update the state
   const handleProductClick = (productId: string) => {
     if (!clickedProducts.includes(productId)) {
       // Add the product to clickedProducts if it is not already present (to avoid duplicates)
       const updatedClickedProducts = [...clickedProducts, productId];
       setClickedProducts(updatedClickedProducts);
-
-      // Send updated clicked products to the backend
-      sendClickedProductsToBackend(updatedClickedProducts);
     }
+
+    // Send only the clicked product and user ID to the backend
+    sendClickedProductToBackend(productId);
   };
 
-  // NEW: Function to send clicked products to the backend
- // Function to send clicked products to the backend
-const sendClickedProductsToBackend = async (clickedProductsArray: string[]) => {
-  try {
-    console.log("clicked products testing", clickedProductsArray);
-    
-    // Send the array of clicked products to the backend API endpoint
-    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user-click`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user_id: authData.id, // Assuming `authData` contains the user ID
-        clicked_products: clickedProductsArray,
-      }),
-    });
-
-    if (!res.ok) {
-      throw new Error(`Error! Status: ${res.status}`);
+  // Function to send a single clicked product to the backend
+  const sendClickedProductToBackend = async (productId: string) => {
+    try {
+      console.log("Clicked product:", productId);
+  
+      const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user-click`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId, // Make sure userId is defined
+          clicked_product: productId, // Send single product ID
+        }),
+      });
+  
+      if (!res.ok) {
+        throw new Error(`Error! Status: ${res.status}`);
+      }
+  
+      console.log("User click data logged successfully.");
+    } catch (error) {
+      console.error("Failed to send clicked product to backend:", error);
     }
-
-    console.log('User click data logged successfully.');
-
-  } catch (error) {
-    console.error("Failed to send clicked products to backend:", error);
-  }
-};
-
+  };
+  
 
   // Render feed items and add onClick handler for tracking
   function renderFeedItems() {
     if (productsData.length === 0) {
       return <p className={utilStyles.emptyFeedMessage}>Sorry, no products were found.</p>;
     }
-    // NEW: Pass `userId` to `ProductFeedItem` and handle click tracking
+    // Pass `userId` to `ProductFeedItem` and handle click tracking
     const feedItems = productsData.map((product) => (
       <div key={product.parent_asin} onClick={() => handleProductClick(product.parent_asin)}>
         <ProductFeedItem productData={product} userId={userId} />
