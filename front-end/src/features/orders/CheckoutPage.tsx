@@ -7,14 +7,12 @@ import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage";
 
 import utilStyles from "../../App/utilStyles.module.css";
 
-
 export async function checkoutAction({ request }: { request: Request }) {
-  // https://reactrouter.com/en/main/start/tutorial#data-writes--html-forms
-  // https://reactrouter.com/en/main/route/action
   let formData = await request.formData();
   try {
     const address = formData.get("address");
     const postcode = formData.get("postcode");
+
     const res = await fetch(
       `${process.env.REACT_APP_API_BASE_URL}/checkout/create-pending-order`,
       {
@@ -27,7 +25,8 @@ export async function checkoutAction({ request }: { request: Request }) {
 
     if (res.ok) {
       const { order_id }: { order_id: number } = await res.json();
-      return redirect(`/checkout/${order_id}/payment`);
+      // Redirect to order confirmation or summary page
+      return redirect(`/orders/${order_id}`);
     }
     throw new Error("Unexpected status code.");
   } catch (error) {
