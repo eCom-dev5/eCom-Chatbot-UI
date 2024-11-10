@@ -194,77 +194,88 @@ const addAddress = async (address, postcode) => {
 };
 
 
-// Checkout
+// // Checkout
 const createPendingOrder = async (user_id, address_id) => {
-  // Create a pending order for all current cart items ahead of successful payment
+  console.log("Starting createPendingOrder function...");
+  console.log("User ID:", user_id);
+  console.log("Address ID:", address_id);
 
-  // Get cart items
-  const cartItems = await getCartItems(user_id);
-
-  // https://node-postgres.com/features/transactions
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
+    console.log("Database transaction started.");
 
-    // Create pending order record
     let total_cost = 0;
-    const order_status = 'payment pending';
+    const order_status = 'confirmed';
+
+    // Insert a new order record into the `orders` table
     const orderCreationRes = await client.query(
-      'INSERT INTO orders(user_id, address_id, status, total_cost) VALUES($1, $2, $3, $4) RETURNING id',
+      'INSERT INTO orders(user_id, address_id, status, total_cost) VALUES($1, $2, $3, $4) RETURNING id, order_placed_time',
       [user_id, address_id, order_status, total_cost]
     );
+
+    // Get the new order's ID and order placed time
     const order_id = orderCreationRes.rows[0].id;
+    const order_placed_time = orderCreationRes.rows[0].order_placed_time;
+    console.log("Created order with ID:", order_id, "and order placed time:", order_placed_time);
 
-    // Update order_products table and calculate total order cost
-    for await (const p of cartItems) {
-      const { product_id, product_quantity, product_price } = p;
+    // Retrieve cart items and iterate over them
+    const cartItems = await getCartItems(user_id);
+    for await (const item of cartItems) {
+      const { product_id: parent_asin, product_quantity, product_price } = item; // Use `parent_asin` as per schema
+      console.log("Processing item - Parent ASIN:", parent_asin, "Quantity:", product_quantity, "Price:", product_price);
 
-      // Add product to order_products table
+      // Insert each product in the order_products table using `parent_asin`
       await client.query(
         'INSERT INTO order_products(order_id, parent_asin, product_quantity) VALUES($1, $2, $3)',
-        [order_id, product_id, product_quantity]
+        [order_id, parent_asin, product_quantity]
       );
 
-      // Increment total order cost
-      total_cost += Number(product_price.substring(1)) * product_quantity;
-    };
+      // Calculate total cost for the order
+      total_cost += Number(product_price) * product_quantity;
+    }
 
-    // Update order total_cost and retrieve order details
-    const orderSummaryRes = await client.query(
-      'UPDATE orders SET total_cost=$1 WHERE id=$2 RETURNING order_placed_time, total_cost',
+    // Update the `total_cost` for the order
+    await client.query(
+      'UPDATE orders SET total_cost=$1 WHERE id=$2',
       [total_cost, order_id]
     );
-    const order_placed_time = orderSummaryRes.rows[0].order_placed_time;
-    total_cost = orderSummaryRes.rows[0].total_cost;
+    console.log("Total cost updated for order:", total_cost);
 
-    // Retrieve address details
+    // Retrieve address details for confirmation
     const addressRes = await client.query(
       'SELECT address, postcode FROM addresses WHERE id=$1',
       [address_id]
     );
     const { address, postcode } = addressRes.rows[0];
+    console.log("Retrieved Address:", address, "Postcode:", postcode);
 
-    // Commit updates and return order details
+    // Commit the transaction to save all changes
     await client.query('COMMIT');
+
+    // Return the order details as confirmation
     return {
       order_id,
       user_id: Number(user_id),
-      order_items: cartItems,
-      order_placed_time,
       order_status,
+      order_placed_time,
       total_cost,
       address,
-      postcode
+      postcode,
+      order_items: cartItems,
     };
 
-  } catch(err) {
+  } catch (err) {
+    // Rollback the transaction in case of any error
     await client.query('ROLLBACK');
-    throw err;
-
+    console.error("Error in createPendingOrder:", err.stack); // Detailed error logging
+    throw new Error('Order creation failed. Please ensure you are providing valid data.');
   } finally {
     client.release();
+    console.log("Database client released.");
   }
 };
+
 
 
 const confirmPaidOrder = async (order_id) => {
@@ -336,31 +347,63 @@ const getOrderStatus = async (id) => {
 };
 
 const getOrderById = async (id) => {
-  const orderSelect = 'SELECT orders.id, user_id, order_placed_time, status, total_cost, address, postcode';
-  const addressesJoin = 'JOIN addresses ON orders.address_id = addresses.id';
-  const orderRes = await query(
-    `${orderSelect} FROM orders ${addressesJoin} WHERE orders.id=$1`,
-    [id]
-  );
+  console.log(`Fetching order details for order ID: ${id}`);
 
-  const orderItemsSelect = 'SELECT parent_asin, name AS product_name, price AS product_price, product_quantity';
-  const productsJoin = 'JOIN productmetadata ON order_products.parent_asin = productmetadata.parent_asin'
-  const orderItemsRes = await query(
-    `${orderItemsSelect} FROM order_products ${productsJoin} WHERE order_id=$1`,
-    [id]
-  );
+  // Select query for the main order details
+  const orderSelect = `
+    SELECT orders.id, user_id, order_placed_time, status, total_cost, address, postcode
+  `;
+  const addressesJoin = `
+    JOIN addresses ON orders.address_id = addresses.id
+  `;
+  
+  try {
+    // Fetch the main order details
+    const orderRes = await query(
+      `${orderSelect} FROM orders ${addressesJoin} WHERE orders.id=$1`,
+      [id]
+    );
+    console.log('Order main details:', orderRes.rows);
+    
+    if (orderRes.rows.length === 0) {
+      console.error(`No order found with ID: ${id}`);
+      throw new Error(`Order not found with ID: ${id}`);
+    }
+    
+    const orderItemsSelect = `
+      SELECT op.parent_asin, pm.title AS product_name, pm.price AS product_price, op.product_quantity
+    `;
+    const productsJoin = `
+      FROM order_products op
+      JOIN productmetadata pm ON op.parent_asin = pm.parent_asin
+    `;
+    
+    // Fetch the order items
+    const orderItemsRes = await query(
+      `${orderItemsSelect} ${productsJoin} WHERE op.order_id=$1`,
+      [id]
+    );
+    console.log('Order items:', orderItemsRes.rows);
+    console.log('Order items status:', orderRes.rows[0].status);  // Use `status` directly
+    // Assemble the final order object to return
+    return {
+      order_id: orderRes.rows[0].id,
+      user_id: orderRes.rows[0].user_id,
+      order_items: orderItemsRes.rows,
+      order_placed_time: orderRes.rows[0].order_placed_time,
+      order_status: orderRes.rows[0].status,  // Use `status` directly
+      total_cost: orderRes.rows[0].total_cost,
+      address: orderRes.rows[0].address,
+      postcode: orderRes.rows[0].postcode
+    };
 
-  return {
-    order_id: orderRes.rows[0].id,
-    user_id: orderRes.rows[0].user_id,
-    order_items: orderItemsRes.rows,
-    order_placed_time: orderRes.rows[0].order_placed_time,
-    order_status: orderRes.rows[0].status,
-    total_cost: orderRes.rows[0].total_cost,
-    address: orderRes.rows[0].address,
-    postcode: orderRes.rows[0].postcode
-  };
+  } catch (error) {
+    console.error(`Error in getOrderById: ${error.message}`, error.stack);
+    throw new Error('Query failed. Please ensure you provided a valid order ID.');
+  }
 };
+
+
 
 const updateOrderStatus = async (id, status) => {
   await query(

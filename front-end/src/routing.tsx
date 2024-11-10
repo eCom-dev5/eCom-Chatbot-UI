@@ -52,14 +52,11 @@ export const router = createBrowserRouter([
         loader: cartLoader,
         action: checkoutAction,
       },
-      {
-        path: "checkout/:orderId/payment",
-        element: <PaymentPage />,
-      },
-      {
-        path: "checkout/:orderId/payment-return",
-        element: <PaymentReturn />,
-      },
+      // {
+      //   // Redirect to confirmation page directly after checkout
+      //   path: "checkout/:orderId/confirmation",
+      //   element: <CheckoutConfirmation />,
+      // },
       {
         path: "checkout/:id/success",
         element: <OrderDetailsPage checkoutSuccess={true} />,
