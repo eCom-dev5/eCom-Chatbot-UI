@@ -1,14 +1,13 @@
 // Import necessary modules and dependencies
 import React, { useState, useEffect } from "react";
 import { Form, Link, redirect, useActionData, useLoaderData, useRouteLoaderData } from "react-router-dom";
-
+import ChatbotWidget from "../../components/ChatbotWidget/ChatbotWidget";
 import { AuthData } from "../auth/authData";
 import { ProductData } from "./productData";
 import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage";
 import InlineLink from "../../components/InlineLink/InlineLink";
 import StarRating from "../../components/StarRating/StarRating";
 import { getProductDetailPath } from "./utils";
-
 import utilStyles from "../../App/utilStyles.module.css";
 import styles from "./ProductDetail.module.css";
 
@@ -179,6 +178,11 @@ const sendClickedProductsToBackend = async (clickedProductsArray: string[]) => {
         <p className={utilStyles.XLText}>{features}</p>
         <p>{description}</p>
       </section>
+      {/* Chatbot Widget Integration */}
+      {authData?.id && (
+        <ChatbotWidget userId={String(authData.id)} parentAsin={parent_asin} />
+      )}
+
     </div>
   );
 }

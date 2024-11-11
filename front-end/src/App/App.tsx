@@ -31,7 +31,6 @@ export function App() {
       <main>
         <Outlet />
       </main>
-      <ChatbotWidget />
     </div>
   );
 }

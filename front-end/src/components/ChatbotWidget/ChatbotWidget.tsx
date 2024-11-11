@@ -1,19 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ChatBot from 'react-chatbotify';
 
+interface ChatbotWidgetProps {
+  userId: string;
+  parentAsin: string;
+}
 interface Message {
   type: 'user' | 'bot';
   content: string;
   followupQuestions?: string[];
 }
 
-const ChatbotWidget: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [userId] = useState('3'); // Replace with dynamic user ID as needed
-  const [parentAsin] = useState('B0B94CZQ3S'); // Replace with dynamic ASIN as needed
+const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => {
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      type: 'bot',
+      content: "I'm Alpha, your product assistant. I'm here to help answer any questions you have about a product. Feel free to ask away, and I'll do my best to assist you. If you've already received information from Metadata or Review-Vectorstore, please share it with me.",
+      followupQuestions: [
+        "What can you help me with?",
+        "What is your purpose or function?",
+        "How do you handle sensitive information?"
+      ],
+    },
+  ]);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
+  useEffect(() => {
+    // Load chat history from localStorage
+    const savedMessages = localStorage.getItem('chatbot_widget_history');
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save chat history to localStorage
+    localStorage.setItem('chatbot_widget_history', JSON.stringify(messages));
+  }, [messages]);
+
   const handleUserInput = async (userInput: string) => {
+    setMessages((prevMessages) => [...prevMessages, { type: 'user', content: userInput }]);
+
     const response = await fetch('http://localhost:80/dev-invoke', {
       method: 'POST',
       headers: {
@@ -24,8 +51,8 @@ const ChatbotWidget: React.FC = () => {
         config: {},
         parent_asin: parentAsin,
         user_id: userId,
-        log_langfuse: false,
-        stream_tokens: false,
+        log_langfuse: true,
+        stream_tokens: true,
       }),
     });
 
@@ -45,35 +72,15 @@ const ChatbotWidget: React.FC = () => {
   };
 
   const handleFollowUpClick = (question: string) => {
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { type: 'user', content: question },
-    ]);
     handleUserInput(question);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && (e.target as HTMLInputElement).value.trim()) {
       const userInput = (e.target as HTMLInputElement).value.trim();
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { type: 'user', content: userInput },
-      ]);
       handleUserInput(userInput);
       (e.target as HTMLInputElement).value = '';
     }
-  };
-
-  // Define chatbot settings
-  const settings = {
-    general: {
-      embedded: true,
-      primaryColor: '#4A90E2',
-      secondaryColor: '#50E3C2',
-    },
-    chatHistory: {
-      storageKey: 'chatbot_widget_history',
-    },
   };
 
   // Define custom styles
@@ -189,147 +196,3 @@ const ChatbotWidget: React.FC = () => {
 };
 
 export default ChatbotWidget;
-
-
-// import React, { useState } from 'react';
-// import ChatBot from 'react-chatbotify';
-
-// const ChatbotWidget: React.FC = () => {
-//   const [userId] = useState('3'); // Replace with dynamic user ID as needed
-//   const [parentAsin] = useState('B0B94CZQ3S'); // Replace with dynamic ASIN as needed
-//   const [isChatOpen, setIsChatOpen] = useState(false);
-
-//   // Define the chatbot flow
-//   const flow = {
-//     start: {
-//       message: 'Hello! How can I assist you today?',
-//       path: 'user_input',
-//     },
-//     user_input: {
-//       message: 'Please type your question below:',
-//       function: async (params: any) => {
-//         const userInput = params.userInput;
-//         const response = await fetch('http://localhost:80/dev-invoke', {
-//           method: 'POST',
-//           headers: {
-//             'Content-Type': 'application/json',
-//           },
-//           body: JSON.stringify({
-//             user_input: userInput,
-//             config: {},
-//             parent_asin: parentAsin,
-//             user_id: userId,
-//             log_langfuse: false,
-//             stream_tokens: false,
-//           }),
-//         });
-    
-//         if (!response.ok) {
-//           return 'Sorry, there was an error processing your request.';
-//         }
-    
-//         const data = await response.json();
-//         console.log("Backend Response:", data);
-    
-//         // Display the main answer as the initial bot response
-//         const mainAnswer = data.answer || 'No response received.';
-//         await params.injectMessage(mainAnswer);
-    
-//         // Display each follow-up question as a separate bot message
-//         if (data.followup_questions && data.followup_questions.length > 0) {
-//           for (let i = 0; i < data.followup_questions.length; i++) {
-//             const followupQuestion = data.followup_questions[i];
-//             await new Promise((resolve) => setTimeout(resolve, 500)); // Delay for effect
-//             await params.injectMessage(followupQuestion);
-//           }
-//         }
-    
-//         // Keep the path at 'user_input' to allow continuous interaction
-//         return '';
-//       },
-//       path: 'user_input',
-//     },
-    
-//   };
-
-//   // Define chatbot settings
-//   const settings = {
-//     general: {
-//       embedded: true,
-//       primaryColor: '#4A90E2',
-//       secondaryColor: '#50E3C2',
-//     },
-//     chatHistory: {
-//       storageKey: 'chatbot_widget_history',
-//     },
-//   };
-
-//   // Define custom styles
-//   const styles = {
-//     headerStyle: {
-//       background: '#4A90E2',
-//       color: '#FFFFFF',
-//       padding: '10px',
-//     },
-//     chatWindowStyle: {
-//       backgroundColor: '#F2F2F2',
-//     },
-//     botBubbleStyle: {
-//       backgroundColor: '#4A90E2',
-//       color: '#FFFFFF',
-//       maxWidth: '300px', // Adjust width for more space
-//       whiteSpace: 'pre-wrap', // Preserve formatting for line breaks
-//     },
-//     userBubbleStyle: {
-//       backgroundColor: '#50E3C2',
-//       color: '#FFFFFF',
-//     },
-//   };
-
-//   return (
-//     <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 1000 }}>
-//       {isChatOpen && (
-//         <div style={{ boxShadow: '0 0 10px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden' }}>
-//           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', ...styles.headerStyle }}>
-//             <span>Chatbot</span>
-//             <button
-//               onClick={() => setIsChatOpen(false)}
-//               style={{
-//                 background: 'none',
-//                 border: 'none',
-//                 color: '#FFFFFF',
-//                 fontSize: '16px',
-//                 cursor: 'pointer',
-//               }}
-//             >
-//               ✖
-//             </button>
-//           </div>
-//           <ChatBot flow={flow} settings={settings} styles={styles} />
-//         </div>
-//       )}
-//       {!isChatOpen && (
-//         <button
-//           onClick={() => setIsChatOpen(true)}
-//           style={{
-//             backgroundColor: '#4A90E2',
-//             color: '#FFFFFF',
-//             border: 'none',
-//             borderRadius: '50%',
-//             width: '60px',
-//             height: '60px',
-//             cursor: 'pointer',
-//             fontSize: '24px',
-//             display: 'flex',
-//             alignItems: 'center',
-//             justifyContent: 'center',
-//           }}
-//         >
-//           💬
-//         </button>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default ChatbotWidget;
