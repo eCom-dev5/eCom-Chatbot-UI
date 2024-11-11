@@ -55,7 +55,7 @@ export function LoginPage() {
   const loggedOutContent = <>If you haven't created an account, please {registerLink} first or sign in with Google below.</>;
   const loggedInContent = <>You are already logged in as {authData.email_address}.</>;
   const googleError = <>Sorry, Google sign in failed. Please try again later or {registerLink} instead.</>;
-
+  console.log("checking the session id ",authData.sessionID)
   return (
     <div className={`${utilStyles.pagePadding} ${utilStyles.mw80rem}`}>
       <h1 className={utilStyles.h1}>Log in</h1>

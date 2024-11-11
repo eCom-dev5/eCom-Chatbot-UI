@@ -84,6 +84,7 @@ router.post('/login',
       id: req.user.id,
       email_address: req.user.email_address,
       auth_method: req.user.auth_method
+      
     });
   }
 );

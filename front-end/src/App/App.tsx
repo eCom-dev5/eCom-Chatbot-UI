@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 
 import { AuthData } from "../features/auth/authData";
 import Header from "../components/Header/Header";
+import ChatbotWidget from "../components/ChatbotWidget/ChatbotWidget";
 
 
 export async function authLoader() {
@@ -33,3 +34,4 @@ export function App() {
     </div>
   );
 }
+
