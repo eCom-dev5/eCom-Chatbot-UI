@@ -28,6 +28,21 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
   ]);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
+  const storageKey = `chatbot_widget_history_${parentAsin}`;
+
+  useEffect(() => {
+    // Load chat history for the specific product
+    const savedMessages = localStorage.getItem(storageKey);
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
+    }
+  }, [storageKey]); // Re-run this effect whenever parentAsin changes
+
+  useEffect(() => {
+    // Save chat history for the specific product
+    localStorage.setItem(storageKey, JSON.stringify(messages));
+  }, [messages, storageKey]);
+
   useEffect(() => {
     const savedMessages = localStorage.getItem('chatbot_widget_history');
     if (savedMessages) {
@@ -128,9 +143,10 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
           for (let line of lines) {
             if (line.trim() === '') continue;
   
+             // Skip JSON parsing for the "[DONE]" signal
             if (line.trim() === '[DONE]') {
-              // End of the stream, cancel the reader and exit
-              reader.cancel();
+              console.log("Received end of stream signal [DONE]");
+              reader.cancel(); // End the reader to stop further processing
               return;
             }
   
@@ -147,12 +163,12 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
                     return updatedMessages;
                   });
                 } else if (event.type === 'message') {
-                  const { answer, followupQuestions, run_id } = event.content;
+                  const { answer, followup_questions, run_id } = event.content;
                   setMessages((prevMessages) => {
                     const updatedMessages = [...prevMessages];
                     const lastMessageIndex = updatedMessages.length - 1;
                     updatedMessages[lastMessageIndex].content = answer;
-                    updatedMessages[lastMessageIndex].followupQuestions = followupQuestions;
+                    updatedMessages[lastMessageIndex].followupQuestions = followup_questions; // Set follow-up questions here
                     updatedMessages[lastMessageIndex].run_id = run_id; // Store the run_id here
                     return updatedMessages;
                   });
@@ -183,7 +199,9 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
       isIntro: true, // Mark this as the intro message
 
       },]);
-    localStorage.removeItem('chatbot_widget_history');
+    localStorage.removeItem(storageKey);
+
+    //localStorage.removeItem('chatbot_widget_history');
   };
   
   const handleFeedback = async (feedback: boolean, index: number) => {
