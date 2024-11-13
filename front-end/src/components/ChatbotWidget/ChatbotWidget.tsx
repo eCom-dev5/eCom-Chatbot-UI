@@ -38,21 +38,25 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
     }
   }, [storageKey]); // Re-run this effect whenever parentAsin changes
 
-  useEffect(() => {
-    // Save chat history for the specific product
-    localStorage.setItem(storageKey, JSON.stringify(messages));
-  }, [messages, storageKey]);
 
   useEffect(() => {
-    const savedMessages = localStorage.getItem('chatbot_widget_history');
-    if (savedMessages) {
-      setMessages(JSON.parse(savedMessages));
+    // Only update localStorage if messages have changed from initial state
+    if (messages.length > 1 || (messages[0] && !messages[0].isIntro)) {
+      localStorage.setItem(storageKey, JSON.stringify(messages));
     }
-  }, []);
+  }, [messages, storageKey]); // Save history whenever messages or product ID changes
 
-  useEffect(() => {
-    localStorage.setItem('chatbot_widget_history', JSON.stringify(messages));
-  }, [messages]);
+
+  // useEffect(() => {
+  //   const savedMessages = localStorage.getItem('chatbot_widget_history');
+  //   if (savedMessages) {
+  //     setMessages(JSON.parse(savedMessages));
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   localStorage.setItem('chatbot_widget_history', JSON.stringify(messages));
+  // }, [messages]);
 
   // const handleUserInput = async (userInput: string) => {
   //   setMessages((prevMessages) => [
