@@ -1,35 +1,64 @@
 steps:
-  # Step 1: Build the Docker image for the backend
+  # Step 1: Build the Docker image for your application
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/backend-image', './back-end']
+    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/ecom-chatbot-backend', '.' ]
+    env:
+      - 'LOGGING=${_LOGGING}'
+      - 'NODE_ENV=${_NODE_ENV}'
+      - 'PORT=${_PORT}'
+      - 'FRONT_END_BASE_URL=${_FRONT_END_BASE_URL}'
+      - 'REACT_PYTHON_APP_API_BASE_URL=${_REACT_PYTHON_APP_API_BASE_URL}'
+      - 'PGDATABASE=${_PGDATABASE}'
+      - 'PGHOST=${_PGHOST}'
+      - 'PGPASSWORD=${_PGPASSWORD}'
+      - 'PGPORT=${_PGPORT}'
+      - 'PGUSER=${_PGUSER}'
+      - 'GOOGLE_CLIENT_ID=${_GOOGLE_CLIENT_ID}'
+      - 'GOOGLE_CLIENT_SECRET=${_GOOGLE_CLIENT_SECRET}'
 
   # Step 2: Push the Docker image to Google Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/backend-image']
+    args: [ 'push', 'gcr.io/$PROJECT_ID/ecom-chatbot-backend' ]
 
-  # Step 3: Deploy to Google Cloud Run
+  # Step 3: Deploy the image to Google Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
-      - run
-      - deploy
-      - backend-service
-      - --image=gcr.io/$PROJECT_ID/backend-image
-      - --platform=managed
-      - --region=us-central1
-      - --allow-unauthenticated
-      - --port=8080
-      - --set-env-vars=NODE_ENV=production,PORT=8080,SESSION_SECRET=$SESSION_SECRET,PGDATABASE=$PGDATABASE,PGHOST=$PGHOST,PGPASSWORD=$PGPASSWORD,PGPORT=$PGPORT,PGUSER=$PGUSER,GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,REACT_PYTHON_APP_API_BASE_URL=$REACT_PYTHON_APP_API_BASE_URL,FRONT_END_BASE_URL=$FRONT_END_BASE_URL
+      - 'run'
+      - 'deploy'
+      - 'ecom-chatbot-backend'
+      - '--image=gcr.io/$PROJECT_ID/ecom-chatbot-backend'
+      - '--platform=managed'
+      - '--region=us-central1'
+      - '--allow-unauthenticated'
+      - '--port=${_PORT}'
+    env:
+      - 'LOGGING=${_LOGGING}'
+      - 'NODE_ENV=${_NODE_ENV}'
+      - 'PORT=${_PORT}'
+      - 'FRONT_END_BASE_URL=${_FRONT_END_BASE_URL}'
+      - 'REACT_PYTHON_APP_API_BASE_URL=${_REACT_PYTHON_APP_API_BASE_URL}'
+      - 'PGDATABASE=${_PGDATABASE}'
+      - 'PGHOST=${_PGHOST}'
+      - 'PGPASSWORD=${_PGPASSWORD}'
+      - 'PGPORT=${_PGPORT}'
+      - 'PGUSER=${_PGUSER}'
+      - 'GOOGLE_CLIENT_ID=${_GOOGLE_CLIENT_ID}'
+      - 'GOOGLE_CLIENT_SECRET=${_GOOGLE_CLIENT_SECRET}'
 
-# Substitute these with the relevant variables in your Google Cloud Project
 substitutions:
-  _PGDATABASE: 'postgres'
-  _PGHOST: '35.221.38.242'
-  _PGPASSWORD: 'root'
-  _PGPORT: '5432'
-  _PGUSER: 'postgres'
- _REACT_PYTHON_APP_API_BASE_URL: 'https://verta-service-294113686552.us-east1.run.app'
-  _FRONT_END_BASE_URL: 'http://localhost:3000'
+  _LOGGING: ${{ secrets.LOGGING }}
+  _NODE_ENV: ${{ secrets.NODE_ENV }}
+  _PORT: ${{ secrets.PORT }}
+  _FRONT_END_BASE_URL: ${{ secrets.FRONT_END_BASE_URL }}
+  _REACT_PYTHON_APP_API_BASE_URL: ${{ secrets.REACT_PYTHON_APP_API_BASE_URL }}
+  _PGDATABASE: ${{ secrets.PGDATABASE }}
+  _PGHOST: ${{ secrets.PGHOST }}
+  _PGPASSWORD: ${{ secrets.PGPASSWORD }}
+  _PGPORT: ${{ secrets.PGPORT }}
+  _PGUSER: ${{ secrets.PGUSER }}
+  _GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+  _GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
 
 images:
-  - 'gcr.io/$PROJECT_ID/backend-image'
+  - 'gcr.io/$PROJECT_ID/ecom-chatbot-backend'
