@@ -1,6 +1,7 @@
 
 # Use Node.js base image
 FROM node:18-alpine
+ENV NODE_ENV=production
 
 # Set the working directory in the container
 WORKDIR /back-end
@@ -12,6 +13,7 @@ COPY package*.json ./
 RUN npm install --silent
 RUN npm install axios
 
+
 # Copy application folders and files into the container
 COPY routes ./routes
 COPY documentation ./documentation
@@ -20,6 +22,7 @@ COPY auth.js .
 COPY index.js .
 COPY .env .env
 COPY . .
+
 
 # Step 6: Set environment variables (the PORT variable is required by Cloud Run)
 ENV PORT=8080

@@ -19,6 +19,7 @@ const usersRouter = require('./routes/users');
 const api = express();
 const port = process.env.PORT|| 8080;
 
+
 // https://expressjs.com/en/resources/middleware/morgan.html
 api.use(logging(process.env.LOGGING));
 
@@ -84,6 +85,7 @@ api.use('/orders', ordersRouter);
 api.use('/products', productsRouter);
 api.use('/users', usersRouter);
 api.use('/api', userClicksRouter);
+
 api.server = api.listen(port, () => {
   console.log(`Server listening on port ${port} in the ${process.env.NODE_ENV} environment.`);
 });
