@@ -109,10 +109,10 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
     // Placeholder bot message while we fetch the response
     let botMessage: Message = { type: 'bot', content: '', followupQuestions: [], feedbackSent: false };
     setMessages((prevMessages) => [...prevMessages, botMessage]);
-  
     try {
       // Make a POST request using fetch and handle the streaming response with ReadableStream
-      const response = await fetch('http://localhost:80/dev-stream', {
+      const response = await fetch(`${process.env.REACT_APP_PYTHON_API_BASE_URL}/dev-stream`, {
+
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -223,7 +223,7 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
   
     // Send feedback to the API
     try {
-      await fetch('http://localhost:80/score', {
+      await fetch(`${process.env.REACT_APP_PYTHON_API_BASE_URL}/score`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
