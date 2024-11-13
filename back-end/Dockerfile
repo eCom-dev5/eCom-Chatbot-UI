@@ -1,6 +1,7 @@
 
 # Use Node.js base image
 FROM node:18-alpine
+ENV NODE_ENV=production
 
 # Set the working directory in the container
 WORKDIR /back-end
@@ -9,8 +10,8 @@ WORKDIR /back-end
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
-RUN npm install axios
+RUN npm install --silent
+RUN npm install axios --silent
 
 # Copy application folders and files into the container
 COPY routes ./routes
@@ -18,11 +19,13 @@ COPY documentation ./documentation
 COPY db ./db
 COPY auth.js .
 COPY index.js .
-COPY .env .  
+COPY .env .env
+COPY . .
 
 
+ENV PORT=8080
 # Expose the application's port (matches `process.env.PORT`)
-EXPOSE 8000
+EXPOSE 8080
 
 # Define the command to run the app
 CMD ["node", "index.js"]
