@@ -17,7 +17,7 @@ const productsRouter = require('./routes/products');
 const usersRouter = require('./routes/users');
 
 const api = express();
-const port = process.env.PORT;
+const port = process.env.PORT|| 8080;
 
 // https://expressjs.com/en/resources/middleware/morgan.html
 api.use(logging(process.env.LOGGING));

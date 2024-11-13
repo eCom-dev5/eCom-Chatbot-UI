@@ -9,7 +9,7 @@ WORKDIR /back-end
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --silent
 RUN npm install axios
 
 # Copy application folders and files into the container
@@ -18,11 +18,16 @@ COPY documentation ./documentation
 COPY db ./db
 COPY auth.js .
 COPY index.js .
-COPY .env .  
+COPY .env .env
+COPY . .
+
+# Step 6: Set environment variables (the PORT variable is required by Cloud Run)
+ENV PORT=8080
+
+# Step 7: Expose the PORT so Cloud Run knows where to listen
+EXPOSE 8080
 
 
-# Expose the application's port (matches `process.env.PORT`)
-EXPOSE 8000
 
 # Define the command to run the app
 CMD ["node", "index.js"]
