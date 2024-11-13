@@ -1,209 +1,3 @@
-// import React, { useState, useEffect, CSSProperties } from 'react';
-
-// interface ChatbotWidgetProps {
-//   userId: string;
-//   parentAsin: string;
-// }
-
-// interface Message {
-//   type: 'user' | 'bot';
-//   content: string;
-//   followupQuestions?: string[];
-// }
-
-// const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => {
-//   const [messages, setMessages] = useState<Message[]>([
-//     {
-//       type: 'bot',
-//       content:
-//         "I'm Alpha, your product assistant. I'm here to help answer any questions you have about a product. Feel free to ask away, and I'll do my best to assist you. If you've already received information from Metadata or Review-Vectorstore, please share it with me so I can better understand your query.",
-//     },
-//   ]);
-//   const [isChatOpen, setIsChatOpen] = useState(false);
-
-//   // Load chat history from local storage when the component mounts
-//   useEffect(() => {
-//     const savedMessages = localStorage.getItem('chatbot_widget_history');
-//     if (savedMessages) {
-//       setMessages(JSON.parse(savedMessages));
-//     }
-//   }, []);
-
-//   // Save chat history to local storage whenever messages change
-//   useEffect(() => {
-//     localStorage.setItem('chatbot_widget_history', JSON.stringify(messages));
-//   }, [messages]);
-
-//   const handleUserInput = async (userInput: string) => {
-//     setMessages((prevMessages) => [
-//       ...prevMessages,
-//       { type: 'user', content: userInput },
-//     ]);
-
-//     try {
-//       const response = await fetch('http://localhost:80/dev-invoke', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({
-//           user_input: userInput,
-//           config: {},
-//           parent_asin: parentAsin,
-//           user_id: userId,
-//           log_langfuse: false,
-//           stream_tokens: false,
-//         }),
-//       });
-
-//       if (response.ok) {
-//         const data = await response.json();
-//         setMessages((prevMessages) => [
-//           ...prevMessages,
-//           { type: 'bot', content: data.answer, followupQuestions: data.followup_questions },
-//         ]);
-//       } else {
-//         setMessages((prevMessages) => [
-//           ...prevMessages,
-//           { type: 'bot', content: 'Sorry, there was an error processing your request.' },
-//         ]);
-//       }
-//     } catch (error) {
-//       console.error('Error:', error);
-//       setMessages((prevMessages) => [
-//         ...prevMessages,
-//         { type: 'bot', content: 'Network error. Please try again.' },
-//       ]);
-//     }
-//   };
-
-//   const handleFollowUpClick = (question: string) => {
-//     handleUserInput(question);
-//   };
-
-//   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-//     if (e.key === 'Enter' && (e.target as HTMLInputElement).value.trim()) {
-//       const userInput = (e.target as HTMLInputElement).value.trim();
-//       (e.target as HTMLInputElement).value = ''; // Clear input field
-//       handleUserInput(userInput);
-//     }
-//   };
-
-//   // Custom styles for the chatbot with CSSProperties type
-//   const styles: Record<string, CSSProperties> = {
-//     headerStyle: {
-//       backgroundColor: '#4A90E2',
-//       color: '#FFFFFF',
-//       padding: '10px',
-//     },
-//     chatWindowStyle: {
-//       backgroundColor: '#F2F2F2',
-//       padding: '10px',
-//       height: '400px',
-//       overflowY: 'auto' as 'auto',
-//     },
-//     botBubbleStyle: {
-//       backgroundColor: '#4A90E2',
-//       color: '#FFFFFF',
-//       padding: '10px',
-//       borderRadius: '8px',
-//       maxWidth: '80%',
-//       margin: '5px 0',
-//     },
-//     userBubbleStyle: {
-//       backgroundColor: '#50E3C2',
-//       color: '#FFFFFF',
-//       padding: '10px',
-//       borderRadius: '8px',
-//       maxWidth: '80%',
-//       alignSelf: 'flex-end',
-//       margin: '5px 0',
-//     },
-//     followUpButton: {
-//       backgroundColor: '#e0e0e0',
-//       color: '#333',
-//       border: 'none',
-//       padding: '5px 10px',
-//       borderRadius: '5px',
-//       margin: '5px 0',
-//       cursor: 'pointer',
-//       display: 'inline-block',
-//     },
-//   };
-
-//   return (
-//     <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 1000 }}>
-//       {isChatOpen && (
-//         <div style={{ boxShadow: '0 0 10px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden', width: '350px' }}>
-//           <div style={{ ...styles.headerStyle, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-//             <span>Chatbot</span>
-//             <button
-//               onClick={() => setIsChatOpen(false)}
-//               style={{
-//                 background: 'none',
-//                 border: 'none',
-//                 color: '#FFFFFF',
-//                 fontSize: '16px',
-//                 cursor: 'pointer',
-//               }}
-//             >
-//               ✖
-//             </button>
-//           </div>
-//           <div style={styles.chatWindowStyle}>
-//             {messages.map((msg, index) => (
-//               <div key={index} style={msg.type === 'user' ? styles.userBubbleStyle : styles.botBubbleStyle}>
-//                 {msg.content}
-//                 {msg.followupQuestions && (
-//                   <div style={{ marginTop: '10px' }}>
-//                     {msg.followupQuestions.map((question, qIndex) => (
-//                       <button
-//                         key={qIndex}
-//                         onClick={() => handleFollowUpClick(question)}
-//                         style={styles.followUpButton}
-//                       >
-//                         {question}
-//                       </button>
-//                     ))}
-//                   </div>
-//                 )}
-//               </div>
-//             ))}
-//           </div>
-//           <div style={{ display: 'flex', padding: '10px', borderTop: '1px solid #ddd' }}>
-//             <input
-//               type="text"
-//               placeholder="Type your message..."
-//               style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
-//               onKeyDown={handleKeyDown}
-//             />
-//           </div>
-//         </div>
-//       )}
-//       {!isChatOpen && (
-//         <button
-//           onClick={() => setIsChatOpen(true)}
-//           style={{
-//             backgroundColor: '#4A90E2',
-//             color: '#FFFFFF',
-//             border: 'none',
-//             borderRadius: '50%',
-//             width: '60px',
-//             height: '60px',
-//             cursor: 'pointer',
-//             fontSize: '24px',
-//             display: 'flex',
-//             alignItems: 'center',
-//             justifyContent: 'center',
-//           }}
-//         >
-//           💬
-//         </button>
-//       )}
-//     </div>
-//   );
-// };
-
 // export default ChatbotWidget;
 import React, { useState, useEffect, CSSProperties } from 'react';
 
@@ -217,6 +11,9 @@ interface Message {
   content: string;
   followupQuestions?: string[];
   feedbackSent?: boolean;
+  run_id?: string;
+  isIntro?: boolean; // New property to mark the intro message
+
 }
 
 const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => {
@@ -224,56 +21,171 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
     {
       type: 'bot',
       content:
-        "I'm Alpha, your product assistant. I'm here to help answer any questions you have about a product. Feel free to ask away, and I'll do my best to assist you. If you've already received information from Metadata or Review-Vectorstore, please share it with me so I can better understand your query.",
-    },
+        "I'm Verta, your product assistant. I'm here to help answer any questions you have about a product. Feel free to ask away, and I'll do my best to assist you. If you've already received information from Metadata or Review-Vectorstore, please share it with me so I can better understand your query.",
+      isIntro: true, // Mark this as the intro message
+
+      },
   ]);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
+  const storageKey = `chatbot_widget_history_${parentAsin}`;
+
   useEffect(() => {
-    const savedMessages = localStorage.getItem('chatbot_widget_history');
+    // Load chat history for the specific product
+    const savedMessages = localStorage.getItem(storageKey);
     if (savedMessages) {
       setMessages(JSON.parse(savedMessages));
     }
-  }, []);
+  }, [storageKey]); // Re-run this effect whenever parentAsin changes
+
 
   useEffect(() => {
-    localStorage.setItem('chatbot_widget_history', JSON.stringify(messages));
-  }, [messages]);
+    // Only update localStorage if messages have changed from initial state
+    if (messages.length > 1 || (messages[0] && !messages[0].isIntro)) {
+      localStorage.setItem(storageKey, JSON.stringify(messages));
+    }
+  }, [messages, storageKey]); // Save history whenever messages or product ID changes
 
+
+  // useEffect(() => {
+  //   const savedMessages = localStorage.getItem('chatbot_widget_history');
+  //   if (savedMessages) {
+  //     setMessages(JSON.parse(savedMessages));
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   localStorage.setItem('chatbot_widget_history', JSON.stringify(messages));
+  // }, [messages]);
+
+  // const handleUserInput = async (userInput: string) => {
+  //   setMessages((prevMessages) => [
+  //     ...prevMessages,
+  //     { type: 'user', content: userInput },
+  //   ]);
+
+  //   try {
+  //     const response = await fetch('http://localhost:80/dev-invoke', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         user_input: userInput,
+  //         config: {},
+  //         parent_asin: parentAsin,
+  //         user_id: userId,
+  //         log_langfuse: false,
+  //         stream_tokens: false,
+  //       }),
+  //     });
+
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       setMessages((prevMessages) => [
+  //         ...prevMessages,
+  //         { type: 'bot', content: data.answer, followupQuestions: data.followup_questions, feedbackSent: false },
+  //       ]);
+  //     } else {
+  //       setMessages((prevMessages) => [
+  //         ...prevMessages,
+  //         { type: 'bot', content: 'Sorry, there was an error processing your request.' },
+  //       ]);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //     setMessages((prevMessages) => [
+  //       ...prevMessages,
+  //       { type: 'bot', content: 'Network error. Please try again.' },
+  //     ]);
+  //   }
+  // };
   const handleUserInput = async (userInput: string) => {
     setMessages((prevMessages) => [
       ...prevMessages,
       { type: 'user', content: userInput },
     ]);
-
+  
+    // Placeholder bot message while we fetch the response
+    let botMessage: Message = { type: 'bot', content: '', followupQuestions: [], feedbackSent: false };
+    setMessages((prevMessages) => [...prevMessages, botMessage]);
+  
     try {
-      const response = await fetch('http://localhost:80/dev-invoke', {
+      // Make a POST request using fetch and handle the streaming response with ReadableStream
+      const response = await fetch('http://localhost:80/dev-stream', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           user_input: userInput,
-          config: {},
           parent_asin: parentAsin,
           user_id: userId,
-          log_langfuse: false,
-          stream_tokens: false,
+          log_langfuse: true,
+          stream_tokens: true,
         }),
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { type: 'bot', content: data.answer, followupQuestions: data.followup_questions, feedbackSent: false },
-        ]);
-      } else {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { type: 'bot', content: 'Sorry, there was an error processing your request.' },
-        ]);
-      }
+  
+      if (!response.body) throw new Error('ReadableStream not supported in this browser');
+  
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      let botMessageContent = '';
+  
+      // Read the stream
+      const readStream = async () => {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) {
+            console.log("Stream complete");
+            break;
+          }
+  
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n');
+  
+          for (let line of lines) {
+            if (line.trim() === '') continue;
+  
+             // Skip JSON parsing for the "[DONE]" signal
+            if (line.trim() === '[DONE]') {
+              console.log("Received end of stream signal [DONE]");
+              reader.cancel(); // End the reader to stop further processing
+              return;
+            }
+  
+            if (line.startsWith("data: ")) {
+              try {
+                const event = JSON.parse(line.slice(5)); // Remove "data: " prefix
+  
+                if (event.type === 'token') {
+                  botMessageContent += event.content;
+                  setMessages((prevMessages) => {
+                    const updatedMessages = [...prevMessages];
+                    const lastMessageIndex = updatedMessages.length - 1;
+                    updatedMessages[lastMessageIndex].content = botMessageContent;
+                    return updatedMessages;
+                  });
+                } else if (event.type === 'message') {
+                  const { answer, followup_questions, run_id } = event.content;
+                  setMessages((prevMessages) => {
+                    const updatedMessages = [...prevMessages];
+                    const lastMessageIndex = updatedMessages.length - 1;
+                    updatedMessages[lastMessageIndex].content = answer;
+                    updatedMessages[lastMessageIndex].followupQuestions = followup_questions; // Set follow-up questions here
+                    updatedMessages[lastMessageIndex].run_id = run_id; // Store the run_id here
+                    return updatedMessages;
+                  });
+                }
+              } catch (error) {
+                console.error('Error parsing JSON:', error);
+              }
+            }
+          }
+        }
+      };
+  
+      await readStream();
     } catch (error) {
       console.error('Error:', error);
       setMessages((prevMessages) => [
@@ -282,29 +194,54 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
       ]);
     }
   };
+  
+  const clearChatHistory = () => {
+    setMessages([ {
+      type: 'bot',
+      content:
+        "I'm Verta, your product assistant. I'm here to help answer any questions you have about a product. Feel free to ask away, and I'll do my best to assist you. If you've already received information from Metadata or Review-Vectorstore, please share it with me so I can better understand your query.",
+      isIntro: true, // Mark this as the intro message
 
+      },]);
+    localStorage.removeItem(storageKey);
+
+    //localStorage.removeItem('chatbot_widget_history');
+  };
+  
   const handleFeedback = async (feedback: boolean, index: number) => {
+    const message = messages[index];
+  
+    if (!message.run_id) {
+      console.error("Run ID not found for this message. Feedback cannot be sent.");
+      return;
+    }
+  
+    // Mark feedback as sent for this message
     const updatedMessages = [...messages];
     updatedMessages[index].feedbackSent = true;
     setMessages(updatedMessages);
-
-    // Send feedback to the API as 1 for true/positive and 0 for false/negative
+  
+    // Send feedback to the API
     try {
-      await fetch('http://localhost:80/feedback', {
+      await fetch('http://localhost:80/score', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: updatedMessages[index].content,
-          feedback: feedback ? 1 : 0,
+          run_id: message.run_id, // Use the specific message's run_id
           user_id: userId,
+          parent_asin: parentAsin,
+          value: feedback ? 1 : 0, // 1 for positive, 0 for negative feedback
         }),
       });
+      console.log(`Feedback sent for run_id: ${message.run_id}`);
     } catch (error) {
       console.error('Error sending feedback:', error);
     }
   };
+  
+  
 
   const handleFollowUpClick = (question: string) => {
     handleUserInput(question);
@@ -332,7 +269,7 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
     chatWindowStyle: {
       backgroundColor: '#F5F5DC', // Beige background
       padding: '10px',
-      height: '300px',
+      height: '500px',
       overflowY: 'auto',
       display: 'flex',
       flexDirection: 'column',
@@ -443,6 +380,17 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
       fontSize: '3rem', // Larger font for the chat icon
 
     },
+    clearButton: {
+      backgroundColor: '#ff4d4d',
+      color: '#FFFFFF',
+      border: 'none',
+      borderRadius: '5px',
+      padding: '5px 10px',
+      cursor: 'pointer',
+      fontSize: '0.8rem',
+      marginLeft: '10px',
+    },
+    
     notificationBadge: {
       position: 'absolute',
       top: '-5px',
@@ -460,14 +408,15 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
       {isChatOpen && (
         <div style={{ boxShadow: '0 0 10px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden', width: '430px', position: 'fixed', bottom: '80px', right: '20px' }}>
           <div style={styles.headerStyle}>
-            <span>Alpha</span>
+            <span>Verta</span>
+            <button style={styles.clearButton} onClick={clearChatHistory}>Clear Chat</button>
             <button onClick={() => setIsChatOpen(false)} style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '1.5rem', cursor: 'pointer' }}>✖</button>
           </div>
           <div style={styles.chatWindowStyle}>
             {messages.map((msg, index) => (
               <div key={index} style={msg.type === 'user' ? styles.userBubbleStyle : styles.botBubbleStyle}>
                 {msg.content}
-                {msg.type === 'bot' && !msg.feedbackSent && (
+                {msg.type === 'bot' && !msg.feedbackSent && !msg.isIntro && (
                   <div style={styles.feedbackContainer}>
                     <span
                       style={styles.feedbackIcon}
