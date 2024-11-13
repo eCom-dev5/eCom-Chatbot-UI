@@ -1,9 +1,9 @@
 import { Form, redirect, useActionData, useRouteLoaderData } from "react-router-dom";
 
-import { AuthData } from "./authData";
-import InlineLink from "../../components/InlineLink/InlineLink";
+import { AuthData } from "./authData.ts";
+import InlineLink from "../../components/InlineLink/InlineLink.tsx";
 import utilStyles from "../../App/utilStyles.module.css";
-import GoogleAuthButton from "./GoogleAuthButton";
+import GoogleAuthButton from "./GoogleAuthButton.tsx";
 
 
 export async function registerAction({ request }: { request: Request }) {

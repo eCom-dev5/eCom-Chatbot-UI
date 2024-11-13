@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom";
 
-import { AuthData } from "../features/auth/authData";
-import Header from "../components/Header/Header";
-import ChatbotWidget from "../components/ChatbotWidget/ChatbotWidget";
+import { AuthData } from "../features/auth/authData.ts";
+import Header from "../components/Header/Header.tsx";
+import ChatbotWidget from "../components/ChatbotWidget/ChatbotWidget.tsx";
 
 
 export async function authLoader() {

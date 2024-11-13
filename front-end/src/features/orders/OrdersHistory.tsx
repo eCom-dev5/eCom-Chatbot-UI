@@ -1,7 +1,7 @@
 import { useLoaderData } from "react-router-dom";
 
-import { OrderSummaryData } from "./OrderSummary";
-import OrderSummary from "./OrderSummary";
+import { OrderSummaryData } from "./OrderSummary.tsx";
+import OrderSummary from "./OrderSummary.tsx";
 
 
 type LoaderData = {

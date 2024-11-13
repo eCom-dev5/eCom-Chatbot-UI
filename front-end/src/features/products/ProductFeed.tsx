@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { redirect, useLoaderData, useRouteLoaderData } from "react-router-dom";
 
-import { ProductData } from "./productData";
-import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage";
-import ProductFeedItem from "./ProductFeedItem";
+import { ProductData } from "./productData.ts";
+import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage.tsx";
+import ProductFeedItem from "./ProductFeedItem.tsx";
 
 import utilStyles from "../../App/utilStyles.module.css";
 import styles from "./ProductFeed.module.css";

@@ -1,4 +1,4 @@
-import SearchBar from "../SearchBar/SearchBar";
+import SearchBar from "../SearchBar/SearchBar.tsx";
 
 import styles from "./LowerHeader.module.css";
 

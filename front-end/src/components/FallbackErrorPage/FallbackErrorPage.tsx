@@ -1,6 +1,6 @@
 import { Link, useRouteError } from "react-router-dom";
 
-import Header from "../Header/Header";
+import Header from "../Header/Header.tsx";
 import utilStyles from "../../App/utilStyles.module.css";
 
 

@@ -1,9 +1,9 @@
 import { Link, useLoaderData, useRouteLoaderData } from "react-router-dom";
 
-import { AuthData } from "../auth/authData";
-import { OrderItemData } from "./orderItemData";
-import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage";
-import { getDateTimeString, renderOrderItems } from "./utils";
+import { AuthData } from "../auth/authData.ts";
+import { OrderItemData } from "./orderItemData.ts";
+import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage.tsx";
+import { getDateTimeString, renderOrderItems } from "./utils.tsx";
 
 import utilStyles from "../../App/utilStyles.module.css";
 import styles from "./OrderDetailsPage.module.css";

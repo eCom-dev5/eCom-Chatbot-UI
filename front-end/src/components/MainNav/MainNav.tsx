@@ -1,5 +1,5 @@
 import { NavLink, useNavigate, useRouteLoaderData } from "react-router-dom";
-import { AuthData } from "../../features/auth/authData";
+import { AuthData } from "../../features/auth/authData.ts";
 import styles from "./MainNav.module.css";
 
 

@@ -1,9 +1,9 @@
 import { Form, Link, redirect, useActionData, useLoaderData, useRouteLoaderData } from "react-router-dom";
 
-import { AuthData } from "../auth/authData";
-import { CartLoaderData } from "./Cart";
-import { renderOrderItems } from "./utils";
-import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage";
+import { AuthData } from "../auth/authData.ts";
+import { CartLoaderData } from "./Cart.tsx";
+import { renderOrderItems } from "./utils.tsx";
+import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage.tsx";
 
 import utilStyles from "../../App/utilStyles.module.css";
 

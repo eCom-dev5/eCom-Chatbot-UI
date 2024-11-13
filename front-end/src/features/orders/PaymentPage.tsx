@@ -3,8 +3,8 @@ import { useParams, useRouteLoaderData } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
 
-import { AuthData } from "../auth/authData";
-import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage";
+import { AuthData } from "../auth/authData.ts";
+import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage.tsx";
 import utilStyles from "../../App/utilStyles.module.css";
 
 

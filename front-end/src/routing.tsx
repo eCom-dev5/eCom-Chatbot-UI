@@ -1,19 +1,19 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import AccountPage from "./components/AccountPage/AccountPage";
-import { App, authLoader } from "./App/App";
-import { Cart, cartLoader } from "./features/orders/Cart";
-import { CheckoutPage, checkoutAction } from "./features/orders/CheckoutPage";
-import { removeCartItemAction } from "./features/orders/OrderItem";
-import FallbackErrorPage from "./components/FallbackErrorPage/FallbackErrorPage";
-import { LoginPage, loginAction } from "./features/auth/LoginPage";
-import { OrderDetailsPage, orderDetailsLoader } from "./features/orders/OrderDetailsPage";
-import { ordersLoader } from "./features/orders/OrdersHistory";
-import PaymentPage from "./features/orders/PaymentPage";
-import PaymentReturn from "./features/orders/PaymentReturn";
-import { ProductDetail, productDetailLoader, addToCartAction } from "./features/products/ProductDetail";
-import { ProductFeed, productFeedLoader } from "./features/products/ProductFeed";
-import { RegistrationPage, registerAction } from "./features/auth/RegistrationPage";
+import AccountPage from "./components/AccountPage/AccountPage.tsx";
+import { App, authLoader } from "./App/App.tsx";
+import { Cart, cartLoader } from "./features/orders/Cart.tsx";
+import { CheckoutPage, checkoutAction } from "./features/orders/CheckoutPage.tsx";
+import { removeCartItemAction } from "./features/orders/OrderItem.tsx";
+import FallbackErrorPage from "./components/FallbackErrorPage/FallbackErrorPage.tsx";
+import { LoginPage, loginAction } from "./features/auth/LoginPage.tsx";
+import { OrderDetailsPage, orderDetailsLoader } from "./features/orders/OrderDetailsPage.tsx";
+import { ordersLoader } from "./features/orders/OrdersHistory.tsx";
+import PaymentPage from "./features/orders/PaymentPage.tsx";
+import PaymentReturn from "./features/orders/PaymentReturn.tsx";
+import { ProductDetail, productDetailLoader, addToCartAction } from "./features/products/ProductDetail.tsx";
+import { ProductFeed, productFeedLoader } from "./features/products/ProductFeed.tsx";
+import { RegistrationPage, registerAction } from "./features/auth/RegistrationPage.tsx";
 
 
 // https://reactrouter.com/en/main/routers/create-browser-router

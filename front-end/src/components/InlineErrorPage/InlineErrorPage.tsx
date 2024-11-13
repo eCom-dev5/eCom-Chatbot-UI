@@ -1,4 +1,4 @@
-import InlineLink from "../InlineLink/InlineLink";
+import InlineLink from "../InlineLink/InlineLink.tsx";
 import utilStyles from "../../App/utilStyles.module.css";
 
 

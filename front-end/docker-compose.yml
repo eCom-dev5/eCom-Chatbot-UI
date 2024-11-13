@@ -1,0 +1,8 @@
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80" # Maps localhost:3000 to the container's port 80

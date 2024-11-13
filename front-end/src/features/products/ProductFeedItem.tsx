@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
-import { ProductData } from "./productData";
-import { getProductDetailPath } from "./utils";
-import StarRating from "../../components/StarRating/StarRating";
+import { ProductData } from "./productData.ts";
+import { getProductDetailPath } from "./utils.ts";
+import StarRating from "../../components/StarRating/StarRating.tsx";
 
 import utilStyles from "../../App/utilStyles.module.css";
 import styles from "./ProductFeedItem.module.css";

@@ -1,0 +1,37 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"  # Maps the container's port 5001 to your local port 5000
+    environment:
+      - NODE_ENV=production
+      - PORT=8000
+      - FRONT_END_BASE_URL=http://localhost:3000
+      - SESSION_SECRET=your-secret-key
+      - LOGGING=dev
+      - DATABASE_URL=postgres://postgres:password@db:5432/postgres
+    depends_on:
+      - db
+    networks:
+      - ecommerce-net
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - ecommerce-net
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+networks:
+  ecommerce-net:
+
+volumes:
+  pgdata:

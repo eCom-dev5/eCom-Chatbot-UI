@@ -1,5 +1,5 @@
-import LowerHeader from "../LowerHeader/LowerHeader";
-import UpperHeader from "../UpperHeader/UpperHeader";
+import LowerHeader from "../LowerHeader/LowerHeader.tsx";
+import UpperHeader from "../UpperHeader/UpperHeader.tsx";
 
 import styles from "./Header.module.css";
 

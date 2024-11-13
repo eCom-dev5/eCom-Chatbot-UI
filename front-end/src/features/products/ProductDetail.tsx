@@ -1,13 +1,13 @@
 // Import necessary modules and dependencies
 import React, { useState, useEffect } from "react";
 import { Form, Link, redirect, useActionData, useLoaderData, useRouteLoaderData } from "react-router-dom";
-import ChatbotWidget from "../../components/ChatbotWidget/ChatbotWidget";
-import { AuthData } from "../auth/authData";
-import { ProductData } from "./productData";
-import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage";
-import InlineLink from "../../components/InlineLink/InlineLink";
-import StarRating from "../../components/StarRating/StarRating";
-import { getProductDetailPath } from "./utils";
+import ChatbotWidget from "../../components/ChatbotWidget/ChatbotWidget.tsx";
+import { AuthData } from "../auth/authData.ts";
+import { ProductData } from "./productData.ts";
+import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage.tsx";
+import InlineLink from "../../components/InlineLink/InlineLink.tsx";
+import StarRating from "../../components/StarRating/StarRating.tsx";
+import { getProductDetailPath } from "./utils.ts";
 import utilStyles from "../../App/utilStyles.module.css";
 import styles from "./ProductDetail.module.css";
 

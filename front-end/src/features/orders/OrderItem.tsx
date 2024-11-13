@@ -1,7 +1,7 @@
 import { Form, Link } from "react-router-dom";
 
-import { OrderItemData } from "./orderItemData";
-import { getProductDetailPath } from "../products/utils";
+import { OrderItemData } from "./orderItemData.ts";
+import { getProductDetailPath } from "../products/utils.ts";
 import styles from "./OrderItem.module.css";
 import utilStyles from "../../App/utilStyles.module.css";
 

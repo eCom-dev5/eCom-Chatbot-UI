@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import { getDateTimeString } from "./utils";
+import { getDateTimeString } from "./utils.tsx";
 import styles from "./OrderSummary.module.css";
 import utilStyles from "../../App/utilStyles.module.css";
 

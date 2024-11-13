@@ -1,0 +1,56 @@
+services:
+  # Backend service
+  backend:
+    build:
+      context: ./back-end
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"  # Map backend API to port 3000 on host
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://postgres:root@db:5432/postgres
+    volumes:
+      - ./back-end:/app
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  # Frontend service
+  frontend:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"  # Map frontend to port 80 on host
+    environment:
+      - REACT_APP_API_BASE_URL=http://backend:8000
+    volumes:
+      - ./front-end:/front-end
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  # Database service (PostgreSQL)
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+# Named volumes for persistent database storage
+volumes:
+  db_data:
+
+# Custom network for app communication
+networks:
+  app-network:
+    driver: bridge

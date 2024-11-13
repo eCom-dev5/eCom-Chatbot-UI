@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import MainNav from "../MainNav/MainNav";
+import MainNav from "../MainNav/MainNav.tsx";
 import styles from "./UpperHeader.module.css";
 
 

@@ -1,5 +1,5 @@
-import { OrderItemData } from "./orderItemData";
-import { OrderItem } from "./OrderItem";
+import { OrderItemData } from "./orderItemData.ts";
+import { OrderItem } from "./OrderItem.tsx";
 import utilStyles from "../../App/utilStyles.module.css";
 
 

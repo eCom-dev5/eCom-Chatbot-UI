@@ -1,12 +1,12 @@
 import { Link, useActionData, useLoaderData, useRouteLoaderData } from "react-router-dom";
 
-import { AuthData } from "../auth/authData";
-import { OrderItemData } from "./orderItemData";
-import { RemoveCartItemActionData } from "./OrderItem";
-import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage";
-import InlineLink from "../../components/InlineLink/InlineLink";
-import { getProductDetailPath } from "../products/utils";
-import { renderOrderItems } from "./utils";
+import { AuthData } from "../auth/authData.ts";
+import { OrderItemData } from "./orderItemData.ts";
+import { RemoveCartItemActionData } from "./OrderItem.tsx";
+import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage.tsx";
+import InlineLink from "../../components/InlineLink/InlineLink.tsx";
+import { getProductDetailPath } from "../products/utils.ts";
+import { renderOrderItems } from "./utils.tsx";
 
 import utilStyles from "../../App/utilStyles.module.css";
 

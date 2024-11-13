@@ -1,9 +1,9 @@
 import { useRouteLoaderData } from "react-router-dom";
 
-import { AuthData } from "../../features/auth/authData";
-import InlineErrorPage from "../InlineErrorPage/InlineErrorPage";
-import InlineLink from "../InlineLink/InlineLink";
-import { OrdersHistory } from "../../features/orders/OrdersHistory";
+import { AuthData } from "../../features/auth/authData.ts";
+import InlineErrorPage from "../InlineErrorPage/InlineErrorPage.tsx";
+import InlineLink from "../InlineLink/InlineLink.tsx";
+import { OrdersHistory } from "../../features/orders/OrdersHistory.tsx";
 import utilStyles from "../../App/utilStyles.module.css";
 
 
