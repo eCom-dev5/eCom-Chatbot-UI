@@ -27,7 +27,7 @@ COPY .env .
 # COPY --from=build /front-end/build /usr/share/nginx/html
 
 # Expose port 80
-EXPOSE 3000
+EXPOSE 80
 
 # Start Nginx server
 CMD ["npm", "start"]

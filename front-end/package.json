@@ -18,19 +18,17 @@
     "@types/react-dom": "^18.3.0",
     "connect-pg-simple": "^10.0.0",
     "express-session": "^1.18.1",
+    "gh-pages": "^6.2.0",
     "react": "^18.3.1",
     "react-chatbot-kit": "^2.2.2",
     "react-chatbotify": "^2.0.0-beta.23",
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
     "react-router-dom": "^6.16.0",
-    "react-scripts": "5.0.1",
-    "homepage": "https://eCom-dev5.github.io/eCom-Chatbot-UI"
-
+    "react-scripts": "5.0.1"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "gh-pages": "^6.2.0",
     "source-map-loader": "^5.0.0",
     "tailwindcss": "^3.4.14",
     "ts-loader": "^9.5.1",
@@ -41,9 +39,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
