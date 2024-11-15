@@ -25,7 +25,7 @@ api.use(logging(process.env.LOGGING));
 
 
 // https://expressjs.com/en/resources/middleware/cors.html
-const devOrigin = ["https://web.postman.co/", "http://localhost", /http:\/\/localhost:.*/];
+const devOrigin = ["https://web.postman.co/", "http://localhost", "http://localhost:3000", "*", "https://rayalpalace-7w2annebga-uk.a.run.app", /http:\/\/localhost:.*/];
 const prodOrigin = process.env.FRONT_END_BASE_URL;
 const origin = process.env.NODE_ENV !== "production" ? devOrigin : prodOrigin;
 
@@ -39,10 +39,10 @@ api.use(cors({
 // https://www.passportjs.org/howtos/session/
 // https://expressjs.com/en/resources/middleware/session.html
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'development') {
   // https://expressjs.com/en/guide/behind-proxies.html
   // https://stackoverflow.com/a/75418142/11262798
-  api.set('trust proxy', 1);
+  api.set('trust proxy', true);
 
   api.use(session({
     secret: process.env.SESSION_SECRET,
@@ -62,6 +62,14 @@ if (process.env.NODE_ENV === 'production') {
     cookie: { secure: false },
   }));
 }
+
+api.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://rayalpalace-7w2annebga-uk.a.run.app");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 
 // Authenticate all routes and add user data to req.user
 api.use(passport.initialize());
