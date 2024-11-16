@@ -1,5 +1,4 @@
-// Import necessary modules and dependencies
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Form, Link, redirect, useActionData, useLoaderData, useRouteLoaderData } from "react-router-dom";
 import ChatbotWidget from "../../components/ChatbotWidget/ChatbotWidget";
 import { AuthData } from "../auth/authData";
@@ -13,9 +12,9 @@ import styles from "./ProductDetail.module.css";
 
 // Type definition for Loader Data
 type LoaderData = {
-  productData: ProductData,
-  errMsg: string | null
-}
+  productData: ProductData;
+  errMsg: string | null;
+};
 
 // Action to add a product to the cart
 export async function addToCartAction({ params }) {
@@ -29,7 +28,7 @@ export async function addToCartAction({ params }) {
     );
 
     if (res.ok) {
-      const cartLink = <InlineLink path="/cart" anchor="cart" />
+      const cartLink = <InlineLink path="/cart" anchor="cart" />;
       return <>This item has been added to your {cartLink}.</>;
     } else if (res.status === 400) {
       const errorMessage = await res.text();
@@ -62,7 +61,6 @@ export async function productDetailLoader({ params }) {
     if (currentPath !== canonicalPath) {
       return redirect(canonicalPath);
     }
-
   } catch (error) {
     if (error.status === 404) {
       throw error;
@@ -94,34 +92,31 @@ export function ProductDetail() {
   };
 
   // Function to send clicked products to the backend API endpoint
-// Function to send clicked products to the backend
-const sendClickedProductsToBackend = async (clickedProductsArray: string[]) => {
-  try {
-    console.log("clicked products testing", clickedProductsArray);
-    
-    // Send the array of clicked products to the backend API endpoint
-    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user-click`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user_id: authData.id, // Assuming `authData` contains the user ID
-        clicked_products: clickedProductsArray,
-      }),
-    });
+  const sendClickedProductsToBackend = async (clickedProductsArray: string[]) => {
+    try {
+      console.log("clicked products testing", clickedProductsArray);
 
-    if (!res.ok) {
-      throw new Error(`Error! Status: ${res.status}`);
+      // Send the array of clicked products to the backend API endpoint
+      const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user-click`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: authData.id, // Assuming `authData` contains the user ID
+          clicked_products: clickedProductsArray,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Error! Status: ${res.status}`);
+      }
+
+      console.log('User click data logged successfully.');
+    } catch (error) {
+      console.error("Failed to send clicked products to backend:", error);
     }
-
-    console.log('User click data logged successfully.');
-
-  } catch (error) {
-    console.error("Failed to send clicked products to backend:", error);
-  }
-};
-
+  };
 
   // Render error page if product fails to load
   if (errMsg) {
@@ -135,7 +130,7 @@ const sendClickedProductsToBackend = async (clickedProductsArray: string[]) => {
     if (authData.logged_in) {
       return (
         <Form method="post">
-          <button type="submit" className={buttonStyles}>Add to cart</button>
+          <button type="submit" className={buttonStyles}>Add to Cart</button>
         </Form>
       );
     } else {
@@ -144,6 +139,15 @@ const sendClickedProductsToBackend = async (clickedProductsArray: string[]) => {
       return <Link to={linkPath} className={buttonStyles}>Log in to buy</Link>;
     }
   }
+
+  // Clean up text in case of unnecessary escape characters (e.g., in description and features)
+  const cleanText = (text: string) => {
+    const cleanedText = text.replace(/[\[\]【】'']+/g, "").trim();
+    return cleanedText.length === 0 ? "No description" : cleanedText;
+  };
+
+  const cleanedDescription = cleanText(description);
+  const cleanedFeatures = cleanText(features);
 
   // Main product detail render
   return (
@@ -155,34 +159,36 @@ const sendClickedProductsToBackend = async (clickedProductsArray: string[]) => {
             alt={productData.title}
             height="500"
             width="500"
-            className={styles.image}></img>
+            className={styles.image}
+          />
         </div>
         <div className={styles.summaryTextContent}>
           <h1 className={styles.productName}>{productData.title}</h1>
           <p className={styles.price}>{price}</p>
           <hr />
-          <p>{description}</p>
+          <p>{cleanedDescription}</p>
           <hr />
           {renderButton()}
           {addToCartMessage ? <p className={styles.buttonMessage}>{addToCartMessage}</p> : null}
-          {average_rating ?
-          <div>
-            <StarRating rating={average_rating} />
-            <div className={styles.ratingText}>Rated {average_rating}/5.00 based on {rating_number} ratings</div>
-          </div>
-          : null}
+          {average_rating && (
+            <div>
+              <StarRating rating={average_rating} />
+              <div className={styles.ratingText}>
+                Rated {average_rating}/5.00 based on {rating_number} ratings
+              </div>
+            </div>
+          )}
         </div>
       </section>
       <section className={styles.descriptionSection}>
-        <h2>Description</h2>
-        <p className={utilStyles.XLText}>{features}</p>
-        <p>{description}</p>
+        <h2>Features</h2>
+        <p className={utilStyles.XLText}>{cleanedFeatures}</p>
       </section>
+
       {/* Chatbot Widget Integration */}
       {authData?.id && (
         <ChatbotWidget userId={String(authData.id)} parentAsin={parent_asin} />
       )}
-
     </div>
   );
 }

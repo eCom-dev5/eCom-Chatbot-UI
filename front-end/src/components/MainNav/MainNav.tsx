@@ -2,12 +2,11 @@ import { NavLink, useNavigate, useRouteLoaderData } from "react-router-dom";
 import { AuthData } from "../../features/auth/authData";
 import styles from "./MainNav.module.css";
 
-
 export default function MainNav() {
-  // https://reactrouter.com/en/main/hooks/use-route-loader-data
   const authData = useRouteLoaderData("app") as AuthData;
   const navigate = useNavigate();
 
+  // Log out handler
   async function handleClickLogOut() {
     try {
       const res = await fetch(
@@ -28,6 +27,7 @@ export default function MainNav() {
     }
   }
 
+  // Function to render nav items
   function renderNavItem(path: string, anchor: string, onClick?: () => void) {
     return (
       <li className={styles.listItem}>
@@ -38,24 +38,19 @@ export default function MainNav() {
 
   return (
     <nav className={styles.mainNav}>
-      <ul className={styles.navList}>
-        {renderNavItem("/", "Home")}
-        {renderNavItem("/category/books", "Books")}
-        {renderNavItem("/category/movies", "Movies")}
-      </ul>
-      
-      {authData?.logged_in ?
-      <ul className={styles.navList}>
-        {renderNavItem("/account", "Account")}
-        {renderNavItem("/cart", "Cart")}
-        {renderNavItem("#", "Log Out", handleClickLogOut)}
-      </ul>
-      :
-      <ul className={styles.navList}>
-        {renderNavItem("/login", "Log In")}
-        {renderNavItem("/register", "Register")}
-      </ul>
-      }
+      {/* Only authenticated routes */}
+      {authData?.logged_in ? (
+        <ul className={styles.navList}>
+          {renderNavItem("/account", "Account")}
+          {renderNavItem("/cart", "Cart")}
+          {renderNavItem("#", "Log Out", handleClickLogOut)}
+        </ul>
+      ) : (
+        <ul className={styles.navList}>
+          {renderNavItem("/login", "Log In")}
+          {renderNavItem("/register", "Register")}
+        </ul>
+      )}
     </nav>
   );
 }

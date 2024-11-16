@@ -1,19 +1,22 @@
 .productGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  column-gap: 2.5%;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Allows for 4 items per row */
+  column-gap: 2.5%; /* Adjust the gap between items */
   row-gap: 2rem;
 }
 
+
+
+
 @media screen and (max-width: 1200px) {
   .productGrid {
-    column-gap: 4%;
+    column-gap: 3%; /* Adjusted column gap for smaller screens */
   }
 }
 
 @media screen and (max-width: 768px) {
   .productGrid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    column-gap: 7.5%;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Allows for 4 items per row on smaller screens */
+    column-gap: 5%; /* Adjusted column gap for mobile screens */
   }
 }

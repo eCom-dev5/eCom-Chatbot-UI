@@ -1,7 +1,7 @@
 .mainNav {
   flex-grow: 1;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end; /* Aligns the nav items to the right */
   padding-right: 5%;
   font-size: 1.05em;
 }
@@ -10,7 +10,7 @@
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: flex-end;  /* Aligns the list items to the right */
   height: 100%;
   margin: 0;
   padding: 0;
@@ -44,13 +44,11 @@
   color: rgb(204, 204, 204);
 }
 
-
 @media screen and (max-width: 1050px) {
   .mainNav {
     padding-right: 0;
   }
 }
-
 
 @media screen and (max-width: 768px) {
   .mainNav {
@@ -61,7 +59,6 @@
     height: auto;  /* Ensure appropriate height if links wrap */
   }
 }
-
 
 @media screen and (max-width: 600px) {
   .mainNav {

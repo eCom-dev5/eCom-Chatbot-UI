@@ -35,8 +35,18 @@
   font-size: 0.95em;
 }
 
+.productTitle {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal; /* Allows wrapping */
+  line-height: 1.4rem; /* Adjust line height for better readability */
+  max-height: 2.8rem; /* Limits to 2 lines */
+}
+
 .price {
-  margin-top: 0.8em;
-  font-size: 1.1em;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #000;
+  margin-top: 0.5rem;
 }

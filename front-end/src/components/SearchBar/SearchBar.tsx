@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { MdOutlineSearch } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { TextField, IconButton, InputAdornment, Box } from "@mui/material";
 
-import styles from "./SearchBar.module.css";
-
+// Import the CSS module
+import styles from './SearchBar.module.css';
 
 export default function SearchBar() {
-
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
@@ -20,23 +20,37 @@ export default function SearchBar() {
     setSearchTerm(trimmedTerm);
 
     if (trimmedTerm.length > 0) {
-      return navigate(`/search?q=${trimmedTerm}`);
+      navigate(`/search?q=${trimmedTerm}`);
     }
   }
 
   return (
-    <form className={styles.searchBar} onSubmit={handleSubmit}>
-      <input
-        type="search"
-        maxLength={60}
-        placeholder="Search Products"
-        value={searchTerm}
-        onChange={handleChange}
-        className={styles.input}   
-      />
-      <button className={styles.btn} type="submit" aria-label="Search">
-        <MdOutlineSearch className={styles.icon} />
-      </button>
-    </form>
+    <Box className={styles["search-bar-container"]}>
+      <form onSubmit={handleSubmit} className={styles["search-form"]}>
+        <TextField
+          variant="outlined"
+          placeholder="Search Products"
+          value={searchTerm}
+          onChange={handleChange}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  type="submit"
+                  aria-label="Search"
+                  className={styles["search-icon-btn"]}
+                >
+                  <MdOutlineSearch size={20} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          inputProps={{
+            maxLength: 60, // Limit input length
+          }}
+          className={styles["search-input"]}
+        />
+      </form>
+    </Box>
   );
 }

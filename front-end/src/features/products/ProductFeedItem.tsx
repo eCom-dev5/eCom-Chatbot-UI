@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-
 import { ProductData } from "./productData";
 import { getProductDetailPath } from "./utils";
 import StarRating from "../../components/StarRating/StarRating";
@@ -34,7 +33,8 @@ export default function ProductFeedItem({ productData, userId }: ProductFeedItem
         <div className={utilStyles.mb1rem}>
           <Link to={detailPath} className={styles.nameLink}>
             <strong className={`${utilStyles.regularWeight} ${utilStyles.XLText}`}>
-              {productData.title}
+              {/* Allowing title to wrap to 2 lines max */}
+              <span className={styles.productTitle}>{productData.title}</span>
             </strong>
           </Link>
         </div>
@@ -47,7 +47,10 @@ export default function ProductFeedItem({ productData, userId }: ProductFeedItem
             </span>
           </div>
         ) : null}
-        <div className={styles.price}>{price}</div>
+        <div className={styles.price}>
+          {/* Prefixing the price with a dollar symbol */}
+          ${price}
+        </div>
       </div>
     </article>
   );
