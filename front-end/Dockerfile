@@ -11,9 +11,6 @@ RUN npm install
 # Copy the rest of the application
 COPY . .
 
-# Build the React app for production
-RUN npm run build
-
 # Expose the Cloud Run port (usually 8080)
 EXPOSE 8080
 
