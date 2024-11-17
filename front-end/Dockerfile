@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 8080
 
 # Serve the production build on the specified PORT
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
