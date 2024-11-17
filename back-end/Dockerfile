@@ -5,6 +5,7 @@ FROM node:18-alpine
 
 # Set the working directory in the container
 ENV NODE_ENV 'development'
+RUN apk add --no-cache make gcc g++ python3
 
 WORKDIR /back-end
 
@@ -15,6 +16,7 @@ COPY . .
 # Install dependencies
 RUN npm install
 RUN npm install axios
+RUN npm rebuild bcrypt --build-from-source
 
 # Copy application folders and files into the container
 
