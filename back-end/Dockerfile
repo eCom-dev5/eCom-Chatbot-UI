@@ -4,7 +4,7 @@ FROM node:18-alpine
 
 
 # Set the working directory in the container
-ENV NODE_ENV 'development'
+ENV NODE_ENV 'production'
 
 WORKDIR /back-end
 
@@ -15,6 +15,7 @@ COPY package*.json ./
 RUN npm install
 RUN npm install axios
 RUN npm ci
+RUN npm install -g firebase-tools
 
 COPY ./back-end/index.js ./index.js
 
