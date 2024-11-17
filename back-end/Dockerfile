@@ -16,7 +16,7 @@ RUN npm install
 RUN npm install axios
 RUN npm ci
 
-COPY index.js ./index.js
+COPY ./back-end/index.js ./index.js
 
 
 # Copy application folders and files into the container
