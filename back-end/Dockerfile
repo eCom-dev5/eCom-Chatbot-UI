@@ -21,7 +21,7 @@ RUN npm install axios
 Copy . .
 
 # Expose the application's port (matches `process.env.PORT`)
-EXPOSE 8000
+EXPOSE 8080
 
 # Define the command to run the app
 CMD ["node", "index.js"]
