@@ -8,7 +8,6 @@ RUN npm install react-scripts --save
 
 COPY ./package.json ./
 COPY public ./public
-COPY .env .
 
 COPY . .
 
