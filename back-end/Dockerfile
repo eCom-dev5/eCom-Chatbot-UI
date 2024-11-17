@@ -17,10 +17,7 @@ RUN npm install axios
 
 
 # Copy application folders and files into the container
-COPY routes ./routes
-COPY documentation ./documentation
-COPY db ./db
-COPY auth.js .
+
 Copy . .
 
 # Expose the application's port (matches `process.env.PORT`)
