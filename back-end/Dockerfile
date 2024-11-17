@@ -10,7 +10,7 @@ WORKDIR /back-end
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
-
+COPY . .
 
 # Install dependencies
 RUN npm install
@@ -18,7 +18,6 @@ RUN npm install axios
 
 # Copy application folders and files into the container
 
-COPY . .
 
 # Expose the application's port (matches `process.env.PORT`)
 EXPOSE 8080

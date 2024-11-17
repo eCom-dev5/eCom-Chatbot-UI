@@ -1,13 +1,11 @@
 FROM node:18-alpine
 
 WORKDIR /front-end
-
-
-RUN npm install
-RUN npm install react-scripts --save
-
-COPY ./package.json ./
+COPY ./package*.json ./
 COPY public ./public
+
+RUN npm install 
+
 
 COPY . .
 
