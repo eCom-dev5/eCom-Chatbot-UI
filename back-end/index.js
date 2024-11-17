@@ -94,7 +94,9 @@ api.use('/products', productsRouter);
 api.use('/users', usersRouter);
 api.use('/api', userClicksRouter);
 
-api.server = api.listen(port, () => {
+const hostname = '0.0.0.0';
+
+api.server = api.listen(port,hostname,() => {
   console.log(`Server listening on port ${port} in the ${process.env.NODE_ENV} environment.`);
 });
 

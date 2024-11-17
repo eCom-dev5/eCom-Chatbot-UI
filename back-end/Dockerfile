@@ -10,6 +10,9 @@ WORKDIR /back-end
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
+RUN npm install --production
+ENV HOSTNAME=0.0.0.0
+ENV PORT=8080
 
 # Install dependencies
 RUN npm install
