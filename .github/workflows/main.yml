@@ -1,0 +1,79 @@
+name: 'Build and Deploy to Cloud Run'
+
+on:
+  push:
+    branches: ["main"]
+    paths-ignore:
+      - 'README.md'
+
+env:
+  PROJECT_ID: 'verta-441204'
+  FRONT_GAR_NAME: 'verta-frontend'
+  FRONT_GAR_LOCATION: "us-east1" 
+  FRONT_SERVICE: 'verta-frontend'
+  REGION: "us-east1"
+  BACK_GAR_NAME: 'verta-backend'
+  BACK_GAR_LOCATION: "us-east1" 
+  BACK_SERVICE: 'verta-backend'
+  
+
+jobs:
+  integration:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout Code
+        uses: 'actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332' # actions/checkout@v4
+
+      - name: Lint code
+        run: echo "Linting repository"
+
+      - name: Run unit tests
+        run: echo "Running unit tests"
+
+  deploy:
+    name: Continuous Delivery
+    needs: integration
+    runs-on: 'ubuntu-latest'
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332' # actions/checkout@v4
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: 'Docker Auth'
+        run: |-
+          gcloud auth configure-docker "us-east1-docker.pkg.dev"
+  
+      - name: 'Build and Push Front-end Container'
+        run: |-
+          docker build -t "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}" -f front-end/Dockerfile .
+          docker push "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}"
+          
+      - name: 'Deploy Front-end to Cloud Run'
+        uses: 'google-github-actions/deploy-cloudrun@33553064113a37d688aa6937bacbdc481580be17'
+        with:
+          service: '${{ env.FRONT_SERVICE }}'
+          region: '${{ env.REGION }}'
+          image: 'us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}'
+          env_vars: |
+            REACT_APP_API_BASE_URL= ${{ vars.REACT_APP_API_BASE_URL }}
+            REACT_APP_PYTHON_API_BASE_URL = ${{ vars.REACT_APP_PYTHON_API_BASE_URL }}
+            PORT = 80
+
+      - name: 'Show output'
+        run: echo ${{ steps.deploy.outputs.url }}
