@@ -21,8 +21,7 @@ COPY routes ./routes
 COPY documentation ./documentation
 COPY db ./db
 COPY auth.js .
-COPY index.js .
-
+Copy . .
 
 # Expose the application's port (matches `process.env.PORT`)
 EXPOSE 8000
