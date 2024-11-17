@@ -14,6 +14,12 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 RUN npm install axios
+RUN npm ci
+
+COPY index.js ./index.js
+
+COPY routes ./routes
+COPY db ./db
 
 
 # Copy application folders and files into the container
