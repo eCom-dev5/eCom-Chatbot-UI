@@ -15,8 +15,7 @@ RUN npm install react-scripts --save
 # Copy the rest of the application code
 # COPY ./src ./src
 # COPY public ./public
-COPY . . 
-COPY .env .
+COPY . /front-end
 
 # Build the TypeScript application
 # RUN npm Start
