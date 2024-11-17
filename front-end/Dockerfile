@@ -1,14 +1,17 @@
-FROM node:18-alpine3.15
+FROM node:18-alpine
 
-WORKDIR /app
+WORKDIR /front-end
 
-COPY ./package.json ./
 
 RUN npm install
+RUN npm install react-scripts --save
 
+COPY ./package.json ./
+COPY public ./public
+COPY .env .
 
 COPY . .
 
 EXPOSE 8080
 
-CMD [ "npm", "run", "dev" ]
+CMD [ "npm", "start" ]

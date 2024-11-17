@@ -100,6 +100,8 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
   //     ]);
   //   }
   // };
+
+
   const handleUserInput = async (userInput: string) => {
     setMessages((prevMessages) => [
       ...prevMessages,
@@ -122,7 +124,9 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
           parent_asin: parentAsin,
           user_id: userId,
           log_langfuse: true,
+          Token: 'ec864c6a-a150-45bf-be00-9c184b3c1f46',
           stream_tokens: true,
+          
         }),
       });
   
