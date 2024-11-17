@@ -59,10 +59,10 @@ jobs:
         run: |-
           gcloud auth configure-docker "us-east1-docker.pkg.dev"
   
-      # - name: 'Build and Push Front-end Container'
-      #   run: |-
-      #     docker build -t "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}" -f front-end/Dockerfile .
-      #     docker push "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}"
+      - name: 'Build and Push Front-end Container'
+        run: |-
+          docker build -t "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}" -f front-end/Dockerfile .
+          docker push "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}"
           
       - name: 'Build and Push Back-end Container'
         run: |-
@@ -79,38 +79,38 @@ jobs:
       #       REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }}
       #       REACT_APP_PYTHON_API_BASE_URL=${{ vars.REACT_APP_PYTHON_API_BASE_URL }}
 
-      - name: 'Deploy Back-end to Cloud Run'
-        uses: 'google-github-actions/deploy-cloudrun@33553064113a37d688aa6937bacbdc481580be17'
-        with:
-              service: '${{ env.BACK_SERVICE }}'
-              region: '${{ env.REGION }}'
-              image: 'us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }}'
-              timeout: 600s
-              env_vars: |
-                REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }}
-                REACT_APP_PYTHON_API_BASE_URL=${{ vars.REACT_APP_PYTHON_API_BASE_URL }}
-                LOGGING='dev'
-                NODE_ENV='development'
-                FRONT_END_BASE_URL='https://rayalpalace-7w2annebga-uk.a.run.app'
-                REACT_PYTHON_APP_API_BASE_URL='https://verta-service-294113686552.us-east1.run.app'
-                SESSION_SECRET="secret"
-                PGDATABASE="postgres"
-                PGHOST="35.221.38.242"
-                PGPASSWORD="root"
-                PGPORT=5432
-                PGUSER="postgres"
-                GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }}
-                GOOGLE_CLIENT_SECRET=${{ vars.GOOGLE_CLIENT_SECRET }}
+      # - name: 'Deploy Back-end to Cloud Run'
+      #   uses: 'google-github-actions/deploy-cloudrun@33553064113a37d688aa6937bacbdc481580be17'
+      #   with:
+      #         service: '${{ env.BACK_SERVICE }}'
+      #         region: '${{ env.REGION }}'
+      #         image: 'us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }}'
+      #         timeout: 600s
+      #         env_vars: |
+      #           REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }}
+      #           REACT_APP_PYTHON_API_BASE_URL=${{ vars.REACT_APP_PYTHON_API_BASE_URL }}
+      #           LOGGING='dev'
+      #           NODE_ENV='development'
+      #           FRONT_END_BASE_URL='https://rayalpalace-7w2annebga-uk.a.run.app'
+      #           REACT_PYTHON_APP_API_BASE_URL='https://verta-service-294113686552.us-east1.run.app'
+      #           SESSION_SECRET="secret"
+      #           PGDATABASE="postgres"
+      #           PGHOST="35.221.38.242"
+      #           PGPASSWORD="root"
+      #           PGPORT=5432
+      #           PGUSER="postgres"
+      #           GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }}
+      #           GOOGLE_CLIENT_SECRET=${{ vars.GOOGLE_CLIENT_SECRET }}
                 
-      # - name: 'Deploy Front-end to Cloud Run'
-      #   run: |-
-      #     gcloud run deploy ${{ env.FRONT_SERVICE }} \
-      #       --region us-east1 \
-      #       --image us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}  \
-      #       --allow-unauthenticated \
-      #       --timeout=300s \
-      #       --set-env-vars "REACT_APP_API_BASE_URL=https://rayalwebsite-innhjl4yvq-uk.a.run.app" \
-      #       --set-env-vars "REACT_APP_PYTHON_API_BASE_URL=https://verta-service-294113686552.us-east1.run.app" 
+      - name: 'Deploy Front-end to Cloud Run'
+        run: |-
+          gcloud run deploy ${{ env.FRONT_SERVICE }} \
+            --region us-east1 \
+            --image us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}  \
+            --allow-unauthenticated \
+            --timeout=300s \
+            --set-env-vars "REACT_APP_API_BASE_URL=https://rayalwebsite-innhjl4yvq-uk.a.run.app" \
+            --set-env-vars "REACT_APP_PYTHON_API_BASE_URL=https://verta-service-294113686552.us-east1.run.app" 
             
 
       
