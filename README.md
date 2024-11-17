@@ -1,7 +1,8 @@
 # Ecommerce App <!-- omit in toc -->
-This is a simplified ecommerce website built with the PERN (PostgreSQL, Express, React, Node) stack. It includes front-end routing (React Router), authentication (Passport.js), and checkout/payment integration (Stripe Checkout).
+This a PERN (PostgreSQL, Express, React, Node) stack ecommerce web application. This application is made to work along with Verta chatbot.
 
-Take a look: https://ecommerce-pern-app-z9pn.onrender.com/.
+
+Take a look: https://rayalpalace-7w2annebga-uk.a.run.app/.
 
 
 ## Contents <!-- omit in toc -->
