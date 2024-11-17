@@ -1,29 +1,34 @@
+/* Add this in your global CSS or UpperHeader.module.css */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* UpperHeader.module.css */
+
 .header {
   display: flex;
-  flex-wrap: wrap;
-  background-color: rgb(2, 2, 2);
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
 }
 
 .logoContainer {
-  flex-grow: 1;
-  align-self: center;
-  padding: 0.3em 2.5%;
+  display: flex;
+  align-items: center;
 }
 
 .logo {
-  color: rgb(255, 255, 255);
-  font-size: 2em;
+  font-family: 'Press Start 2P', cursive; /* Pixel font */
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #000;
   text-decoration: none;
 }
 
 .orange {
-  color: rgb(163, 201, 188);
+  color: #FFA500; /* Orange color for 'Pop' part */
 }
 
-@media screen and (max-width: 600px) {
-  .logoContainer {
-    /* Centre logo */
-    flex-grow: 0;
-    margin: 0 auto 0.5em auto;
-  }
+/* Optional: Add a pixelated shadow or border effect */
+.logo {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }

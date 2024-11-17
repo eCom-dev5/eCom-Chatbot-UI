@@ -6,11 +6,10 @@ import ProductFeedItem from "./ProductFeedItem";
 import { Box, Typography, Grid, CircularProgress, Paper } from "@mui/material";
 import './ProductFeed.module.css'; // Import the CSS file
 
-// Add paths to all available video files
-const videoPaths = [
-  "/assets/video1.mp4",
-  "/assets/video2.mp4",
-  "/assets/video3.mp4",
+const gifPaths = [
+  "/assets/page1.gif",
+  "/assets/page2.gif",
+  "/assets/page3.gif",
 ];
 
 type ProductFeedProps = {
@@ -83,15 +82,15 @@ export function ProductFeed({ isSearchResults }: ProductFeedProps) {
   const authData = useRouteLoaderData("app") as AuthData;
   const userId = authData?.id;
 
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [currentGifIndex, setCurrentGifIndex] = useState(0);
+  const [gifError, setGifError] = useState<boolean>(false);
 
   useEffect(() => {
-    // Set an interval to change the video every 10 seconds (adjust as needed)
     const interval = setInterval(() => {
-      setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videoPaths.length);
+      setCurrentGifIndex((prevIndex) => (prevIndex + 1) % gifPaths.length);
+      setGifError(false); // Reset error state when switching GIF
     }, 10000);
 
-    // Cleanup the interval on component unmount
     return () => clearInterval(interval);
   }, []);
 
@@ -145,6 +144,10 @@ export function ProductFeed({ isSearchResults }: ProductFeedProps) {
     );
   };
 
+  const handleGifError = () => {
+    setGifError(true); // Set error flag if GIF doesn't load
+  };
+
   return (
     <Box
       sx={{
@@ -163,22 +166,21 @@ export function ProductFeed({ isSearchResults }: ProductFeedProps) {
           marginBottom: "1.5rem",
         }}
       >
-        {/* Render the current video */}
+        {/* Render the current GIF with error handling */}
         <Box sx={{ width: "100%", overflow: "hidden", textAlign: "center", borderRadius: "8px" }}>
-          <video 
-            src={videoPaths[currentVideoIndex]}
-            autoPlay 
-            loop 
-            muted 
+          <img
+            src={gifPaths[currentGifIndex]}
+            alt="Product Animation"
+            onError={handleGifError} // Handle error when GIF fails to load
             style={{
               width: "100%",
               height: "300px",
               objectFit: "cover",
               borderRadius: "8px",
+              display: gifError ? "none" : "block", // Hide GIF if error occurred
             }}
-          >
-            Your browser does not support the video tag.
-          </video>
+          />
+          {gifError && <Typography variant="body2" color="error">Error loading GIF.</Typography>}
         </Box>
       </Paper>
       {productsData.length ? renderFeedItems() : <CircularProgress />}

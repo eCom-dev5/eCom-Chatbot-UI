@@ -9,7 +9,7 @@
 
 .image {
   width: 100%;
-  height: auto;
+  height: fit-content;
   aspect-ratio: 1 / 1;
 }
 

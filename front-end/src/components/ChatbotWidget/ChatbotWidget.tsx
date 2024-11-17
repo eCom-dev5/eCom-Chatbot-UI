@@ -118,7 +118,7 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user_input: userInput,
+          query: userInput,
           parent_asin: parentAsin,
           user_id: userId,
           log_langfuse: true,

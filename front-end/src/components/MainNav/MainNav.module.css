@@ -1,42 +1,41 @@
 .mainNav {
-  flex-grow: 1;
-  display: flex;
+  display: flex;           /* Flexbox to align items in a row */
   justify-content: flex-end; /* Aligns the nav items to the right */
-  padding-right: 5%;
-  font-size: 1.05em;
+  align-items: center;     /* Center items vertically */
+  width: 100%;             /* Make sure the navbar takes full width */
+  background-color: #fff;  /* Add a background color (optional) */
+  padding: 1rem 5%;        /* Add some padding around the navbar */
+  box-sizing: border-box;  /* Include padding in the element's total width/height */
 }
 
 .navList {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;  /* Aligns the list items to the right */
-  height: 100%;
+  display: flex;           /* Flexbox for horizontal items */
+  align-items: center;     /* Center vertically */
   margin: 0;
   padding: 0;
-  list-style-type: none;
+  list-style-type: none;    /* Remove default list styling */
 }
 
 .listItem {
-  height: 100%;
+  margin: 0 15px;          /* Space between navigation items */
 }
 
 .link {
   display: inline-block;
-  height: 100%;
-  padding: 1.25rem 1.5rem;
+  padding: 1.25rem 1.5rem; /* Add padding to the links */
   border: 1px solid transparent;  /* Prevent element size increase on hover */
+  text-align: center;      /* Center text inside the link */
 }
 
 .link,
 .link:link {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   text-decoration: none;
 }
 
 .link:focus,
 .link:hover {
-  border: 1px solid rgb(255, 255, 255);
+  border: 1px solid rgb(0, 0, 0);
 }
 
 .link:active {
@@ -54,17 +53,18 @@
   .mainNav {
     width: 100%;
   }
-
-  .listItem {
-    height: auto;  /* Ensure appropriate height if links wrap */
-  }
 }
 
 @media screen and (max-width: 600px) {
   .mainNav {
-    flex-direction: column;  /* Stacked, full-width sub-navigations */
+    flex-direction: column;  /* Stack items vertically for smaller screens */
+    padding: 1rem;           /* Adjust padding for mobile */
   }
   .navList {
     justify-content: center;
+    flex-direction: column; /* Align items vertically on mobile */
+  }
+  .listItem {
+    margin-bottom: 10px; /* Adds space between items vertically */
   }
 }
