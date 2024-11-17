@@ -69,7 +69,6 @@ jobs:
           gcloud run deploy ${{ env.FRONT_SERVICE }} \
             --region us-east1 \
             --image us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}  \
-            --port=8080 \
             --allow-unauthenticated \
             --timeout=300s \
             --set-env-vars "REACT_APP_API_BASE_URL=https://rayalwebsite-innhjl4yvq-uk.a.run.app" \

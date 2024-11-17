@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routing";
-const port = process.env.PORT || 8080;
 
 import "./index.css";
 
