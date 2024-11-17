@@ -10,12 +10,11 @@ WORKDIR /back-end
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
-RUN npm install --production
+RUN npm ci --production
 ENV HOSTNAME=0.0.0.0
 ENV PORT=8080
 
 # Install dependencies
-RUN npm install
 RUN npm install axios
 RUN npm ci
 RUN npm install -g firebase-tools
