@@ -18,8 +18,6 @@ RUN npm ci
 
 COPY index.js ./index.js
 
-COPY routes ./routes
-
 
 # Copy application folders and files into the container
 
