@@ -5,7 +5,9 @@ steps:
       - 'build'
       - '-t'
       - 'gcr.io/$PROJECT_ID/ecom-chatbot-ui:$COMMIT_SHA' # Build the Docker image with commit-based tagging
-      - './front-end' # Specify the backend folder as the build context
+      - '-f'
+      - './front-end/Dockerfile' # Specify the path to the Dockerfile
+      - './front-end' # Specify the frontend folder as the build context
 
   # Step 2: Push the Docker image to Google Container Registry
   - name: 'gcr.io/cloud-builders/docker'
@@ -19,13 +21,13 @@ steps:
     args:
       - 'run'
       - 'deploy'
-      - 'backend-service' # Name of the Cloud Run service
+      - '${_SERVICE_NAME}' # Use service name from substitution
       - '--image'
       - 'gcr.io/$PROJECT_ID/ecom-chatbot-ui:$COMMIT_SHA' # Use the pushed image for deployment
       - '--platform'
       - 'managed' # Use the Cloud Run managed platform
       - '--region'
-      - 'us-east1' # Replace with your preferred region
+      - '${_REGION}' # Use region from substitution
       - '--allow-unauthenticated' # Allow unauthenticated access (optional)
       - '--set-env-vars' # Add environment variables
       - 'REACT_APP_API_BASE_URL=https://rayalwebsite-innhjl4yvq-uk.a.run.app,REACT_APP_PYTHON_API_BASE_URL=https://verta-service-294113686552.us-east1.run.app'
@@ -37,7 +39,7 @@ options:
   logging: CLOUD_LOGGING_ONLY
   machineType: 'E2_HIGHCPU_8'
 
-
+# Substitutions for dynamic variables
 substitutions:
-  _REGION: 'us-east1'
-  _SERVICE_NAME: 'ecom-chatbot-ui'
+  _REGION: 'us-east1' # Specify your desired region
+  _SERVICE_NAME: 'ecom-chatbot-ui' # Service name
