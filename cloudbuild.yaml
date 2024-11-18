@@ -5,7 +5,7 @@ steps:
       - 'build'
       - '-t'
       - 'gcr.io/$PROJECT_ID/ecom-chatbot-ui:$COMMIT_SHA' # Build the Docker image with commit-based tagging
-      - './back-end' # Specify the backend folder as the build context
+      - './front-end' # Specify the backend folder as the build context
 
   # Step 2: Push the Docker image to Google Container Registry
   - name: 'gcr.io/cloud-builders/docker'
@@ -27,6 +27,8 @@ steps:
       - '--region'
       - 'us-east1' # Replace with your preferred region
       - '--allow-unauthenticated' # Allow unauthenticated access (optional)
+      - '--set-env-vars' # Add environment variables
+      - 'REACT_APP_API_BASE_URL=https://rayalwebsite-innhjl4yvq-uk.a.run.app,REACT_APP_PYTHON_API_BASE_URL=https://verta-service-294113686552.us-east1.run.app'
 
 # Timeout for Cloud Build execution
 timeout: '900s'
