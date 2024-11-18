@@ -6,7 +6,7 @@ steps:
       - '-t'
       - 'gcr.io/$PROJECT_ID/ecom-chatbot-ui:$COMMIT_SHA' # Build the Docker image with commit-based tagging
       - '-f'
-      - './front-end/Dockerfile' # Specify the path to the Dockerfile
+      - './front-end/Dockerfile' # Explicit path to the Dockerfile
       - './front-end' # Specify the frontend folder as the build context
 
   # Step 2: Push the Docker image to Google Container Registry
