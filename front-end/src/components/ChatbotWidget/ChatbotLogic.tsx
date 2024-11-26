@@ -19,7 +19,7 @@ const useChatbotLogic = (userId: string, parentAsin: string) => {
     {
       type: 'bot',
       content:
-        "I'm Verta, your product assistant. I'm here to help answer any questions you have about a product. Feel free to ask away, and I'll do my best to assist you. If you've already received information from Metadata or Review-Vectorstore, please share it with me so I can better understand your query.",
+        "I'm Verta, your product assistant. I'm here to help answer any questions you have about a product. Feel free to ask away, and I'll do my best to assist you.",
       isIntro: true,
     },
   ]);
@@ -49,18 +49,27 @@ const useChatbotLogic = (userId: string, parentAsin: string) => {
     let botMessage: Message = { type: 'bot', content: '', followupQuestions: [], feedbackSent: false };
     setMessages((prevMessages) => [...prevMessages, botMessage]);
 
+    console.log('Sending API request with payload:', {
+      query: userInput,
+      parent_asin: parentAsin,
+      user_id: userId,
+      log_langfuse: true,
+      stream_tokens: true,
+      Authorization: `Bearer ${process.env.REACT_APP_Token}`,
+    });
+
     try {
       const response = await fetch(`${process.env.REACT_APP_PYTHON_API_BASE_URL}/dev-stream`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.REACT_APP_Token}`,
         },
         body: JSON.stringify({
           query: userInput,
           parent_asin: parentAsin,
           user_id: userId,
           log_langfuse: true,
-          Token: 'ec864c6a-a150-45bf-be00-9c184b3c1f46',
           stream_tokens: true,
         }),
       });
@@ -69,7 +78,7 @@ const useChatbotLogic = (userId: string, parentAsin: string) => {
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder('utf-8');
-      let localBotMessageContent = ''; // Create a local copy to avoid closure issues
+      let localBotMessageContent = '';
 
       const readStream = async () => {
         while (true) {
@@ -91,11 +100,15 @@ const useChatbotLogic = (userId: string, parentAsin: string) => {
               try {
                 const event = JSON.parse(line.slice(5));
                 if (event.type === 'token') {
+                  // Stream token formatting
                   localBotMessageContent += event.content;
+                  let updateTimeout;
                   setMessages((prevMessages) => {
+                    clearTimeout(updateTimeout);
                     const updatedMessages = [...prevMessages];
                     const lastMessageIndex = updatedMessages.length - 1;
                     updatedMessages[lastMessageIndex].content = localBotMessageContent;
+                    updateTimeout = setTimeout(() => setMessages(updatedMessages), 50); // Debounce
                     return updatedMessages;
                   });
                 } else if (event.type === 'message') {
@@ -132,7 +145,7 @@ const useChatbotLogic = (userId: string, parentAsin: string) => {
       {
         type: 'bot',
         content:
-          "I'm Verta, your product assistant. I'm here to help answer any questions you have about a product. Feel free to ask away, and I'll do my best to assist you. If you've already received information from Metadata or Review-Vectorstore, please share it with me so I can better understand your query.",
+          "I'm Verta, your product assistant. I'm here to help answer any questions you have about a product.",
         isIntro: true,
       },
     ]);
@@ -147,11 +160,11 @@ const useChatbotLogic = (userId: string, parentAsin: string) => {
     }
 
     try {
-      // Send feedback API call
       await fetch(`${process.env.REACT_APP_PYTHON_API_BASE_URL}/score`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.REACT_APP_Token}`,
         },
         body: JSON.stringify({
           run_id: message.run_id,
@@ -161,7 +174,6 @@ const useChatbotLogic = (userId: string, parentAsin: string) => {
         }),
       });
 
-      // Mark feedback as sent
       setMessages((prevMessages) => {
         const updatedMessages = [...prevMessages];
         updatedMessages[index].feedbackSent = true;

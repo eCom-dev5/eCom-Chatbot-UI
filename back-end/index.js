@@ -25,9 +25,16 @@ api.use(logging(process.env.LOGGING));
 
 
 // https://expressjs.com/en/resources/middleware/cors.html
-const devOrigin = ["https://web.postman.co/", "http://localhost", "http://localhost:3000", "*", "https://rayalpalace-7w2annebga-uk.a.run.app", /http:\/\/localhost:.*/];
+const devOrigin = [
+  "https://web.postman.co/",
+  "http://localhost",
+  "http://localhost:3000",
+  "*",  // Allow all origins in development (adjust as necessary)
+  "https://rayalpalace-7w2annebga-uk.a.run.app",
+  /http:\/\/localhost:.*/
+];
 const prodOrigin = process.env.FRONT_END_BASE_URL;
-const origin = process.env.NODE_ENV !== "development" ? devOrigin : prodOrigin;
+const origin = process.env.NODE_ENV !== "production" ? devOrigin : prodOrigin;
 
 api.use(cors({
   origin,
@@ -63,13 +70,13 @@ if (process.env.NODE_ENV === 'development') {
   }));
 }
 
-api.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://rayalpalace-7w2annebga-uk.a.run.app");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  next();
-});
+// api.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "https://rayalpalace-7w2annebga-uk.a.run.app");
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
+//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   next();
+// });
 
 // Authenticate all routes and add user data to req.user
 api.use(passport.initialize());

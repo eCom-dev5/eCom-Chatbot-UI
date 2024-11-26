@@ -20,7 +20,11 @@
       // Forward the clicked_product to the FastAPI backend using a GET request
       const response = await axios.get(`${process.env.REACT_PYTHON_APP_API_BASE_URL}/initialize`, {
          // Use REACT_APP_API_BASE_URL instead of localhost:80
-        params: { asin: clicked_product, user_id: user_id}, // Send ASIN as a query parameter
+        headers: {
+          Authorization: `Bearer ${process.env.REACT_APP_Token}`,
+        },
+        params: { Token: 'ec864c6a-a150-45bf-be00-9c184b3c1f46',
+        asin: clicked_product, user_id: user_id}, // Send ASIN as a query parameter
       });
 
       res.status(response.status).send(response.data);
