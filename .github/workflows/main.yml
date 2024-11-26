@@ -66,6 +66,7 @@ jobs:
       - name: 'Deploy Back-end to Cloud Run'
         run: |-
           gcloud run deploy verta-backend \
+            --image us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }} \
             --region ${{ env.REGION }} \
             --platform managed \
             --allow-unauthenticated
