@@ -15,7 +15,6 @@ env:
   BACK_GAR_NAME: 'verta-backend'
   BACK_GAR_LOCATION: "us-east1" 
   BACK_SERVICE: 'verta-backend'
-  
 
 jobs:
   integration:
@@ -54,32 +53,17 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
-          
 
-      # - name: 'Docker Auth'
-      #   run: |-
-      #     gcloud auth configure-docker "us-east1-docker.pkg.dev"
-  
-      # - name: 'Build and Push Front-end Container'
-      #   run: |-
-      #     docker build -t "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}" -f front-end/Dockerfile .
-      #     docker push "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}"
-          
-      # - name: 'Build and Push Back-end Container'
-      #   run: |-
-      #       docker build -t "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }}" -f back-end/Dockerfile .
-      #       docker push "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }}"
-            
-      # - name: 'Deploy Front-end to Cloud Run'
-      #   uses: 'google-github-actions/deploy-cloudrun@33553064113a37d688aa6937bacbdc481580be17'
-      #   with:
-      #     service: '${{ env.FRONT_SERVICE }}'
-      #     region: '${{ env.REGION }}'
-      #     image: 'us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}'
-      #     env_vars: |
-      #       REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }}
-      #       REACT_APP_PYTHON_API_BASE_URL=${{ vars.REACT_APP_PYTHON_API_BASE_URL }}
-       - name: 'Deploy Back-end to Cloud Run'
+      - name: 'Docker Auth'
+        run: |-
+          gcloud auth configure-docker "us-east1-docker.pkg.dev"
+
+      - name: 'Build and Push Back-end Container'
+        run: |-
+          docker build -t "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }}" -f back-end/Dockerfile .
+          docker push "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }}"
+
+      - name: 'Deploy Back-end to Cloud Run'
         run: |-
           gcloud run deploy verta-backend \
             --image us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }} \
@@ -102,32 +86,5 @@ jobs:
             --platform managed \
             --allow-unauthenticated
 
-
-      - name: 'Deploy Back-end to Cloud Run'
-        uses: 'google-github-actions/deploy-cloudrun@33553064113a37d688aa6937bacbdc481580be17'
-        with:
-              service: '${{ env.BACK_SERVICE }}'
-              region: '${{ env.REGION }}'
-              # image: 'us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }}'
-              timeout: 1000s
-              env_vars: |
-                REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }}
-                REACT_APP_PYTHON_API_BASE_URL=${{ vars.REACT_APP_PYTHON_API_BASE_URL }}
-                LOGGING='dev'
-                NODE_ENV='development'
-                FRONT_END_BASE_URL='https://verta-backend-7k7ldne36a-ue.a.run.app'
-                REACT_PYTHON_APP_API_BASE_URL='https://verta-service-294113686552.us-east1.run.app'
-                SESSION_SECRET="secret"
-                PGDATABASE="postgres"
-                PGHOST="35.221.38.242"
-                PGPASSWORD="root"
-                PGPORT=5432
-                PGUSER="postgres"
-                GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }}
-                GOOGLE_CLIENT_SECRET=${{ vars.GOOGLE_CLIENT_SECRET }}
-                
-      
-
-      
       - name: 'Show output'
         run: echo ${{ steps.deploy.outputs.url }}
