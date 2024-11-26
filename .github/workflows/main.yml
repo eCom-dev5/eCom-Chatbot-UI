@@ -1,118 +1,118 @@
-# name: 'Build and Deploy to Cloud Run'
+name: 'Build and Deploy to Cloud Run'
 
-# on:
-#   push:
-#     branches: ["main"]
-#     paths-ignore:
-#       - 'README.md'
+on:
+  push:
+    branches: ["main"]
+    paths-ignore:
+      - 'README.md'
 
-# env:
-#   PROJECT_ID: 'verta-441204'
-#   FRONT_GAR_NAME: 'verta-frontend'
-#   FRONT_GAR_LOCATION: "us-east1" 
-#   FRONT_SERVICE: 'verta-frontend'
-#   REGION: "us-east1"
-#   BACK_GAR_NAME: 'verta-backend'
-#   BACK_GAR_LOCATION: "us-east1" 
-#   BACK_SERVICE: 'verta-backend'
+env:
+  PROJECT_ID: 'verta-441204'
+  FRONT_GAR_NAME: 'verta-frontend'
+  FRONT_GAR_LOCATION: "us-east1" 
+  FRONT_SERVICE: 'verta-frontend'
+  REGION: "us-east1"
+  BACK_GAR_NAME: 'verta-backend'
+  BACK_GAR_LOCATION: "us-east1" 
+  BACK_SERVICE: 'verta-backend'
   
 
-# jobs:
-#   integration:
-#     name: Continuous Integration
-#     runs-on: ubuntu-latest
+jobs:
+  integration:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
 
-#     permissions:
-#       contents: 'read'
-#       id-token: 'write'
+    permissions:
+      contents: 'read'
+      id-token: 'write'
 
-#     steps:
-#       - name: Checkout Code
-#         uses: 'actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332' # actions/checkout@v4
+    steps:
+      - name: Checkout Code
+        uses: 'actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332' # actions/checkout@v4
 
-#       - name: Lint code
-#         run: echo "Linting repository"
+      # - name: Lint code
+      #   run: echo "Linting repository"
 
-#       - name: Run unit tests
-#         run: echo "Running unit tests"
+      # - name: Run unit tests
+      #   run: echo "Running unit tests"
 
-#   deploy:
-#     name: Continuous Delivery
-#     needs: integration
-#     runs-on: 'ubuntu-latest'
+  deploy:
+    name: Continuous Delivery
+    needs: integration
+    runs-on: 'ubuntu-latest'
 
-#     permissions:
-#       contents: 'read'
-#       id-token: 'write'
+    permissions:
+      contents: 'read'
+      id-token: 'write'
 
-#     steps:
-#       - name: 'Checkout'
-#         uses: 'actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332' # actions/checkout@v4
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332' # actions/checkout@v4
 
-#       - id: 'auth'
-#         name: 'Authenticate to Google Cloud'
-#         uses: 'google-github-actions/auth@v2'
-#         with:
-#           credentials_json: '${{ secrets.GCP_SA_KEY }}'
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
-#       - name: 'Docker Auth'
-#         run: |-
-#           gcloud auth configure-docker "us-east1-docker.pkg.dev"
+      - name: 'Docker Auth'
+        run: |-
+          gcloud auth configure-docker "us-east1-docker.pkg.dev"
   
-#       # - name: 'Build and Push Front-end Container'
-#       #   run: |-
-#       #     docker build -t "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}" -f front-end/Dockerfile .
-#       #     docker push "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}"
+      # - name: 'Build and Push Front-end Container'
+      #   run: |-
+      #     docker build -t "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}" -f front-end/Dockerfile .
+      #     docker push "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}"
           
-#       - name: 'Build and Push Back-end Container'
-#         run: |-
-#             docker build -t "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }}" -f back-end/Dockerfile .
-#             docker push "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }}"
+      - name: 'Build and Push Back-end Container'
+        run: |-
+            docker build -t "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }}" -f back-end/Dockerfile .
+            docker push "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }}"
             
-#       # - name: 'Deploy Front-end to Cloud Run'
-#       #   uses: 'google-github-actions/deploy-cloudrun@33553064113a37d688aa6937bacbdc481580be17'
-#       #   with:
-#       #     service: '${{ env.FRONT_SERVICE }}'
-#       #     region: '${{ env.REGION }}'
-#       #     image: 'us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}'
-#       #     env_vars: |
-#       #       REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }}
-#       #       REACT_APP_PYTHON_API_BASE_URL=${{ vars.REACT_APP_PYTHON_API_BASE_URL }}
+      # - name: 'Deploy Front-end to Cloud Run'
+      #   uses: 'google-github-actions/deploy-cloudrun@33553064113a37d688aa6937bacbdc481580be17'
+      #   with:
+      #     service: '${{ env.FRONT_SERVICE }}'
+      #     region: '${{ env.REGION }}'
+      #     image: 'us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}'
+      #     env_vars: |
+      #       REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }}
+      #       REACT_APP_PYTHON_API_BASE_URL=${{ vars.REACT_APP_PYTHON_API_BASE_URL }}
 
-#       - name: 'Deploy Back-end to Cloud Run'
-#         uses: 'google-github-actions/deploy-cloudrun@33553064113a37d688aa6937bacbdc481580be17'
-#         with:
-#               service: '${{ env.BACK_SERVICE }}'
-#               region: '${{ env.REGION }}'
-#               image: 'us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }}'
-#               timeout: 1000s
-#               env_vars: |
-#                 REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }}
-#                 REACT_APP_PYTHON_API_BASE_URL=${{ vars.REACT_APP_PYTHON_API_BASE_URL }}
-#                 LOGGING='dev'
-#                 NODE_ENV='development'
-#                 FRONT_END_BASE_URL='https://rayalpalace-7w2annebga-uk.a.run.app'
-#                 REACT_PYTHON_APP_API_BASE_URL='https://verta-service-294113686552.us-east1.run.app'
-#                 SESSION_SECRET="secret"
-#                 PGDATABASE="postgres"
-#                 PGHOST="35.221.38.242"
-#                 PGPASSWORD="root"
-#                 PGPORT=5432
-#                 PGUSER="postgres"
-#                 GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }}
-#                 GOOGLE_CLIENT_SECRET=${{ vars.GOOGLE_CLIENT_SECRET }}
+      - name: 'Deploy Back-end to Cloud Run'
+        uses: 'google-github-actions/deploy-cloudrun@33553064113a37d688aa6937bacbdc481580be17'
+        with:
+              service: '${{ env.BACK_SERVICE }}'
+              region: '${{ env.REGION }}'
+              image: 'us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }}'
+              timeout: 1000s
+              env_vars: |
+                REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }}
+                REACT_APP_PYTHON_API_BASE_URL=${{ vars.REACT_APP_PYTHON_API_BASE_URL }}
+                LOGGING='dev'
+                NODE_ENV='development'
+                FRONT_END_BASE_URL='https://rayalpalace-7w2annebga-uk.a.run.app'
+                REACT_PYTHON_APP_API_BASE_URL='https://verta-service-294113686552.us-east1.run.app'
+                SESSION_SECRET="secret"
+                PGDATABASE="postgres"
+                PGHOST="35.221.38.242"
+                PGPASSWORD="root"
+                PGPORT=5432
+                PGUSER="postgres"
+                GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }}
+                GOOGLE_CLIENT_SECRET=${{ vars.GOOGLE_CLIENT_SECRET }}
                 
-#       # - name: 'Deploy Front-end to Cloud Run'
-#       #   run: |-
-#       #     gcloud run deploy ${{ env.FRONT_SERVICE }} \
-#       #       --region us-east1 \
-#       #       --image us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}  \
-#       #       --allow-unauthenticated \
-#       #       --timeout=300s \
-#       #       --set-env-vars "REACT_APP_API_BASE_URL=https://rayalwebsite-innhjl4yvq-uk.a.run.app" \
-#       #       --set-env-vars "REACT_APP_PYTHON_API_BASE_URL=https://verta-service-294113686552.us-east1.run.app" 
+      # - name: 'Deploy Front-end to Cloud Run'
+      #   run: |-
+      #     gcloud run deploy ${{ env.FRONT_SERVICE }} \
+      #       --region us-east1 \
+      #       --image us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.FRONT_GAR_NAME }}/${{ env.FRONT_SERVICE }}:${{ github.sha }}  \
+      #       --allow-unauthenticated \
+      #       --timeout=300s \
+      #       --set-env-vars "REACT_APP_API_BASE_URL=https://rayalwebsite-innhjl4yvq-uk.a.run.app" \
+      #       --set-env-vars "REACT_APP_PYTHON_API_BASE_URL=https://verta-service-294113686552.us-east1.run.app" 
             
 
       
-#       - name: 'Show output'
-#         run: echo ${{ steps.deploy.outputs.url }}
+      - name: 'Show output'
+        run: echo ${{ steps.deploy.outputs.url }}
