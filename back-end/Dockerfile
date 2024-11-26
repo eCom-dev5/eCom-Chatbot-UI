@@ -4,7 +4,7 @@ FROM node:18-alpine
 
 
 # Set the working directory in the container
-ENV NODE_ENV 'devlopment'
+ENV NODE_ENV 'production'
 RUN apk add --no-cache make gcc g++ python3
 
 WORKDIR /back-end
