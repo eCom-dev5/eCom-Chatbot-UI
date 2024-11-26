@@ -130,6 +130,24 @@ env:
   FRONT_SERVICE: 'verta-frontend'
 
 jobs:
+  integration:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout Code
+        uses: 'actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332' # actions/checkout@v4
+
+      - name: Lint code
+        run: echo "Linting repository"
+
+      - name: Run unit tests
+        run: echo "Running unit tests"
+
   deploy:
     name: 'Continuous Delivery'
     runs-on: 'ubuntu-latest'
@@ -155,16 +173,16 @@ jobs:
             --region=${{ env.REGION }} \
             --allow-unauthenticated \
             --timeout=1000s \
-            --set-env-vars="REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }},REACT_APP_PYTHON_API_BASE_URL=${{ vars.REACT_APP_PYTHON_API_BASE_URL }},LOGGING=dev,NODE_ENV=development,FRONT_END_BASE_URL=https://rayalpalace-7w2annebga-uk.a.run.app,REACT_PYTHON_APP_API_BASE_URL=https://verta-service-294113686552.us-east1.run.app,SESSION_SECRET=secret,PGDATABASE=postgres,PGHOST=35.221.38.242,PGPASSWORD=root,PGPORT=5432,PGUSER=postgres,GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }},GOOGLE_CLIENT_SECRET=${{ vars.GOOGLE_CLIENT_SECRET }}"
+            --set-env-vars="REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }},REACT_APP_PYTHON_API_BASE_URL=${{ vars.REACT_APP_PYTHON_API_BASE_URL }},LOGGING=dev,NODE_ENV=development,FRONT_END_BASE_URL=https://rayalpalace-7w2annebga-uk.a.run.app,REACT_PYTHON_APP_API_BASE_URL=https://verta-chat-service-403080441770.us-east1.run.app,SESSION_SECRET=secret,PGDATABASE=postgres,PGHOST=35.221.38.242,PGPASSWORD=root,PGPORT=5432,PGUSER=postgres,GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }},GOOGLE_CLIENT_SECRET=${{ vars.GOOGLE_CLIENT_SECRET }}"
 
       - name: 'Show output'
         run: echo ${{ steps.deploy.outputs.url }}
 
-    #   - name: 'Deploy Front-end to Cloud Run from Source'
-    #     run: |-
-    #       gcloud run deploy ${{ env.FRONT_SERVICE }} \
-    #         --source ./front-end \
-    #         --region=${{ env.REGION }} \
-    #         --allow-unauthenticated \
-    #         --timeout=300s \
-    #         --set-env-vars="REACT_APP_API_BASE_URL=https://rayalwebsite-innhjl4yvq-uk.a.run.app,REACT_APP_PYTHON_API_BASE_URL=https://verta-service-294113686552.us-east1.run.app"
+      - name: 'Deploy Front-end to Cloud Run from Source'
+        run: |-
+          gcloud run deploy ${{ env.FRONT_SERVICE }} \
+            --source ./front-end \
+            --region=${{ env.REGION }} \
+            --allow-unauthenticated \
+            --timeout=300s \
+            --set-env-vars="REACT_APP_API_BASE_URL=https://verta-backend-403080441770.us-east1.run.app,REACT_APP_PYTHON_API_BASE_URL=https://verta-chat-service-403080441770.us-east1.run.app"
