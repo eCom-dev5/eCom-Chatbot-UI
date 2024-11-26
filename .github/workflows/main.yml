@@ -2,19 +2,14 @@ name: 'Build and Deploy to Cloud Run'
 
 on:
   push:
-    branches: ["production"]
-    paths-ignore:
-      - 'README.md'
+    branches:
+      - production
 
 env:
   PROJECT_ID: 'verta-441204'
-  FRONT_GAR_NAME: 'verta-frontend'
-  FRONT_GAR_LOCATION: "us-east1" 
-  FRONT_SERVICE: 'verta-frontend'
-  REGION: "us-east1"
-  BACK_GAR_NAME: 'verta-backend'
-  BACK_GAR_LOCATION: "us-east1" 
+  REGION: 'us-east1'
   BACK_SERVICE: 'verta-backend'
+  FRONT_SERVICE: 'verta-frontend'
 
 jobs:
   integration:
@@ -29,15 +24,14 @@ jobs:
       - name: Checkout Code
         uses: 'actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332' # actions/checkout@v4
 
-      # - name: Lint code
-      #   run: echo "Linting repository"
+      - name: Lint code
+        run: echo "Linting repository"
 
-      # - name: Run unit tests
-      #   run: echo "Running unit tests"
+      - name: Run unit tests
+        run: echo "Running unit tests"
 
   deploy:
-    name: Continuous Delivery
-    needs: integration
+    name: 'Continuous Delivery'
     runs-on: 'ubuntu-latest'
 
     permissions:
@@ -45,8 +39,8 @@ jobs:
       id-token: 'write'
 
     steps:
-      - name: 'Checkout'
-        uses: 'actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332' # actions/checkout@v4
+      - name: 'Checkout Code'
+        uses: 'actions/checkout@v4'
 
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
@@ -54,22 +48,23 @@ jobs:
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
-      - name: 'Docker Auth'
+      - name: 'Deploy Back-end to Cloud Run from Source'
         run: |-
-          gcloud auth configure-docker "us-east1-docker.pkg.dev"
-
-      - name: 'Build and Push Back-end Container'
-        run: |-
-          docker build -t "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }}" -f back-end/Dockerfile .
-          docker push "us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }}"
-
-      - name: 'Deploy Back-end to Cloud Run'
-        run: |-
-          gcloud run deploy verta-backend \
-            --image us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.BACK_GAR_NAME }}/${{ env.BACK_SERVICE }}:${{ github.sha }} \
-            --region ${{ env.REGION }} \
-            --platform managed \
-            --allow-unauthenticated
+          gcloud run deploy ${{ env.BACK_SERVICE }} \
+            --source ./back-end \
+            --region=${{ env.REGION }} \
+            --allow-unauthenticated \
+            --timeout=1000s \
+            --set-env-vars="REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }},REACT_APP_PYTHON_API_BASE_URL=${{ vars.REACT_APP_PYTHON_API_BASE_URL }},LOGGING=dev,NODE_ENV=development,FRONT_END_BASE_URL=https://rayalpalace-7w2annebga-uk.a.run.app,REACT_PYTHON_APP_API_BASE_URL=https://verta-chat-service-403080441770.us-east1.run.app,SESSION_SECRET=secret,PGDATABASE=postgres,PGHOST=35.221.38.242,PGPASSWORD=root,PGPORT=5432,PGUSER=postgres,GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }},GOOGLE_CLIENT_SECRET=${{ vars.GOOGLE_CLIENT_SECRET }}"
 
       - name: 'Show output'
         run: echo ${{ steps.deploy.outputs.url }}
+
+      - name: 'Deploy Front-end to Cloud Run from Source'
+        run: |-
+          gcloud run deploy ${{ env.FRONT_SERVICE }} \
+            --source ./front-end \
+            --region=${{ env.REGION }} \
+            --allow-unauthenticated \
+            --timeout=300s \
+            --set-env-vars="REACT_APP_API_BASE_URL=https://verta-backend-403080441770.us-east1.run.app,REACT_APP_PYTHON_API_BASE_URL=https://verta-chat-service-403080441770.us-east1.run.app"
