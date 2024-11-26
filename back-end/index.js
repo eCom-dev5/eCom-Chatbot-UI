@@ -31,6 +31,7 @@ const devOrigin = [
   "http://localhost:3000",
   "*",  // Allow all origins in development (adjust as necessary)
   "https://rayalpalace-7w2annebga-uk.a.run.app",
+  "https://verta-frontend-403080441770.us-east1.run.app/"
   /http:\/\/localhost:.*/
 ];
 const prodOrigin = process.env.FRONT_END_BASE_URL;
