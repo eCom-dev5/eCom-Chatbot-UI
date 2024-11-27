@@ -1,12 +1,27 @@
-.detailsContainer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 2rem;
-  max-width: 40rem;
+.orderOverviewContainer {
+  display: flex;
+  gap: 2rem; /* Space between key details and delivery address */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
-@media screen and (max-width: 500px) {
-  .detailsContainer {
-    grid-template-columns: 1fr;
+.keyDetailsSection {
+  flex: 2; /* Take up more space */
+}
+
+.deliveryDetailsSection {
+  flex: 1; /* Take up less space */
+  max-width: 300px; /* Optional: limit width */
+  border-left: 1px solid #ddd; /* Optional: vertical divider */
+  padding-left: 1rem; /* Optional: spacing */
+}
+
+@media (max-width: 768px) {
+  .orderOverviewContainer {
+    flex-direction: column; /* Stack vertically on small screens */
+  }
+
+  .deliveryDetailsSection {
+    border-left: none; /* Remove divider */
+    padding-left: 0;
   }
 }

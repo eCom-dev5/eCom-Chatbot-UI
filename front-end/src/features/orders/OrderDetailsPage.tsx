@@ -65,7 +65,6 @@ export async function orderDetailsLoader({ params }) {
 
 
 export function OrderDetailsPage({ checkoutSuccess }: OrderDetailsPageProps) {
-  // https://reactrouter.com/en/main/hooks/use-route-loader-data
   const authData = useRouteLoaderData("app") as AuthData;
   const { orderData, errMsg } = useLoaderData() as LoaderData;
 
@@ -82,24 +81,29 @@ export function OrderDetailsPage({ checkoutSuccess }: OrderDetailsPageProps) {
     <div className={utilStyles.pagePadding}>
       <h1 className={utilStyles.mb3rem}>Order details</h1>
       {checkoutSuccess ? <p>Your order was placed successfully.</p> : null}
-      <section className={utilStyles.mb3rem}>
-        <h2>Key details</h2>
-        <div className={styles.detailsContainer}>
-          <p><span className={utilStyles.bold}>Order ID:</span> {order_id}</p>
-          <p><span className={utilStyles.bold}>Status:</span> {order_status}</p>
-          <p><span className={utilStyles.bold}>Placed:</span> {formattedTime}</p>
-          <p><span className={utilStyles.bold}>Total cost:</span> {total_cost}</p>
+      
+      <section className={`${utilStyles.mb3rem} ${styles.orderOverviewContainer}`}>
+        <div className={styles.keyDetailsSection}>
+          <h2>Key details</h2>
+          <div className={styles.detailsContainer}>
+            <p><span className={utilStyles.bold}>Order ID:</span> {order_id}</p>
+            <p><span className={utilStyles.bold}>Status:</span> {order_status}</p>
+            <p><span className={utilStyles.bold}>Placed:</span> {formattedTime}</p>
+            <p><span className={utilStyles.bold}>Total cost:</span> {total_cost}</p>
+          </div>
+        </div>
+        <div className={styles.deliveryDetailsSection}>
+          <h2 className={utilStyles.mb2rem}>Delivery address</h2>
+          <p>{address}</p>
+          <p>{postcode}</p>
         </div>
       </section>
+
       <section className={utilStyles.mb3rem}>
         <h2>Items</h2>
         {renderOrderItems(order_items, false)}
       </section>
-      <section className={utilStyles.mb3rem}>
-        <h2 className={utilStyles.mb2rem}>Delivery address</h2>
-        <p>{address}</p>
-        <p>{postcode}</p>
-      </section>
+      
       <Link to="/" className={utilStyles.button}>Continue shopping</Link>
     </div>
   );

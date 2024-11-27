@@ -36,7 +36,7 @@ export async function addToCartAction({ params }) {
     }
     throw new Error("Unexpected status code.");
   } catch (error) {
-    return "Sorry, this item couldn't be added to your cart.";
+    return "";
   }
 }
 

@@ -60,9 +60,9 @@ export function Cart() {
     <Box className={utilStyles.pagePadding} sx={{ paddingTop: 2 }}>
       <Typography variant="h4" sx={{ fontWeight: 'bold' }}>Cart</Typography>
       <Typography variant="body1" sx={{ marginBottom: 2 }}>
-        You are logged in as {authData.email_address}.
+        You are logged in as <strong>{authData.email_address}</strong>.
         {cartData?.length > 0 ?
-          <> View your cart below or <InlineLink path="/checkout" anchor="check out" />.</>
+          <> View your cart below or <InlineLink path="/checkout" anchor="check out now" />.</>
           : null}
       </Typography>
       
@@ -86,6 +86,11 @@ export function Cart() {
           padding: '4px 12px', // Reduced padding to make the button smaller
           textTransform: 'none', // Prevents text from being uppercased
           marginTop: 2, // Optional: Adds some space above the button
+          backgroundColor: "#FFA500", // Your custom color
+              color: "#000", // Text color
+              "&:hover": {
+                backgroundColor: "#FFAf00", // Hover color
+              },
           }}
           >
             Go to checkout

@@ -56,32 +56,47 @@ export function CheckoutPage() {
       console.log("price for each product",item.product_price)
       totalCost += Number(item.product_price) * item.product_quantity;
     });
-    return totalCost;
+    return parseFloat(totalCost.toFixed(2));
   }
 
   return (
     <div className={utilStyles.pagePadding}>
       <h1 className={utilStyles.h1}>Checkout</h1>
-      <p className={utilStyles.mb3rem}>Complete your order below.</p>
-      <h2>Order items</h2>
-      {renderOrderItems(cartData, false)}
-      <div className={`${utilStyles.mb3rem} ${utilStyles.XLText}`}>
-        <strong>Total cost: <span className={utilStyles.red}>${getTotalCost()}</span></strong>
-      </div>
-      <h2>Delivery address</h2>
-      <Form method="post" className={utilStyles.stackedForm}>
-        <label htmlFor="address" className={utilStyles.label}>Delivery name and address</label>
-        <textarea id="address" className={utilStyles.input} name="address" rows={6} minLength={15} maxLength={300} required />
-        <label htmlFor="postcode" className={utilStyles.label}>Postcode</label>
-        <input id="postcode" className={utilStyles.input} type="text" name="postcode" minLength={5} maxLength={8} required />
-        <button type="submit" className={`${utilStyles.mt2rem} ${utilStyles.button}`}>Continue to payment</button>
-      </Form>
-      {checkoutErrMsg ? (
-        <div className={utilStyles.mt2rem}>
-          <p className={`${utilStyles.mb2rem} ${utilStyles.red}`}><strong>{checkoutErrMsg}</strong></p>
-          <Link to="/" className={utilStyles.button}>Continue shopping</Link>
+      <p className={utilStyles.mb2rem}>Complete your order below.</p>
+      <div className={utilStyles.checkoutContainer}>
+        {/* Left Column: Order Items */}
+        <div className={utilStyles.orderItemsColumn}>
+          <h2>Order items</h2>
+          {renderOrderItems(cartData, false)}
         </div>
-      ) : null}
+  
+        {/* Right Column: Total Cost and Delivery Address */}
+        <div className={utilStyles.rightColumn}>
+          <div className={`${utilStyles.mb3rem} ${utilStyles.XLText}`}>
+            <strong>
+              Total cost: <span className={utilStyles.red}>${getTotalCost()}</span>
+            </strong>
+          </div>
+  
+          <h2>Delivery address</h2>
+          <Form method="post" className={utilStyles.stackedForm}>
+            <label htmlFor="address" className={utilStyles.label}>Delivery name and address</label>
+            <textarea id="address" className={utilStyles.input} name="address" rows={6} minLength={15} maxLength={300} required />
+            <label htmlFor="postcode" className={utilStyles.label}>Postcode</label>
+            <input id="postcode" className={utilStyles.input} type="text" name="postcode" minLength={5} maxLength={8} required />
+            <button type="submit" className={`${utilStyles.mt2rem} ${utilStyles.button}`}>Place order</button>
+          </Form>
+          {checkoutErrMsg ? (
+            <div className={utilStyles.mt2rem}>
+              <p className={`${utilStyles.mb2rem} ${utilStyles.red}`}>
+                <strong>{checkoutErrMsg}</strong>
+              </p>
+              <Link to="/" className={utilStyles.button}>Continue shopping</Link>
+            </div>
+          ) : null}
+        </div>
+      </div>
     </div>
   );
+  
 }

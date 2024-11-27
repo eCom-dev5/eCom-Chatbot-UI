@@ -41,14 +41,14 @@ export function LoginPage() {
   const [searchParams] = useSearchParams();
   const isGoogleError = searchParams.get("googleAuthError");
 
-  const registerLink = <InlineLink path="/register" anchor="register" />;
-  const loggedOutContent = <>If you haven't created an account, please {registerLink} first or sign in with Google below.</>;
+  const registerLink = <InlineLink path="/register" anchor="Register" />;
+  const loggedOutContent = <>New here? {registerLink} or sign in with e-mail below</>;
   const loggedInContent = <>You are already logged in as {authData.email_address}.</>;
   const googleError = <>Sorry, Google sign in failed. Please try again later or {registerLink} instead.</>;
 
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", bgcolor: "#f9f9f9" }}>
-      <Paper elevation={3} sx={{ maxWidth: "500px", width: "100%", padding: "2rem", borderRadius: "12px" }}>
+    <Box sx={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", bgcolor: "#ffffff" }}>
+      <Paper elevation={3} sx={{ maxWidth: "500px", width: "100%", padding: "2rem", borderRadius: "13px" }}>
         <Typography variant="h4" component="h1" gutterBottom textAlign="center">
           Log in
         </Typography>
@@ -76,7 +76,14 @@ export function LoginPage() {
               fullWidth
               variant="outlined"
             />
-            <Button type="submit" variant="contained" color="primary" size="large" fullWidth>
+            <Button type="submit" variant="contained" size="large" fullWidth
+            sx={{
+              backgroundColor: "#FFA500", // Your custom color
+              color: "#000", // Text color
+              "&:hover": {
+                backgroundColor: "#FFAf00", // Hover color
+              },
+            }}>
               Log in
             </Button>
           </Stack>

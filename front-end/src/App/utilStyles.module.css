@@ -76,8 +76,8 @@
   justify-content: center;
   min-height: 2.2em;
   padding: 0.5em 2em;
-  background-color: rgb(163, 201, 188);
-  border: 2px solid rgb(163, 201, 188);
+  background-color: rgb(238, 245, 219);
+  border: 2px solid rgb(238, 245, 219);
   border-radius: 25px;
   box-shadow: 0 2px 5px rgb(217, 217, 217);
   color: rgb(15, 17, 17);
@@ -89,14 +89,14 @@
 .button:focus,
 .button:hover {
   cursor: pointer;
-  background-color: rgb(115, 161, 145);
-  border: 2px solid rgb(115, 161, 145);
+  background-color: rgb(236, 187, 95);
+  border: 2px solid rgb(236, 187, 95);
 }
 
 .button:active {
-  background-color: rgb(115, 161, 145);
+  background-color: rgb(236, 187, 95);
   border: 2px solid rgb(0, 0, 0);
-  box-shadow: 0 2px 5px rgb(200, 240, 250);
+  box-shadow: 0 2px 5px rgb(236, 187, 95);
 }
 
 
@@ -165,4 +165,25 @@
 .emptyFeedMessage {
   margin-top: 2.5em;
   font-style: italic;
+}
+
+
+/* CSS code to place the delivery text box in checkout page at the right side */
+.checkoutContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.orderItemsColumn {
+  flex: 2; /* Takes up more space */
+  min-width: 300px;
+}
+
+.rightColumn {
+  flex: 1; /* Takes up less space */
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }

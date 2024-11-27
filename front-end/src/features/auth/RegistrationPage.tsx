@@ -35,15 +35,14 @@ export function RegistrationPage() {
   const authData = useRouteLoaderData("app") as AuthData;
   const registrationError = useActionData() as string | undefined;
 
-  const loginLink = <InlineLink path="/login" anchor="log in" />;
+  const loginLink = <InlineLink path="/login" anchor="Log in" />;
   const loggedOutContent = (
-    <>Create an account or alternatively sign in with Google. 
-    If you already have an account, please {loginLink} instead.</>
+    <>Create an account or sign in with Google. Already registered? {loginLink}.</>
   );
   const loggedInContent = <>You are already logged in as {authData.email_address}.</>;
 
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", bgcolor: "#f9f9f9" }}>
+    <Box sx={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", bgcolor: "#ffffff" }}>
       <Paper elevation={3} sx={{ maxWidth: "500px", width: "100%", padding: "2rem", borderRadius: "12px" }}>
         <Typography variant="h4" component="h1" gutterBottom textAlign="center">
           Create Your Account
@@ -74,7 +73,14 @@ export function RegistrationPage() {
               inputProps={{ minLength: 8, maxLength: 25 }}
               helperText="Password must be between 8-25 characters."
             />
-            <Button type="submit" variant="contained" color="primary" size="large" fullWidth>
+            <Button type="submit" variant="contained" size="large" fullWidth
+             sx={{
+              backgroundColor: "#FFA500", // Your custom color
+              color: "#000", // Text color
+              "&:hover": {
+                backgroundColor: "#FFAf00", // Hover color
+              },
+            }}>
               Register
             </Button>
           </Stack>

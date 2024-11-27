@@ -14,7 +14,7 @@ export default function AccountPage() {
   }
 
   return (
-    <Box sx={{ padding: "2rem", bgcolor: "#f9f9f9", minHeight: "100vh" }}>
+    <Box sx={{ padding: "2rem", bgcolor: "#ffffff", minHeight: "100vh" }}>
       <Paper elevation={3} sx={{ padding: "2rem", borderRadius: "12px", maxWidth: "800px", margin: "0 auto" }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Your Account
@@ -32,7 +32,14 @@ export default function AccountPage() {
         </Typography>
         <OrdersHistory />
         <Box sx={{ marginTop: "2rem", textAlign: "center" }}>
-          <Button variant="contained" color="primary" href="/logout">
+          <Button variant="contained" href="/logout"
+          sx={{
+            backgroundColor: "#FFA500", // Your custom color
+            color: "#000", // Text color
+            "&:hover": {
+              backgroundColor: "#FFAf00", // Hover color
+            },
+          }}>
             Log Out
           </Button>
         </Box>
