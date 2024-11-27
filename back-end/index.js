@@ -17,7 +17,8 @@ const productsRouter = require('./routes/products');
 const usersRouter = require('./routes/users');
 
 const api = express();
-const port = process.env.PORT|| 8080;
+const port = process.env.PORT || 8080;
+
 
 
 // https://expressjs.com/en/resources/middleware/morgan.html
@@ -25,15 +26,7 @@ api.use(logging(process.env.LOGGING));
 
 
 // https://expressjs.com/en/resources/middleware/cors.html
-const devOrigin = [
-  "https://web.postman.co/",
-  "http://localhost",
-  "http://localhost:3000",
-  "*",  // Allow all origins in development (adjust as necessary)
-  "https://rayalpalace-7w2annebga-uk.a.run.app",
-  "https://verta-frontend-403080441770.us-east1.run.app/",
-  /http:\/\/localhost:.*/
-];
+const devOrigin = ["https://web.postman.co/", "http://localhost", "http://localhost:3000", "*", "https://rayalpalace-7w2annebga-uk.a.run.app", "https://verta-frontend-403080441770.us-east1.run.app",/http:\/\/localhost:.*/];
 const prodOrigin = process.env.FRONT_END_BASE_URL;
 const origin = process.env.NODE_ENV !== "production" ? devOrigin : prodOrigin;
 
@@ -47,7 +40,7 @@ api.use(cors({
 // https://www.passportjs.org/howtos/session/
 // https://expressjs.com/en/resources/middleware/session.html
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'development') {
   // https://expressjs.com/en/guide/behind-proxies.html
   // https://stackoverflow.com/a/75418142/11262798
   api.set('trust proxy', true);
@@ -102,8 +95,7 @@ api.use('/products', productsRouter);
 api.use('/users', usersRouter);
 api.use('/api', userClicksRouter);
 
-
-api.server = api.listen(port,() => {
+api.server = api.listen(port, () => {
   console.log(`Server listening on port ${port} in the ${process.env.NODE_ENV} environment.`);
 });
 
