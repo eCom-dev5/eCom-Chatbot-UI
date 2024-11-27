@@ -25,7 +25,15 @@ api.use(logging(process.env.LOGGING));
 
 
 // https://expressjs.com/en/resources/middleware/cors.html
-const devOrigin = ["https://web.postman.co/", "http://localhost", "http://localhost:3000", "*", "https://rayalpalace-7w2annebga-uk.a.run.app", /http:\/\/localhost:.*/];
+const devOrigin = [
+  "https://web.postman.co/",
+  "http://localhost",
+  "http://localhost:3000",
+  "*",  // Allow all origins in development (adjust as necessary)
+  "https://rayalpalace-7w2annebga-uk.a.run.app",
+  "https://verta-frontend-403080441770.us-east1.run.app/",
+  /http:\/\/localhost:.*/
+];
 const prodOrigin = process.env.FRONT_END_BASE_URL;
 const origin = process.env.NODE_ENV !== "production" ? devOrigin : prodOrigin;
 
@@ -39,7 +47,7 @@ api.use(cors({
 // https://www.passportjs.org/howtos/session/
 // https://expressjs.com/en/resources/middleware/session.html
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'production') {
   // https://expressjs.com/en/guide/behind-proxies.html
   // https://stackoverflow.com/a/75418142/11262798
   api.set('trust proxy', true);
@@ -63,15 +71,8 @@ if (process.env.NODE_ENV === 'development') {
   }));
 }
 
-// api.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "https://rayalpalace-7w2annebga-uk.a.run.app");
-//   res.header("Access-Control-Allow-Credentials", "true");
-//   res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
-//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//   next();
-// });
 api.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://verta-frontend-403080441770.us-east1.run.app/");
+  res.header("Access-Control-Allow-Origin", "https://verta-frontend-403080441770.us-east1.run.app");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -101,7 +102,8 @@ api.use('/products', productsRouter);
 api.use('/users', usersRouter);
 api.use('/api', userClicksRouter);
 
-api.server = api.listen(port, () => {
+
+api.server = api.listen(port,() => {
   console.log(`Server listening on port ${port} in the ${process.env.NODE_ENV} environment.`);
 });
 
