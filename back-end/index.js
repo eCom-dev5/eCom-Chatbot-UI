@@ -26,7 +26,7 @@ api.use(logging(process.env.LOGGING));
 
 
 // https://expressjs.com/en/resources/middleware/cors.html
-const devOrigin = ["https://web.postman.co/", "http://localhost", "http://localhost:3000", "*", "https://rayalpalace-7w2annebga-uk.a.run.app", "https://verta-frontend-403080441770.us-east1.run.app",/http:\/\/localhost:.*/];
+const devOrigin = ["https://web.postman.co/", "http://localhost", "http://localhost:3000", "*", "https://rayalpalace-7w2annebga-uk.a.run.app", "https://verta-frontend-403080441770.us-east1.run.app", "https://verta-frontend-7k7ldne36a-ue.a.run.app",/http:\/\/localhost:.*/];
 const prodOrigin = process.env.FRONT_END_BASE_URL;
 const origin = process.env.NODE_ENV !== "production" ? devOrigin : prodOrigin;
 
@@ -65,7 +65,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 api.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://verta-frontend-403080441770.us-east1.run.app");
+  res.header("Access-Control-Allow-Origin", "https://verta-frontend-7k7ldne36a-ue.a.run.app");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
