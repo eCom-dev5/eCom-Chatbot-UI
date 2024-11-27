@@ -67,4 +67,4 @@ jobs:
             --region=${{ env.REGION }} \
             --allow-unauthenticated \
             --timeout=300s \
-            --set-env-vars="REACT_APP_API_BASE_URL=https://verta-backend-403080441770.us-east1.run.app,REACT_APP_PYTHON_API_BASE_URL=https://verta-chat-service-403080441770.us-east1.run.app"
+            --set-env-vars="REACT_APP_API_BASE_URL=https://verta-backend-7k7ldne36a-ue.a.run.app,REACT_APP_PYTHON_API_BASE_URL=https://verta-chat-service-403080441770.us-east1.run.app"
