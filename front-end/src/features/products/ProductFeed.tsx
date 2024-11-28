@@ -1,10 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { redirect, useLoaderData, useRouteLoaderData } from "react-router-dom";
 import { ProductData } from "./productData";
 import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage";
 import ProductFeedItem from "./ProductFeedItem";
-import { Box, Typography, Grid, CircularProgress, Paper } from "@mui/material";
-import './ProductFeed.module.css'; // Import the CSS file
+import {
+  Box,
+  Typography,
+  Grid,
+  CircularProgress,
+  Paper,
+  Pagination,
+} from "@mui/material";
+import "./ProductFeed.module.css";
 
 const gifPaths = [
   "/assets/page1.gif",
@@ -35,6 +42,7 @@ type AuthData = {
   logged_in: boolean;
 };
 
+// Fetch category data based on slug
 export async function fetchCategoryData(categorySlug: string) {
   const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/categories`);
   if (!res.ok) throw new Error("Unsuccessful categories fetch.");
@@ -44,7 +52,8 @@ export async function fetchCategoryData(categorySlug: string) {
   return filteredCategories[0];
 }
 
-export async function productFeedLoader({ params, request }) {
+// Loader function for the product feed
+export async function productFeedLoader({ params, request }: any) {
   let { categoryData, productsData, searchTerm, errMsg } = {
     categoryData: null,
     productsData: [],
@@ -68,7 +77,7 @@ export async function productFeedLoader({ params, request }) {
     const res = await fetch(productsFetchURL);
     if (!res.ok) throw new Error("Unsuccessful products fetch.");
     productsData = await res.json();
-  } catch (error) {
+  } catch (error: any) {
     if (error.status === 404) throw error;
     errMsg = "Sorry, products could not be loaded.";
   }
@@ -82,6 +91,15 @@ export function ProductFeed({ isSearchResults }: ProductFeedProps) {
   const authData = useRouteLoaderData("app") as AuthData;
   const userId = authData?.id;
 
+  const itemsPerPage = 16; // Products per page
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(productsData.length / itemsPerPage);
+
+  const paginatedProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return productsData.slice(startIndex, startIndex + itemsPerPage);
+  }, [productsData, currentPage]);
+
   const [currentGifIndex, setCurrentGifIndex] = useState(0);
   const [gifError, setGifError] = useState<boolean>(false);
 
@@ -94,7 +112,7 @@ export function ProductFeed({ isSearchResults }: ProductFeedProps) {
     return () => clearInterval(interval);
   }, []);
 
-  if (errMsg) return <InlineErrorPage pageName="Error" message={errMsg} />;
+  const handleGifError = () => setGifError(true);
 
   const handleProductClick = async (productId: string) => {
     if (!clickedProducts.includes(productId)) setClickedProducts([...clickedProducts, productId]);
@@ -114,76 +132,80 @@ export function ProductFeed({ isSearchResults }: ProductFeedProps) {
   const getDescriptionText = () => {
     if (isSearchResults) {
       const count = productsData.length;
-      return `${count} ${count === 1 ? "result" : "results"} for "${searchTerm}".`;
+      return `${count} ${count === 1 ? "result" : "results"} for \"${searchTerm}\".`;
     }
     if (categoryData) return categoryData.description;
     return "";
   };
 
-  const renderFeedItems = () => {
-    if (!productsData.length)
-      return <Typography variant="body2">Sorry, no products were found.</Typography>;
-
-    return (
-      <Grid container spacing={2} className="productGrid">
-        {productsData.map((product) => (
-          <Grid item xs={12} sm={6} md={3} key={product.parent_asin}>
-            <Box
-              onClick={() => handleProductClick(product.parent_asin)}
-              sx={{
-                padding: "0.5rem",
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-              }}
-            >
-              <ProductFeedItem productData={product} userId={userId} />
-            </Box>
-          </Grid>
-        ))}
-      </Grid>
-    );
-  };
-
-  const handleGifError = () => {
-    setGifError(true); // Set error flag if GIF doesn't load
-  };
+  if (errMsg) return <InlineErrorPage pageName="Error" message={errMsg} />;
 
   return (
     <Box
       sx={{
         padding: "2rem",
-        maxWidth: "1100px",
+        maxWidth: "100%",
         margin: "0 auto",
         bgcolor: "#f9f9f9",
-        borderRadius: "8px",
+        minHeight: "100vh",
       }}
     >
-      <Paper
-        elevation={2}
-        sx={{
-          padding: "1rem",
-          borderRadius: "8px",
-          marginBottom: "1.5rem",
-        }}
-      >
-        {/* Render the current GIF with error handling */}
-        <Box sx={{ width: "100%", overflow: "hidden", textAlign: "center", borderRadius: "8px" }}>
+      <Paper elevation={2} sx={{ padding: "1rem", marginBottom: "1.5rem" }}>
+        <Box sx={{ textAlign: "center", borderRadius: "8px" }}>
           <img
             src={gifPaths[currentGifIndex]}
             alt="Product Animation"
-            onError={handleGifError} // Handle error when GIF fails to load
+            onError={handleGifError}
             style={{
               width: "100%",
               height: "300px",
               objectFit: "cover",
               borderRadius: "8px",
-              display: gifError ? "none" : "block", // Hide GIF if error occurred
+              display: gifError ? "none" : "block",
             }}
           />
-          {gifError && <Typography variant="body2" color="error">Error loading GIF.</Typography>}
+          {gifError && (
+            <Typography variant="body2" color="error">
+              Error loading GIF.
+            </Typography>
+          )}
         </Box>
       </Paper>
-      {productsData.length ? renderFeedItems() : <CircularProgress />}
+
+      <Typography variant="h6" sx={{ marginBottom: "1rem", textAlign: "center" }}>
+        {getDescriptionText()}
+      </Typography>
+
+      {productsData.length ? (
+        <Grid container spacing={3} justifyContent="center">
+          {paginatedProducts.map((product) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={product.parent_asin}>
+              <Box
+                onClick={() => handleProductClick(product.parent_asin)}
+                sx={{
+                  padding: "1rem",
+                  border: "1px solid #ddd",
+                  borderRadius: "8px",
+                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                  "&:hover": {
+                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+                    transform: "scale(1.03)",
+                    transition: "0.2s",
+                  },
+                }}
+              >
+                <ProductFeedItem productData={product} userId={userId} />
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <CircularProgress sx={{ margin: "auto" }} />
+      )}
+
+      <Box sx={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
+        <Pagination count={totalPages} page={currentPage} onChange={(e, value) => setCurrentPage(value)} />
+      </Box>
     </Box>
   );
 }

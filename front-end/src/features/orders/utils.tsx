@@ -31,6 +31,7 @@ export function getDateTimeString(rawString: string) {
  * @param editable - Whether it should be possible for the user to remove cart items
  * @returns JSX that displays a list of `<OrderItem>`s
  */
+
 export function renderOrderItems(orderItemsData: OrderItemData[], editable: boolean) {
   const itemsCount = orderItemsData.length;
   if (itemsCount === 0) {
@@ -38,9 +39,11 @@ export function renderOrderItems(orderItemsData: OrderItemData[], editable: bool
   }
   const orderItems = orderItemsData.map((item, index) => {
     if (index + 1 === itemsCount) {
-      return <OrderItem key={item.product_id} orderItemData={item} editable={editable} lastItem={true} />;
+      return <OrderItem key={item.parent_asin} orderItemData={item} editable={editable} lastItem={true} />;
+
     }
-    return <OrderItem key={item.product_id} orderItemData={item} editable={editable} />;
+  
+    return <OrderItem key={item.parent_asin} orderItemData={item} editable={editable} />;
   }
   );
   return <div>{orderItems}</div>;

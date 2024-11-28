@@ -75,16 +75,19 @@ const getProducts = async (category_id = undefined, search_term = undefined) => 
   
   if (category_id) {
     res = await query(
-      baseQuery + ' AND main_category LIKE $1 LIMIT 10',
+      baseQuery + ' AND main_category LIKE $1 LIMIT 100',
       [category_id]
     );
+
   } else if (search_term) {
     res = await query(
-      baseQuery + ' AND LOWER(title) LIKE $1 LIMIT 10',
+      baseQuery + ' AND LOWER(title) LIKE $1 LIMIT 100',
       ['%' + search_term.toLowerCase() + '%']
     );
+  
+    
   } else {
-    res = await query(baseQuery + ' LIMIT 10');
+    res = await query(baseQuery + ' LIMIT 100');
   }
   
   return res.rows;

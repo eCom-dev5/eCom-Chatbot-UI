@@ -23,7 +23,7 @@ export async function removeCartItemAction({ request }: { request: Request }) {
   // https://reactrouter.com/en/main/start/tutorial#data-writes--html-forms
   // https://reactrouter.com/en/main/route/action
   let formData = await request.formData();
-  const productId = formData.get("product_id");
+  const productId = formData.get("parent_asin");
   const productName = formData.get("product_name");
   try {
     const res = await fetch(
@@ -45,8 +45,8 @@ export async function removeCartItemAction({ request }: { request: Request }) {
 
 
 export function OrderItem({ orderItemData, editable, lastItem }: OrderItemProps) {
-  const { product_id, product_name, product_price } = orderItemData;
-  const productPath = getProductDetailPath(product_id, product_name);
+  const { parent_asin,product_id, product_name, product_price } = orderItemData;
+  const productPath = getProductDetailPath(parent_asin, product_name);
 
   return (
     <div className={styles.orderItem}>
@@ -60,7 +60,7 @@ export function OrderItem({ orderItemData, editable, lastItem }: OrderItemProps)
         </div>
         {editable ?
         <Form method="post">
-          <input type="hidden" name="product_id" value={product_id}></input>
+          <input type="hidden" name="product_id" value={parent_asin}></input>
           <input type="hidden" name="product_name" value={product_name}></input>
           <button type="submit" className={styles.button}>Remove</button>
         </Form>
