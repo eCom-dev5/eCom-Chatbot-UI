@@ -74,7 +74,7 @@ const getProducts = async (category_id = undefined, search_term = undefined) => 
   let res;
   
   if (category_id) {
-    console.log("Category ID:", category_id);
+    console.log("Category ID is pasign to backednd :", category_id);
     res = await query(
       baseQuery + ' AND main_category LIKE $1 LIMIT 100',
       [category_id]

@@ -28,6 +28,7 @@ type CategoryData = {
   name: string;
   description: string;
   url_slug: string;
+  main_category: string;
 };
 
 type LoaderData = {
@@ -47,8 +48,9 @@ export async function fetchCategoryData(categorySlug: string) {
   const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/categories`);
   if (!res.ok) throw new Error("Unsuccessful categories fetch.");
   const categories: CategoryData[] = await res.json();
-  console.log(categories);
-  const filteredCategories = categories.filter((c) => c.url_slug === categorySlug);
+  console.log("categorues in product feed",categories);
+  console.log("categorySlug in product feed",categorySlug);
+  const filteredCategories = categories.filter((c) => c.main_category === categorySlug);
   if (!filteredCategories.length) throw new Response("Not Found", { status: 404 });
   return filteredCategories[0];
 }
@@ -68,7 +70,7 @@ export async function productFeedLoader({ params, request }: any) {
 
     if (params.categorySlug) {
       categoryData = await fetchCategoryData(params.categorySlug);
-      productsFetchURL += `?category_id=${categoryData.id}`;
+      productsFetchURL += `?category_id=${categoryData.main_category}`;
     } else if (url.pathname.includes("search")) {
       searchTerm = url.searchParams.get("q");
       if (!searchTerm) return redirect("/");
