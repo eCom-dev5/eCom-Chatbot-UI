@@ -14,26 +14,7 @@ export default function AccountPage() {
     return <InlineErrorPage pageName="Your account" type="login_required" />;
   }
 
-  // Log out handler
-  async function handleClickLogOut() {
-    try {
-      const res = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}/auth/logout`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include", // Include cookies in the request
-        }
-      );
-      if (!res.ok) {
-        throw new Error(`Logout failed with status ${res.status}`);
-      }
-      // Navigate to login or home page after logout
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  }
+
 
   return (
     <Box sx={{ padding: "2rem", bgcolor: "#ffffff", minHeight: "100vh" }}>
@@ -59,7 +40,7 @@ export default function AccountPage() {
         <Box sx={{ marginTop: "2rem", textAlign: "center" }}>
           <Button
             variant="contained"
-            onClick={handleClickLogOut} // Attach logout handler
+            onClick= {() => navigate("/")} // Navigate to home on click
             sx={{
               backgroundColor: "#FFA500", // Your custom color
               color: "#000", // Text color
@@ -68,7 +49,7 @@ export default function AccountPage() {
               },
             }}
           >
-            Log Out
+            Home
           </Button>
         </Box>
       </Paper>

@@ -19,10 +19,10 @@ export default function LowerHeader() {
         {renderNavItem("/", "Home")}
       </ul>
       <ul className={styles.navList}>
-        {renderNavItem("/category/books", "Toys")}
+        {renderNavItem("/category/Toys", "Toys")}
       </ul>
       <ul className={styles.navList}>
-        {renderNavItem("/category/movies", "Games")}
+        {renderNavItem("/category/Games", "Games")}
       </ul>
       <SearchBar />
     </div>

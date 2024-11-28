@@ -112,7 +112,7 @@ const getProductById = async (id) => {
 
 // Categories
 const getCategories = async () => {
-  res = await query('SELECT id, name, description, url_slug FROM categories');
+  res = await query('SELECT * FROM productcategories');
   return res.rows;
 };
 
