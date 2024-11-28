@@ -3,73 +3,6 @@ name: 'Build and Deploy to Cloud Run'
 on:
   push:
     branches:
-      - production
-
-env:
-  PROJECT_ID: 'verta-441204'
-  REGION: 'us-east1'
-  BACK_SERVICE: 'verta-backend'
-  FRONT_SERVICE: 'verta-frontend'
-
-jobs:
-  integration:
-    name: Continuous Integration
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
-    steps:
-      - name: Checkout Code
-        uses: 'actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332' # actions/checkout@v4
-
-      - name: Lint code
-        run: echo "Linting repository"
-
-      - name: Run unit tests
-        run: echo "Running unit tests"
-
-  deploy:
-    name: 'Continuous Delivery'
-    runs-on: 'ubuntu-latest'
-
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
-    steps:
-      - name: 'Checkout Code'
-        uses: 'actions/checkout@v4'
-
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v2'
-        with:
-          credentials_json: '${{ secrets.GCP_SA_KEY }}'
-
-      - name: 'Deploy Back-end to Cloud Run from Source'
-        run: |-
-          gcloud run deploy ${{ env.BACK_SERVICE }} \
-            --source ./back-end \
-            --region=${{ env.REGION }} \
-            --allow-unauthenticated \
-            --timeout=1000s \
-            --set-env-vars="REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }},REACT_APP_PYTHON_API_BASE_URL=${{ vars.REACT_APP_PYTHON_API_BASE_URL }},LOGGING=dev,NODE_ENV=development,FRONT_END_BASE_URL=https://rayalpalace-7w2annebga-uk.a.run.app,REACT_PYTHON_APP_API_BASE_URL=https://verta-chat-service-403080441770.us-east1.run.app,SESSION_SECRET=secret,PGDATABASE=postgres,PGHOST=35.221.38.242,PGPASSWORD=root,PGPORT=5432,PGUSER=postgres,GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }},GOOGLE_CLIENT_SECRET=${{ vars.GOOGLE_CLIENT_SECRET }}"
-
-      - name: 'Show output'
-        run: echo ${{ steps.deploy.outputs.url }}
-
-<<<<<<< HEAD
-=======
-      
-#       - name: 'Show output'
-#         run: echo ${{ steps.deploy.outputs.url }}
-name: 'Build and Deploy to Cloud Run'
-
-on:
-  push:
-    branches:
       - main
 
 env:
@@ -127,7 +60,6 @@ jobs:
       - name: 'Show output'
         run: echo ${{ steps.deploy.outputs.url }}
 
->>>>>>> 20c33291f93bb18d87c9a0bd7d48bf44788313c9
       - name: 'Deploy Front-end to Cloud Run from Source'
         run: |-
           gcloud run deploy ${{ env.FRONT_SERVICE }} \
@@ -135,8 +67,4 @@ jobs:
             --region=${{ env.REGION }} \
             --allow-unauthenticated \
             --timeout=300s \
-<<<<<<< HEAD
-            --set-env-vars="REACT_APP_API_BASE_URL=https://verta-backend-403080441770.us-east1.run.app,REACT_APP_PYTHON_API_BASE_URL=https://verta-chat-service-403080441770.us-east1.run.app"
-=======
             --set-env-vars="REACT_APP_API_BASE_URL=https://verta-backend-403080441770.us-east1.run.app,REACT_APP_PYTHON_API_BASE_URL=https://verta-chat-service-403080441770.us-east1.run.app,REACT_APP_Token=${{vars.REACT_APP_TOKEN}}"
->>>>>>> 20c33291f93bb18d87c9a0bd7d48bf44788313c9
