@@ -47,6 +47,7 @@ export async function fetchCategoryData(categorySlug: string) {
   const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/categories`);
   if (!res.ok) throw new Error("Unsuccessful categories fetch.");
   const categories: CategoryData[] = await res.json();
+  console.log(categories);
   const filteredCategories = categories.filter((c) => c.url_slug === categorySlug);
   if (!filteredCategories.length) throw new Response("Not Found", { status: 404 });
   return filteredCategories[0];

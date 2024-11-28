@@ -74,6 +74,7 @@ const getProducts = async (category_id = undefined, search_term = undefined) => 
   let res;
   
   if (category_id) {
+    console.log("Category ID:", category_id);
     res = await query(
       baseQuery + ' AND main_category LIKE $1 LIMIT 100',
       [category_id]
@@ -108,6 +109,7 @@ const getProductById = async (id) => {
     AND average_rating IS NOT NULL 
     AND rating_number IS NOT NULL 
     AND large_res IS NOT NULL
+    AND main_category IS NOT NULL
   `;
   const res = await query(baseQuery + ' AND productmetadata.parent_asin LIKE $1', [id]);
   return res.rows.length > 0 ? res.rows[0] : null;
@@ -115,7 +117,9 @@ const getProductById = async (id) => {
 
 // Categories
 const getCategories = async () => {
-  res = await query('SELECT id, name, description, url_slug FROM categories');
+  res = await query('SELECT distinct(main_category) FROM productcategories');
+  console.log(res.rows);
+
   return res.rows;
 };
 
