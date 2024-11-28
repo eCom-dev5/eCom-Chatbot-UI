@@ -75,11 +75,13 @@ const getProducts = async (category_id = undefined, search_term = undefined) => 
   
   if (category_id) {
     console.log("Category ID is pasign to backednd :", category_id);
+    const formattedCategoryId = decodeURIComponent(category_id.trim());
+    console.log("Category ID is formatted  pasign to backednd :", formattedCategoryId);
+    console.log("Category ID is formatted  pasign to backednd :", baseQuery + ' AND main_category LIKE $1 LIMIT 100');  
     res = await query(
       baseQuery + ' AND main_category LIKE $1 LIMIT 100',
-      [category_id]
-    );
-
+       [`%${formattedCategoryId}%`]);
+   
   } else if (search_term) {
     res = await query(
       baseQuery + ' AND LOWER(title) LIKE $1 LIMIT 100',
