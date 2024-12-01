@@ -1,3 +1,92 @@
 .header {
-  display: inline;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: linear-gradient(90deg, #0073e6, #00b4d8);
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 0;
+  color: white;
+}
+
+.logo span {
+  color: #ffcc00;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+}
+
+.navbar ul li a {
+  text-decoration: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.navbar ul li a:hover {
+  color: #ffcc00;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.actionButton {
+  text-decoration: none;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: bold;
+  background: #005bb5;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.actionButton:hover {
+  background: #ffcc00;
+  color: #005bb5;
+  transform: translateY(-2px);
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background: white;
+  padding: 0.3rem 0.5rem;
+}
+
+.searchBar input {
+  border: none;
+  outline: none;
+  padding: 0.3rem 0.5rem;
+  flex: 1;
+}
+
+.searchBar button {
+  background: none;
+  border: none;
+  color: #0073e6;
+  cursor: pointer;
+}
+
+.searchBar button i {
+  font-size: 1.2rem;
 }
