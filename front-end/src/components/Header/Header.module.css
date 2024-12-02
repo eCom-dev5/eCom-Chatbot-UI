@@ -43,50 +43,23 @@
 
 .actions {
   display: flex;
-  align-items: center;
   gap: 1rem;
+  align-items: center;
 }
 
 .actionButton {
   text-decoration: none;
   color: white;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: bold;
-  background: #005bb5;
   padding: 0.5rem 1rem;
   border-radius: 5px;
   transition: background 0.3s ease, transform 0.3s ease;
+  background: #0073e6; /* Same blue background as the header */
+  border: 1px solid #005bb5; /* Optional for button border styling */
 }
 
 .actionButton:hover {
-  background: #ffcc00;
-  color: #005bb5;
+  background: #005bb5; /* Darker blue on hover */
   transform: translateY(-2px);
-}
-
-.searchBar {
-  display: flex;
-  align-items: center;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  background: white;
-  padding: 0.3rem 0.5rem;
-}
-
-.searchBar input {
-  border: none;
-  outline: none;
-  padding: 0.3rem 0.5rem;
-  flex: 1;
-}
-
-.searchBar button {
-  background: none;
-  border: none;
-  color: #0073e6;
-  cursor: pointer;
-}
-
-.searchBar button i {
-  font-size: 1.2rem;
 }
