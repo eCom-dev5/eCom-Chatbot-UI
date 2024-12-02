@@ -61,17 +61,17 @@ A user can add any product to their cart and gain access to the chatbot after lo
 ### Cart and checkout
 Authenticated visitors can add items to their cart, remove items from in their cart, and check out. 
 
-We didn't implement any payment authentication page, but instead the user can 
+We didn't implement any payment authentication page, but instead the user can click on Place Order in the checkout page to confirm the purchase.
 
-![Stripe Checkout integration](/readme-images/checkout.png)
+![Checkout page](/readme-images/checkout.png)
 
 *Relevant code: [front-end cart & checkout components](front-end/src/features/orders); [cart API endpoints](back-end/routes/cart.js); [checkout API endpoints](back-end/routes/checkout.js); [database query functions](back-end/db/index.js).*
 
 
 ### Previous orders
-Authenticated visitors can view a summary of their previous orders (status; date; total cost) on the main account page, with extra details (order item summaries and delivery address) available via order detail pages.
+Authenticated visitors can view a summary of their previous orders (status, date, total cost) by navigating to the account page.
 
-![Previous order details](/readme-images/order-details.png)
+![Previous order details](/readme-images/order-history.png)
 
 *Relevant code: [front-end orders components](front-end/src/features/orders); [orders API endpoints](back-end/routes/orders.js); [database query functions](back-end/db/index.js).*
 
@@ -93,9 +93,9 @@ Comprehensive error handling is used throughout the back end and front end. Non-
 
 
 ### Database and API documentation
-The database structure is documented in a [Database Markup Language file](/back-end/documentation/db-structure.dbml) and visualised in a [diagram](/back-end/documentation/db-structure-diagram-v4.png).
+The database structure is documented in a [Database Markup Language file](/back-end/documentation/db-structure.dbml) and visualised in a [diagram](/back-end/documentation/db-structure-diagram.png).
 
-![Database diagram](/back-end/documentation/db-structure-diagram-v4.png)
+![Database diagram](/back-end/documentation/db-structure-diagram.png)
 
 The back-end API is documented using [Swagger UI](https://swagger.io/tools/swagger-ui/), available at http://localhost:8000/docs/ (refer to [setup](#setup)) or in [JSON](/back-end/documentation/api-spec.json) & [YAML](/back-end/documentation/api-spec.yaml) source files.
 
