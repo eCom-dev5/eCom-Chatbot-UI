@@ -31,9 +31,6 @@ export async function removeCartItemAction({ request }: { request: Request }) {
       {
         method: "DELETE",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json", // If the backend expects this
-        },
       }
     );
 
@@ -48,7 +45,7 @@ export async function removeCartItemAction({ request }: { request: Request }) {
 
 
 export function OrderItem({ orderItemData, editable, lastItem }: OrderItemProps) {
-  const { parent_asin,product_id, product_name, product_price } = orderItemData;
+  const { parent_asin, product_name, product_price } = orderItemData;
   const productPath = getProductDetailPath(parent_asin, product_name);
 
   return (
