@@ -64,6 +64,13 @@ if (process.env.NODE_ENV === 'development') {
   }));
 }
 
+api.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://verta-frontend-403080441770.us-east1.run.app");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 
 // Authenticate all routes and add user data to req.user
 api.use(passport.initialize());
