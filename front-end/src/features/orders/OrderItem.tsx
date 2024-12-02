@@ -60,7 +60,7 @@ export function OrderItem({ orderItemData, editable, lastItem }: OrderItemProps)
         </div>
         {editable ?
         <Form method="post">
-          <input type="hidden" name="product_id" value={parent_asin}></input>
+          <input type="hidden" name="parent_asin" value={parent_asin}></input>
           <input type="hidden" name="product_name" value={product_name}></input>
           <button type="submit" className={styles.button}>Remove</button>
         </Form>
