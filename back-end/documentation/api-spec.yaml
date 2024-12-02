@@ -399,8 +399,8 @@ components:
     CartItem:
       type: object
       properties:
-        product_id:
-          type: integer
+        parent_asin:
+          type: string
         product_name:
           type: string
         product_price:
@@ -414,8 +414,8 @@ components:
     OrderItem:
       type: object
       properties:
-        product_id:
-          type: integer
+        parent_asin:
+          type: string
         product_name:
           type: string
         product_price:

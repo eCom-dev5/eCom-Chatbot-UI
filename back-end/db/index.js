@@ -128,7 +128,7 @@ const getCategories = async () => {
 
 // Cart
 const getCartItems = async (user_id) => {
-  const select = 'SELECT parent_asin, title AS product_name, price AS product_price, quantity AS product_quantity FROM cart_products';
+  const select = 'SELECT cart_products.parent_asin, title AS product_name, price AS product_price, quantity AS product_quantity FROM cart_products';
   const join = 'JOIN productmetadata ON cart_products.parent_asin = productmetadata.parent_asin';
   res = await query(`${select} ${join} WHERE user_id=$1`, [user_id]);
   return res.rows;

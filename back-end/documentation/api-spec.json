@@ -610,8 +610,8 @@
       "CartItem": {
         "type": "object",
         "properties": {
-          "product_id": {
-            "type": "integer"
+          "parent_asin": {
+            "type": "string"
           },
           "product_name": {
             "type": "string"
@@ -633,8 +633,8 @@
       "OrderItem": {
         "type": "object",
         "properties": {
-          "product_id": {
-            "type": "integer"
+          "parent_asin": {
+            "type": "string"
           },
           "product_name": {
             "type": "string"
