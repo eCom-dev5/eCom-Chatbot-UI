@@ -128,50 +128,50 @@ const getCategories = async () => {
 
 // Cart
 const getCartItems = async (user_id) => {
-  const select = 'SELECT product_id, title AS product_name, price AS product_price, quantity AS product_quantity FROM cart_products';
-  const join = 'JOIN productmetadata ON cart_products.product_id = productmetadata.parent_asin';
+  const select = 'SELECT parent_asin, title AS product_name, price AS product_price, quantity AS product_quantity FROM cart_products';
+  const join = 'JOIN productmetadata ON cart_products.parent_asin = productmetadata.parent_asin';
   res = await query(`${select} ${join} WHERE user_id=$1`, [user_id]);
   return res.rows;
 };
 
-const cartItemExists = async (user_id, product_id) => {
+const cartItemExists = async (user_id, parent_asin) => {
   res = await query(
-    'SELECT user_id, product_id FROM cart_products WHERE user_id=$1 AND product_id=$2',
-    [user_id, product_id]
+    'SELECT user_id, parent_asin FROM cart_products WHERE user_id=$1 AND parent_asin=$2',
+    [user_id, parent_asin]
   );
   return res.rowCount > 0;
 };
 
-const addCartItem = async (user_id, product_id, product_quantity = 1) => {
+const addCartItem = async (user_id, parent_asin, product_quantity = 1) => {
   // Insert the new cart item
-  const insert = 'INSERT INTO cart_products(user_id, product_id, quantity) VALUES($1, $2, $3) RETURNING *';
-  const resInsert = await query(insert, [user_id, product_id, product_quantity]);
+  const insert = 'INSERT INTO cart_products(user_id, parent_asin, quantity) VALUES($1, $2, $3) RETURNING *';
+  const resInsert = await query(insert, [user_id, parent_asin, product_quantity]);
 
   // Get the product details
-  const productDetails = await query('SELECT name, price FROM products WHERE id = $1', [product_id]);
+  const productDetails = await query('SELECT name, price FROM products WHERE id = $1', [parent_asin]);
   
   if (productDetails.rows.length === 0) {
-    throw new Error(`Product with ID '${product_id}' not found.`);
+    throw new Error(`Product with ID '${parent_asin}' not found.`);
   }
   
   const product_name = productDetails.rows[0].name;
   const product_price = productDetails.rows[0].price;
 
-  return { product_id, product_name, product_price, product_quantity };
+  return { parent_asin, product_name, product_price, product_quantity };
 };
 
 
-const deleteCartItem = async (user_id, product_id) => {
+const deleteCartItem = async (user_id, parent_asin) => {
   const deleteRes = await query(
-    'DELETE FROM cart_products WHERE user_id=$1 AND product_id=$2 RETURNING quantity',
-    [user_id, product_id]
+    'DELETE FROM cart_products WHERE user_id=$1 AND parent_asin=$2 RETURNING quantity',
+    [user_id, parent_asin]
   );
   try {
     // TypeError if cart item didn't exist (quantity undefined)
     const quantity = deleteRes.rows[0].quantity;
     await query(
       'UPDATE products SET available_stock_count = (available_stock_count + $1) WHERE id=$2',
-      [quantity, product_id]
+      [quantity, parent_asin]
     );
   } catch(err) {
     console.log(err);
@@ -231,7 +231,7 @@ const createPendingOrder = async (user_id, address_id) => {
     // Retrieve cart items and iterate over them
     const cartItems = await getCartItems(user_id);
     for await (const item of cartItems) {
-      const { product_id: parent_asin, product_quantity, product_price } = item; // Use `parent_asin` as per schema
+      const { parent_asin: parent_asin, product_quantity, product_price } = item; // Use `parent_asin` as per schema
       console.log("Processing item - Parent ASIN:", parent_asin, "Quantity:", product_quantity, "Price:", product_price);
 
       // Insert each product in the order_products table using `parent_asin`
@@ -307,18 +307,18 @@ const confirmPaidOrder = async (order_id) => {
 
     // For each order item, reduce stock count and delete cart item
     for await (const product of order.order_items) {
-      const { product_id, product_quantity } = product;
+      const { parent_asin, product_quantity } = product;
 
       // Reduce the product's stock count
       await client.query(
         'UPDATE products SET stock_count = (stock_count - $1) WHERE id=$2',
-        [product_quantity, product_id]
+        [product_quantity, parent_asin]
       );
 
       // Delete the product from the user's cart
       await client.query(
-        'DELETE FROM cart_products WHERE user_id=$1 AND product_id=$2',
-        [order.user_id, product_id]
+        'DELETE FROM cart_products WHERE user_id=$1 AND parent_asin=$2',
+        [order.user_id, parent_asin]
       );
     };
 

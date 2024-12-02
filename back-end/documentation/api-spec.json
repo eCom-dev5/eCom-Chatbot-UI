@@ -334,12 +334,12 @@
         ]
       }
     },
-    "/cart/items/{product_id}": {
+    "/cart/items/{parent_asin}": {
       "summary": "Used to add and delete user cart items.",
       "parameters": [
         {
           "in": "path",
-          "name": "product_id",
+          "name": "parent_asin",
           "required": true,
           "description": "The product id.",
           "schema": {
