@@ -31,6 +31,9 @@ export async function removeCartItemAction({ request }: { request: Request }) {
       {
         method: "DELETE",
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json", // If the backend expects this
+        },
       }
     );
 

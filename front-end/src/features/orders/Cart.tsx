@@ -1,5 +1,5 @@
+import React from 'react';
 import { Link, useActionData, useLoaderData, useRouteLoaderData } from "react-router-dom";
-
 import { AuthData } from "../auth/authData";
 import { OrderItemData } from "./orderItemData";
 import { RemoveCartItemActionData } from "./OrderItem";
@@ -7,25 +7,18 @@ import InlineErrorPage from "../../components/InlineErrorPage/InlineErrorPage";
 import InlineLink from "../../components/InlineLink/InlineLink";
 import { getProductDetailPath } from "../products/utils";
 import { renderOrderItems } from "./utils";
-
+import { Button, Box, Typography, Paper, Grid, Divider } from "@mui/material";
 import utilStyles from "../../App/utilStyles.module.css";
-
 
 export type CartLoaderData = {
   cartData: OrderItemData[],
   cartLoaderErrMsg?: string
 }
 
-
 export async function cartLoader() {
-  // https://reactrouter.com/en/main/start/tutorial#loading-data
-  // https://reactrouter.com/en/main/route/loader
   let cartData: OrderItemData[] = [];
   try {
-    const res = await fetch(
-      `${process.env.REACT_APP_API_BASE_URL}/cart`,
-      { credentials: "include" }
-    );
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cart`, { credentials: "include" });
     if (res.ok) {
       cartData = await res.json();
       return { cartData };
@@ -36,9 +29,7 @@ export async function cartLoader() {
   }
 }
 
-
 export function Cart() {
-  // https://reactrouter.com/en/main/hooks/use-route-loader-data
   const authData = useRouteLoaderData("app") as AuthData;
   const { cartData, cartLoaderErrMsg } = useLoaderData() as CartLoaderData;
   const removalResult = useActionData() as RemoveCartItemActionData | undefined;
@@ -60,25 +51,54 @@ export function Cart() {
       message = `Sorry, '${productName}' couldn't be removed from your cart.`;
     } else {
       const productPath = getProductDetailPath(productId, productName);
-      message = <>'<InlineLink path={productPath} anchor={productName} />' was removed from your cart.</>;
+      message = <><InlineLink path={productPath} anchor={productName} /> was removed from your cart.</>;
     }
-    return <p><strong>{message}</strong></p>;
+    return <Typography variant="body1" color="error" sx={{ fontWeight: 'bold' }}>{message}</Typography>;
   }
 
   return (
-    <div className={utilStyles.pagePadding}>
-      <h1 className={utilStyles.h1}>Cart</h1>
-      <p>
-        You are logged in as {authData.email_address}.
+    <Box className={utilStyles.pagePadding} sx={{ paddingTop: 2 }}>
+      <Typography variant="h4" sx={{ fontWeight: 'bold' }}>Cart</Typography>
+      <Typography variant="body1" sx={{ marginBottom: 2 }}>
+        You are logged in as <strong>{authData.email_address}</strong>.
         {cartData?.length > 0 ?
-        <> View your cart below or <InlineLink path="/checkout" anchor="check out" />.</>
-        : null }
-      </p>
+          <> View your cart below or <InlineLink path="/checkout" anchor="check out now" />.</>
+          : null}
+      </Typography>
+      
       {removalResult ? renderRemovalMessage() : null}
-      {renderOrderItems(cartData, true)}
+
       {cartData?.length > 0 ?
-      <Link to="/checkout" className={utilStyles.button}>Go to checkout</Link>
-      : null}
-    </div>
+        <>
+          <Box sx={{ marginBottom: 3 }}>
+            {renderOrderItems(cartData, true)}
+          </Box>
+
+          <Divider sx={{ marginBottom: 2 }} />
+
+          <Link to="/checkout" style={{ textDecoration: 'none' }}>
+          <Button
+          variant="contained"
+          color="primary"
+          size="large" // Keeps the button size small
+          sx={{
+          borderRadius: 1, // Slightly more rounded for a softer appearance
+          padding: '4px 12px', // Reduced padding to make the button smaller
+          textTransform: 'none', // Prevents text from being uppercased
+          marginTop: 2, // Optional: Adds some space above the button
+          backgroundColor: "#FFA500", // Your custom color
+              color: "#000", // Text color
+              "&:hover": {
+                backgroundColor: "#FFAf00", // Hover color
+              },
+          }}
+          >
+            Go to checkout
+          </Button>
+          </Link>
+        </>
+        : <Typography variant="body1">Your cart is empty.</Typography>
+      }
+    </Box>
   );
 }
