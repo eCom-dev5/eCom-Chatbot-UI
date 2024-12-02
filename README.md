@@ -119,8 +119,6 @@ The back-end API is documented using [Swagger UI](https://swagger.io/tools/swagg
 * [React v18](https://react.dev/)
 * [TypeScript v4](https://www.typescriptlang.org/)
 * [React Router v6](https://reactrouter.com/en/main)
-* [Stripe Checkout](https://stripe.com/gb/payments/checkout)
-* [React Stripe.js](https://www.npmjs.com/package/@stripe/react-stripe-js)
 * [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
 * [React Icons](https://www.npmjs.com/package/react-icons)
 
@@ -151,7 +149,7 @@ The back-end API is documented using [Swagger UI](https://swagger.io/tools/swagg
 ## FAQs
 
 ### Can I see an example?
-Yes! A deployed version of the website can be found here: https://ecommerce-pern-app-z9pn.onrender.com/. (The checkout payment functionality is in test mode, so you won't be charged).
+
 
 
 ### Why did you build this?
