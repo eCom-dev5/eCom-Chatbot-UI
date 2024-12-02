@@ -18,7 +18,7 @@ pids
 
 # Dependency directories
 node_modules/
-
+back-end/index.js
 # dotenv environment variable files
 .env
 .env.development.local

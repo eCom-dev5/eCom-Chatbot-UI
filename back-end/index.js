@@ -26,19 +26,7 @@ api.use(logging(process.env.LOGGING));
 
 
 // https://expressjs.com/en/resources/middleware/cors.html
-<<<<<<< HEAD
 const devOrigin = ["https://web.postman.co/", "http://localhost", "http://localhost:3000", "*", "https://rayalpalace-7w2annebga-uk.a.run.app", "https://verta-frontend-403080441770.us-east1.run.app", "https://verta-frontend-7k7ldne36a-ue.a.run.app",/http:\/\/localhost:.*/];
-=======
-const devOrigin = [
-  "https://web.postman.co/",
-  "http://localhost",
-  "http://localhost:3000",
-  "*",  // Allow all origins in development (adjust as necessary)
-  "https://rayalpalace-7w2annebga-uk.a.run.app",
-  "https://verta-frontend-403080441770.us-east1.run.app/",
-  /http:\/\/localhost:.*/
-];
->>>>>>> 20c33291f93bb18d87c9a0bd7d48bf44788313c9
 const prodOrigin = process.env.FRONT_END_BASE_URL;
 const origin = process.env.NODE_ENV !== "production" ? devOrigin : prodOrigin;
 
@@ -52,7 +40,7 @@ api.use(cors({
 // https://www.passportjs.org/howtos/session/
 // https://expressjs.com/en/resources/middleware/session.html
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'development') {
   // https://expressjs.com/en/guide/behind-proxies.html
   // https://stackoverflow.com/a/75418142/11262798
   api.set('trust proxy', true);
@@ -76,13 +64,6 @@ if (process.env.NODE_ENV === 'production') {
   }));
 }
 
-api.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://verta-frontend-403080441770.us-east1.run.app");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  next();
-});
 
 // Authenticate all routes and add user data to req.user
 api.use(passport.initialize());

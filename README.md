@@ -2,7 +2,7 @@
 This a PERN (PostgreSQL, Express, React, Node) stack ecommerce web application. This application is made to work along with Verta chatbot.
 
 
-Take a look: https://rayalpalace-7w2annebga-uk.a.run.app/.
+Take a look: https://verta-frontend-403080441770.us-east1.run.app/.
 
 
 ## Contents <!-- omit in toc -->
@@ -37,7 +37,6 @@ Product listing pages are dynamically rendered based on the URL path (homepage, 
 ### Product detail pages
 Product detail pages are dynamically rendered based on the product ID in the URL path, using JSON data fetched from a back-end API endpoint.
 
-Content is dynamically rendered depending on authentication status (log in or add to cart button) and available stock count (no stock message, low stock message, or out of stock message).
 
 ![Product detail page example](/readme-images/product-detail-page.png)
 
@@ -47,11 +46,12 @@ Content is dynamically rendered depending on authentication status (log in or ad
 ### Authentication and authorisation
 Authentication is implemented using Passport.js and Express session middleware, including both local login and *Sign In With Google*. In the case of local login, passwords are hashed and verified using node.bcrypt.js.
 
-A visitor's authentication status is used to dynamically render and/or restrict access to content and functionality across both the back end and front end:
+A user can add any product to their cart and gain access to the chatbot after logging in.
 
 * Relevant API endpoints return a 401 status code if the user is not authenticated (logged out) or not authorised (trying to access another user's data), resulting in a user-friendly [error message](#error-handling) on the front end
-* Primary navigation links change if the user is authenticated (account; cart; log out) or not (register; log in)
-* The product detail page button changes if the user is authenticated (add to cart) or not (log in)
+* The options in the navbar change based on the user's authorization status: if logged in successfully, it displays 'Account,' 'Cart,' and 'Log Out'; otherwise, it shows 'Register' and 'Log In'.
+* Also, when the user is logged in, they can see the Add to Cart button and click the chat options on the product detail page.
+ The clicks made by the authorized users are stored in the database for future implementation of product recommendations.
 
 ![Login page when logged out](/readme-images/login-page.png)
 
@@ -59,9 +59,9 @@ A visitor's authentication status is used to dynamically render and/or restrict 
 
 
 ### Cart and checkout
-Authenticated visitors can add items to their cart, remove items from in their cart, and check out. These actions modify database stock counts (actual and available) to prevent orders exceeding stock.
+Authenticated visitors can add items to their cart, remove items from in their cart, and check out. 
 
-The checkout journey includes Stripe Checkout payment integration (in test mode). Several API calls are used to create a pending order, establish a payment session, and ultimately confirm the order. Database transactions are used where appropriate to ensure that changes (e.g. stock counts) are made only if all related queries are successful.
+We didn't implement any payment authentication page, but instead the user can 
 
 ![Stripe Checkout integration](/readme-images/checkout.png)
 
