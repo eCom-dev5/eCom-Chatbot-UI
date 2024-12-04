@@ -17,6 +17,7 @@ const gifPaths = [
   "/assets/page1.gif",
   "/assets/page2.gif",
   "/assets/page3.gif",
+  "/assets/page4.gif"
 ];
 
 type ProductFeedProps = {

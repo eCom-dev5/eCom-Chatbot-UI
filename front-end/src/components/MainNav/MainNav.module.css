@@ -6,29 +6,27 @@
   background-color: #fff;  /* Add a background color (optional) */
   padding: 1rem 5%;        /* Add some padding around the navbar */
   box-sizing: border-box;  /* Include padding in the element's total width/height */
+  z-index: 10;
 }
 
 .navList {
-  display: flex;           /* Flexbox for horizontal items */
-  align-items: center;     /* Center vertically */
+  display: flex;
+  align-items: center;
   margin: 0;
   padding: 0;
-  list-style-type: none;    /* Remove default list styling */
+  list-style-type: none;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
 }
 
 .listItem {
-  margin: 0 15px;          /* Space between navigation items */
+  margin: 0 15px;
 }
 
 .link {
   display: inline-block;
-  padding: 1.25rem 1.5rem; /* Add padding to the links */
-  border: 1px solid transparent;  /* Prevent element size increase on hover */
-  text-align: center;      /* Center text inside the link */
-}
-
-.link,
-.link:link {
+  padding: 1.25rem 1.5rem;
+  border: 1px solid transparent;
+  text-align: center;
   color: rgb(0, 0, 0);
   text-decoration: none;
 }
@@ -41,6 +39,25 @@
 .link:active {
   border: 1px solid rgb(255, 255, 255);
   color: rgb(204, 204, 204);
+}
+
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 35px;
+  height: 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.hamburgerBar {
+  height: 4px;
+  width: 100%;
+  background-color: black;
+  border-radius: 2px;
 }
 
 @media screen and (max-width: 1050px) {
@@ -57,14 +74,39 @@
 
 @media screen and (max-width: 600px) {
   .mainNav {
-    flex-direction: column;  /* Stack items vertically for smaller screens */
-    padding: 1rem;           /* Adjust padding for mobile */
+    display: flex; 
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    background-color: #fff;
+    padding: 1rem 5%;
+    box-sizing: border-box;
+    position: relative;
+  }
+  .hamburger {
+    display: flex;
   }
   .navList {
-    justify-content: center;
-    flex-direction: column; /* Align items vertically on mobile */
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: rgb(253, 249, 245);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    width: 100%;
+    z-index: 15;
+    border-radius: 10px;
+
   }
+
+  .navList.open {
+    max-height: 300px;
+    opacity: 1;
+  }
+
   .listItem {
-    margin-bottom: 10px; /* Adds space between items vertically */
+    margin: 10px 0;
   }
 }

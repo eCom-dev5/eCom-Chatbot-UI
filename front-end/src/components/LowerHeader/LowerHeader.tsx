@@ -24,7 +24,7 @@ export default function LowerHeader() {
       <ul className={styles.navList}>
         {renderNavItem("/category/Video Games", "Video Games")}
       </ul>
-      <SearchBar />
+      <SearchBar/>
     </div>
   );
 }
