@@ -27,3 +27,87 @@
 .button:active {
   background-color: rgb(180, 180, 180);
 }
+
+.itemContainer {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.imageContainer {
+  position: relative;
+}
+
+.itemImage {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.itemImage:hover {
+  transform: scale(1.2);
+}
+
+.discountBadge {
+  background: #ff4500;
+  color: white;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  border-radius: 5px;
+}
+
+.rating {
+  margin-top: 1rem;
+}
+
+.filledStar {
+  color: #ffc107;
+  cursor: pointer;
+}
+
+.emptyStar {
+  color: #ddd;
+  cursor: pointer;
+}
+
+.itemContainer {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 1rem;
+}
+
+.itemImage {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+.itemDetails {
+  flex: 1;
+}
+
+.itemName {
+  font-size: 1rem;
+  color: #0073e6;
+  text-decoration: none;
+}
+
+.itemName:hover {
+  text-decoration: underline;
+}
+
+.discountBadge {
+  background: #ff4500;
+  color: white;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  margin-left: 0.5rem;
+}

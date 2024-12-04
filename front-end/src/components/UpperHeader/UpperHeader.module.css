@@ -5,6 +5,37 @@
 
 
 .upperHeader {
+  background: #f8d210;
+  color: #333;
+  padding: 0.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  animation: slideIn 0.5s ease-out;
+}
+
+.upperHeader .socials a {
+  color: #333;
+  margin: 0 0.5rem;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.upperHeader .socials a:hover {
+  color: #0073e6;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.upperHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;

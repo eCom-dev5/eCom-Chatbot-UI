@@ -2,3 +2,37 @@
   color: rgb(253, 215, 136);
   font-size: 1.25rem;
 }
+
+.ratingContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ratingValue {
+  font-size: 1rem;
+  color: #555;
+}
+
+.starRating {
+  display: flex;
+  gap: 0.2rem;
+  cursor: pointer;
+}
+
+.filledStar {
+  color: #ffcc00;
+  font-size: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.emptyStar {
+  color: #ccc;
+  font-size: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.filledStar:hover, .emptyStar:hover {
+  transform: scale(1.2);
+  color: #ff9900;
+}

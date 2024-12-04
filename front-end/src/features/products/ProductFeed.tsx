@@ -43,6 +43,37 @@ type AuthData = {
   logged_in: boolean;
 };
 
+const [quickViewProduct, setQuickViewProduct] = useState(null);
+
+const handleQuickView = (product) => {
+  setQuickViewProduct(product);
+};
+
+return (
+  <div className={styles.productGrid}>
+    {products.map((product) => (
+      <div
+        key={product.id}
+        className={styles.productCard}
+        onMouseEnter={() => handleQuickView(product)}
+      >
+        <img src={product.image} alt={product.name} />
+        <h3>{product.name}</h3>
+        <p>${product.price}</p>
+        <button className={styles.quickViewButton}>Quick View</button>
+      </div>
+    ))}
+    {quickViewProduct && (
+      <div className={styles.quickViewModal}>
+        <h3>{quickViewProduct.name}</h3>
+        <p>{quickViewProduct.description}</p>
+        <p>${quickViewProduct.price}</p>
+        <button onClick={() => setQuickViewProduct(null)}>Close</button>
+      </div>
+    )}
+  </div>
+);
+
 // Fetch category data based on slug
 export async function fetchCategoryData(categorySlug: string) {
   const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/categories`);

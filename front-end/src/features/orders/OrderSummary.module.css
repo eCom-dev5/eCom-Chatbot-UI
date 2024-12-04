@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: space-between;
 }
-
+ 
 .contentContainer {
   padding-right: 2.5em;
 }
@@ -15,6 +15,89 @@
 .button {
   min-width: 10em;
 }
+
+.summaryContainer {
+  position: sticky;
+  top: 20px;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.toggleButton {
+  background: #0073e6;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.toggleButton:hover {
+  background: #005bb5;
+}
+
+.details {
+  margin-top: 1rem;
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.payNowButton {
+  background: #28a745;
+  color: white;
+}
+
+.summaryContainer {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.couponInput {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin: 1rem 0;
+}
+
+.applyCouponButton {
+  background: #0073e6;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: background 0.3s ease;
+}
+
+.applyCouponButton:hover {
+  background: #005bb5;
+}
+
+.payNowButton {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.3s ease;
+}
+
+.payNowButton:hover {
+  background: #218838;
+}
+
 
 @media screen and (max-width: 350px) {
   .contentContainer {

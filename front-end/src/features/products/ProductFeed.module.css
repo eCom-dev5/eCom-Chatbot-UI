@@ -6,8 +6,6 @@
 }
 
 
-
-
 @media screen and (max-width: 1200px) {
   .productGrid {
     column-gap: 3%; /* Adjusted column gap for smaller screens */
@@ -19,4 +17,31 @@
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Allows for 4 items per row on smaller screens */
     column-gap: 5%; /* Adjusted column gap for mobile screens */
   }
+}
+
+
+.quickViewModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.quickViewButton {
+  background: #0073e6;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.quickViewButton:hover {
+  background: #005bb5;
 }
