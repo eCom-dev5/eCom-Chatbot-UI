@@ -146,22 +146,3 @@ The back-end API is documented using [Swagger UI](https://swagger.io/tools/swagg
 14.  The application should launch in your browser, but otherwise can be accessed at http://localhost:3000/.
 
 
-## FAQs
-
-### Can I see an example?
-
-
-
-### Why did you build this?
-This is one of the practice projects that I completed as part of the Codecademy Full-Stack Engineer career path. Later, I used this project to practice implementing TypeScript (converted from the existing JavaScript).
-
-I planned and built it almost entirely independently; only the key requirements (core functionality and technologies) and a few links to documentation were provided. Some aspects were definitely challenging, requiring a lot of reading through documentation and Stack Overflow!
-
-In particular, I now have significantly more experience with:
-
-* Database design and documentation
-* API design and documentation
-* Local and third-party authentication, using Passport.js and Express session configuration
-* Checkout/payment functionality using Stripe and a lot of SQL
-* Data loading using React Router v6
-* TypeScript
