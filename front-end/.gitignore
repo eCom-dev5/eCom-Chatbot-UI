@@ -10,8 +10,6 @@
 
 # production
 /build
-/back-end/index.js
-back-end/documentation/api-spec.yaml
 README.md
 
 # misc
