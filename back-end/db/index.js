@@ -111,7 +111,7 @@ const getProductById = async (id) => {
     AND average_rating IS NOT NULL 
     AND rating_number IS NOT NULL 
     AND large_res IS NOT NULL
-    AND main_category 
+    AND main_category IS NOT NULL
   `;
   const res = await query(baseQuery + ' AND productmetadata.parent_asin LIKE $1', [id]);
   return res.rows.length > 0 ? res.rows[0] : null;
