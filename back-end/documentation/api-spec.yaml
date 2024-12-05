@@ -1,11 +1,11 @@
 openapi: 3.0.3
 info:
-  title: Codecademy Ecommerce App API
+  title: MLOPS Chatbot Pern APP
   version: 1.0.0
   description: The API of a fake (independent practice project) ecommerce app.
   contact:
-    name: Chris Mastris
-    url: https://github.com/Cmastris/ecommerce-pern-app
+    name: Bharath gajula and Nishith reddy
+    url: 
 paths:
   /auth/status:
     summary: Used to retrieve the current user's authentication status.
