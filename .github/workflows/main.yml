@@ -55,7 +55,7 @@ jobs:
             --source ./back-end \
             --region=${{ env.REGION }} \
             --allow-unauthenticated \
-            --timeout=5000s \
+            --timeout=3600s \
             --set-env-vars="REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }},REACT_APP_PYTHON_API_BASE_URL=${{ vars.REACT_APP_PYTHON_API_BASE_URL }},LOGGING=dev,NODE_ENV=development,FRONT_END_BASE_URL=https://verta-frontend-269431978711.us-east1.run.app,REACT_PYTHON_APP_API_BASE_URL=https://verta-chat-service-403080441770.us-east1.run.app,SESSION_SECRET=secret,PGDATABASE=postgres,PGHOST=35.225.47.127,PGPASSWORD=pixel-pop,PGPORT=5432,PGUSER=postgres,REACT_APP_Token=${{vars.REACT_APP_TOKEN}},GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }},GOOGLE_CLIENT_SECRET=${{ vars.GOOGLE_CLIENT_SECRET }}"
 
       - name: 'Show output'
