@@ -69,7 +69,6 @@ const getProducts = async (category_id = undefined, search_term = undefined) => 
     AND rating_number IS NOT NULL 
     AND thumb IS NOT NULL
     AND hi_res IS NOT NULL
-    AND main_category 
   `;
 
   let res;
