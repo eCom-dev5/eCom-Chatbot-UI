@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  PROJECT_ID: 'verta-441204'
+  PROJECT_ID: 'pixel-pop-444117'
   REGION: 'us-east1'
   BACK_SERVICE: 'verta-backend'
   FRONT_SERVICE: 'verta-frontend'
