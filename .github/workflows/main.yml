@@ -48,7 +48,7 @@ jobs:
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
-          
+
       - name: 'Deploy Back-end to Cloud Run from Source'
         run: |-
           gcloud run deploy ${{ env.BACK_SERVICE }} \
@@ -61,6 +61,7 @@ jobs:
       - name: 'Show output'
         run: echo ${{ steps.deploy.outputs.url }}
 
+        
       - name: 'Deploy Front-end to Cloud Run from Source'
         run: |-
           gcloud run deploy ${{ env.FRONT_SERVICE }} \
