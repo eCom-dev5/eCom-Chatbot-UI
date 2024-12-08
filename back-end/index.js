@@ -26,7 +26,7 @@ api.use(logging(process.env.LOGGING));
 
 
 // https://expressjs.com/en/resources/middleware/cors.html
-const devOrigin = ["https://web.postman.co/", "http://localhost", "http://localhost:3000", "*", "https://rayalpalace-7w2annebga-uk.a.run.app", "https://verta-frontend-403080441770.us-east1.run.app", "https://verta-frontend-7k7ldne36a-ue.a.run.app","https://verta-frontend-269431978711.us-east1.run.app/", /http:\/\/localhost:.*/];
+const devOrigin = ["https://web.postman.co/", "http://localhost", "http://localhost:3000", "*", "https://rayalpalace-7w2annebga-uk.a.run.app", "https://verta-frontend-403080441770.us-east1.run.app", "https://verta-frontend-269431978711.us-east1.run.app",/http:\/\/localhost:.*/];
 const prodOrigin = process.env.FRONT_END_BASE_URL;
 const origin = process.env.NODE_ENV !== "production" ? devOrigin : prodOrigin;
 
@@ -40,7 +40,7 @@ api.use(cors({
 // https://www.passportjs.org/howtos/session/
 // https://expressjs.com/en/resources/middleware/session.html
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'production') {
   // https://expressjs.com/en/guide/behind-proxies.html
   // https://stackoverflow.com/a/75418142/11262798
   api.set('trust proxy', true);
