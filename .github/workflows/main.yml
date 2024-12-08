@@ -48,6 +48,7 @@ jobs:
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
+          
       - name: 'Deploy Back-end to Cloud Run from Source'
         run: |-
           gcloud run deploy ${{ env.BACK_SERVICE }} \
