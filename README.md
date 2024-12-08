@@ -2,7 +2,7 @@
 This a PERN (PostgreSQL, Express, React, Node) stack ecommerce web application. This application is made to work along with Verta chatbot.
 
 
-Take a look: https://verta-frontend-403080441770.us-east1.run.app/.
+Take a look: https://verta-frontend-269431978711.us-east1.run.app/
 
 
 ## Contents <!-- omit in toc -->
