@@ -61,17 +61,17 @@ A user can add any product to their cart and gain access to the chatbot after lo
 ### Cart and checkout
 Authenticated visitors can add items to their cart, remove items from in their cart, and check out. 
 
-We didn't implement any payment authentication page, but instead the user can 
+We didn't implement any payment authentication page, but instead the user can click on Place Order in the checkout page to confirm the purchase.
 
-![Stripe Checkout integration](/readme-images/checkout.png)
+![Checkout page](/readme-images/checkout.png)
 
 *Relevant code: [front-end cart & checkout components](front-end/src/features/orders); [cart API endpoints](back-end/routes/cart.js); [checkout API endpoints](back-end/routes/checkout.js); [database query functions](back-end/db/index.js).*
 
 
 ### Previous orders
-Authenticated visitors can view a summary of their previous orders (status; date; total cost) on the main account page, with extra details (order item summaries and delivery address) available via order detail pages.
+Authenticated visitors can view a summary of their previous orders (status, date, total cost) by navigating to the account page.
 
-![Previous order details](/readme-images/order-details.png)
+![Previous order details](/readme-images/order-history.png)
 
 *Relevant code: [front-end orders components](front-end/src/features/orders); [orders API endpoints](back-end/routes/orders.js); [database query functions](back-end/db/index.js).*
 
@@ -93,9 +93,9 @@ Comprehensive error handling is used throughout the back end and front end. Non-
 
 
 ### Database and API documentation
-The database structure is documented in a [Database Markup Language file](/back-end/documentation/db-structure.dbml) and visualised in a [diagram](/back-end/documentation/db-structure-diagram-v4.png).
+The database structure is documented in a [Database Markup Language file](/back-end/documentation/db-structure.dbml) and visualised in a [diagram](/back-end/documentation/db-structure-diagram.png).
 
-![Database diagram](/back-end/documentation/db-structure-diagram-v4.png)
+![Database diagram](/back-end/documentation/db-structure-diagram.png)
 
 The back-end API is documented using [Swagger UI](https://swagger.io/tools/swagger-ui/), available at http://localhost:8000/docs/ (refer to [setup](#setup)) or in [JSON](/back-end/documentation/api-spec.json) & [YAML](/back-end/documentation/api-spec.yaml) source files.
 
@@ -119,6 +119,8 @@ The back-end API is documented using [Swagger UI](https://swagger.io/tools/swagg
 * [React v18](https://react.dev/)
 * [TypeScript v4](https://www.typescriptlang.org/)
 * [React Router v6](https://reactrouter.com/en/main)
+* [Stripe Checkout](https://stripe.com/gb/payments/checkout)
+* [React Stripe.js](https://www.npmjs.com/package/@stripe/react-stripe-js)
 * [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
 * [React Icons](https://www.npmjs.com/package/react-icons)
 
@@ -146,3 +148,22 @@ The back-end API is documented using [Swagger UI](https://swagger.io/tools/swagg
 14.  The application should launch in your browser, but otherwise can be accessed at http://localhost:3000/.
 
 
+## FAQs
+
+### Can I see an example?
+Yes! A deployed version of the website can be found here: https://ecommerce-pern-app-z9pn.onrender.com/. (The checkout payment functionality is in test mode, so you won't be charged).
+
+
+### Why did you build this?
+This is one of the practice projects that I completed as part of the Codecademy Full-Stack Engineer career path. Later, I used this project to practice implementing TypeScript (converted from the existing JavaScript).
+
+I planned and built it almost entirely independently; only the key requirements (core functionality and technologies) and a few links to documentation were provided. Some aspects were definitely challenging, requiring a lot of reading through documentation and Stack Overflow!
+
+In particular, I now have significantly more experience with:
+
+* Database design and documentation
+* API design and documentation
+* Local and third-party authentication, using Passport.js and Express session configuration
+* Checkout/payment functionality using Stripe and a lot of SQL
+* Data loading using React Router v6
+* TypeScript
