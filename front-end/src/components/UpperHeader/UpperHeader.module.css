@@ -3,11 +3,17 @@
 
 /* UpperHeader.module.css */
 
+/* Header Container */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: 1rem 2rem;
+  background: linear-gradient(90deg, #0055a4, #0073e6);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .logoContainer {
@@ -16,19 +22,59 @@
 }
 
 .logo {
-  font-family: 'Press Start 2P', cursive; /* Pixel font */
-  font-size: 2rem;
+  font-family: "Press Start 2P", cursive; /* Retro pixel font */
+  color: #f8fafc; /* Light text color for contrast */
+  font-size: 2rem; /* Keep the original font size */
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: #000;
-  text-decoration: none;
+  text-decoration: none; /* Remove underline */
 }
 
 .orange {
-  color: #FFA500; /* Orange color for 'Pop' part */
+  color: #FFA500;
 }
 
-/* Optional: Add a pixelated shadow or border effect */
-.logo {
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+.orange {
+  color: #FFA500;
+}
+
+/* Actions Container */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Login and Register Links */
+.login, .register {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  background: transparent;
+  transition: color 0.3s ease, background 0.3s ease;
+}
+
+/* Hover Effects */
+.login:hover, .register:hover {
+  color: #0055a4;
+  background: #ffcc00;
+}
+
+/* Animation for Fade-In */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login, .register {
+  animation: fadeIn 0.5s ease-in-out;
 }
