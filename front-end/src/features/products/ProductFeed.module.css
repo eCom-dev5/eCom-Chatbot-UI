@@ -1,22 +1,20 @@
+
+/* Container for the grid */
 .productGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Allows for 4 items per row */
-  column-gap: 2.5%; /* Adjust the gap between items */
-  row-gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Dynamic column width */
+  gap: 1.5rem; /* Space between rows and columns */
+  padding: 2rem; /* Add padding around the grid */
+  background-color: #f9f9f9; /* Subtle background color */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
 }
 
-
-
-
-@media screen and (max-width: 1200px) {
-  .productGrid {
-    column-gap: 3%; /* Adjusted column gap for smaller screens */
-  }
-}
-
+/* Media query for smaller screens */
 @media screen and (max-width: 768px) {
   .productGrid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Allows for 4 items per row on smaller screens */
-    column-gap: 5%; /* Adjusted column gap for mobile screens */
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Adjust columns for smaller screens */
   }
 }
+
+
