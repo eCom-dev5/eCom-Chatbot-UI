@@ -1,30 +1,37 @@
-import { NavLink } from "react-router-dom";
-import SearchBar from "../SearchBar/SearchBar";
+import { Link } from "react-router-dom";
 import styles from "./LowerHeader.module.css";
 
 export default function LowerHeader() {
-  // Function to render nav items
-  function renderNavItem(path: string, anchor: string) {
-    return (
-      <li className={styles.listItem}>
-        <NavLink to={path} className={styles.link}>{anchor}</NavLink>
-      </li>
-    );
-  }
-
   return (
-    
     <div className={styles.header}>
-      <ul className={styles.navList}>
-        {renderNavItem("/", "Home")}
+      <ul className={styles.navLinks}>
+        <li>
+          <Link to="/" className={`${styles.link} ${styles.active}`}>
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link to="/toys" className={styles.link}>
+            Toys & Games
+          </Link>
+        </li>
+        <li>
+          <Link to="/video-games" className={styles.link}>
+            Video Games
+          </Link>
+        </li>
       </ul>
-      <ul className={styles.navList}>
-        {renderNavItem( "/category/Toys & Games", "Toys & Games")}
-      </ul>
-      <ul className={styles.navList}>
-        {renderNavItem("/category/Video Games", "Video Games")}
-      </ul>
-      <SearchBar />
+      <div className={styles.searchBar}>
+        <input
+          type="text"
+          placeholder="Search for games or toys..."
+          className={styles.searchInput}
+        />
+        <button className={styles.searchButton}>
+          <i className="fa fa-search" aria-hidden="true"></i>
+        </button>
+      </div>
     </div>
   );
 }
+
