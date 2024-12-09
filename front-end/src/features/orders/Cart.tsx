@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Link, useActionData, useLoaderData, useRouteLoaderData } from "react-router-dom";
 import { AuthData } from "../auth/authData";
 import { OrderItemData } from "./orderItemData";
@@ -13,7 +13,7 @@ import utilStyles from "../../App/utilStyles.module.css";
 export type CartLoaderData = {
   cartData: OrderItemData[],
   cartLoaderErrMsg?: string
-}
+};
 
 export async function cartLoader() {
   let cartData: OrderItemData[] = [];
@@ -33,6 +33,11 @@ export function Cart() {
   const authData = useRouteLoaderData("app") as AuthData;
   const { cartData, cartLoaderErrMsg } = useLoaderData() as CartLoaderData;
   const removalResult = useActionData() as RemoveCartItemActionData | undefined;
+
+  const handleClearCart = async () => {
+    // Logic for clearing the cart
+    console.log("Clear cart action triggered");
+  };
 
   if (!authData.logged_in) {
     return <InlineErrorPage pageName="Cart" type="login_required" loginRedirect="/cart" />;
@@ -58,17 +63,17 @@ export function Cart() {
 
   return (
     <Box className={utilStyles.pagePadding} sx={{ paddingTop: 2 }}>
-      <Typography variant="h4" sx={{ fontWeight: 'bold' }}>Cart</Typography>
+      <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: 2 }}>Your Cart</Typography>
       <Typography variant="body1" sx={{ marginBottom: 2 }}>
         You are logged in as <strong>{authData.email_address}</strong>.
-        {cartData?.length > 0 ?
+        {cartData?.length > 0 ? (
           <> View your cart below or <InlineLink path="/checkout" anchor="check out now" />.</>
-          : null}
+        ) : null}
       </Typography>
       
       {removalResult ? renderRemovalMessage() : null}
 
-      {cartData?.length > 0 ?
+      {cartData?.length > 0 ? (
         <>
           <Box sx={{ marginBottom: 3 }}>
             {renderOrderItems(cartData, true)}
@@ -76,29 +81,46 @@ export function Cart() {
 
           <Divider sx={{ marginBottom: 2 }} />
 
-          <Link to="/checkout" style={{ textDecoration: 'none' }}>
+          {/* Clear Cart Button */}
           <Button
-          variant="contained"
-          color="primary"
-          size="large" // Keeps the button size small
-          sx={{
-          borderRadius: 1, // Slightly more rounded for a softer appearance
-          padding: '4px 12px', // Reduced padding to make the button smaller
-          textTransform: 'none', // Prevents text from being uppercased
-          marginTop: 2, // Optional: Adds some space above the button
-          backgroundColor: "#FFA500", // Your custom color
-              color: "#000", // Text color
-              "&:hover": {
-                backgroundColor: "#FFAf00", // Hover color
-              },
-          }}
+            variant="outlined"
+            color="secondary"
+            size="large"
+            onClick={handleClearCart}
+            sx={{
+              marginRight: 2,
+              borderRadius: 1,
+              textTransform: 'none',
+            }}
           >
-            Go to checkout
+            Clear Cart
           </Button>
+
+          {/* Go to Checkout Button */}
+          <Link to="/checkout" style={{ textDecoration: 'none' }}>
+            <Button
+              variant="contained"
+              size="large"
+              sx={{
+                borderRadius: 1,
+                padding: '8px 20px',
+                textTransform: 'none',
+                backgroundColor: "#FFA500",
+                color: "#000",
+                "&:hover": {
+                  backgroundColor: "#FFAf00",
+                },
+              }}
+            >
+              Go to Checkout
+            </Button>
           </Link>
         </>
-        : <Typography variant="body1">Your cart is empty.</Typography>
-      }
+      ) : (
+        <Typography variant="body1" sx={{ marginTop: 2 }}>
+          Your cart is empty. <InlineLink path="/products" anchor="Start shopping now" />.
+        </Typography>
+      )}
     </Box>
   );
 }
