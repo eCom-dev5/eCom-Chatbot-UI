@@ -9,6 +9,7 @@ import {
   CircularProgress,
   useMediaQuery,
   Badge,
+  Avatar,
 } from '@mui/material';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import SendIcon from '@mui/icons-material/Send';
@@ -33,31 +34,57 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
   const isMobile = useMediaQuery('(max-width:600px)');
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
   const [chatHeight, setChatHeight] = useState(isMobile ? 400 : 500);
+  const [chatWidth, setChatWidth] = useState(isMobile ? 300 : 400);
+
   const [isAtBottom, setIsAtBottom] = useState(true);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const isResizing = useRef(false);
+  const startX = useRef(0);
   const startY = useRef(0);
+  const startWidth = useRef(chatWidth);
   const startHeight = useRef(chatHeight);
 
-  const handleResizeStart = (
+  const handleCornerResizeStart = (
     e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
   ) => {
+    e.preventDefault();
     isResizing.current = true;
+    startX.current = 'clientX' in e ? e.clientX : e.touches[0]?.clientX || 0;
     startY.current = 'clientY' in e ? e.clientY : e.touches[0]?.clientY || 0;
+    startWidth.current = chatWidth;
     startHeight.current = chatHeight;
+
+    window.addEventListener('mousemove', handleResizeMove as any);
+    window.addEventListener('touchmove', handleResizeMove as any, { passive: false });
+    window.addEventListener('mouseup', handleResizeEnd);
+    window.addEventListener('touchend', handleResizeEnd);
   };
 
   const handleResizeMove = (e: MouseEvent | TouchEvent) => {
     if (!isResizing.current) return;
+    const currentX = 'clientX' in e ? e.clientX : (e as TouchEvent).touches[0]?.clientX || 0;
     const currentY = 'clientY' in e ? e.clientY : (e as TouchEvent).touches[0]?.clientY || 0;
-    const newHeight = Math.max(300, startHeight.current + (startY.current - currentY));
+
+    // Adjusted deltas so that moving handle upwards/leftwards can also resize correctly
+    const deltaX = startX.current - currentX;
+    const deltaY = startY.current - currentY;
+
+    const newWidth = startWidth.current + deltaX;
+    const newHeight = startHeight.current + deltaY;
+
+    setChatWidth(newWidth);
     setChatHeight(newHeight);
   };
 
   const handleResizeEnd = () => {
     isResizing.current = false;
+    window.removeEventListener('mousemove', handleResizeMove as any);
+    window.removeEventListener('touchmove', handleResizeMove as any);
+    window.removeEventListener('mouseup', handleResizeEnd);
+    window.removeEventListener('touchend', handleResizeEnd);
   };
 
   const scrollToBottom = () => {
@@ -96,7 +123,11 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
   };
 
   return (
-    <Box>
+    <Box
+      sx={{
+        fontFamily: 'Inter, Roboto, sans-serif', 
+      }}
+    >
       {isChatOpen ? (
         <Paper
           elevation={3}
@@ -104,107 +135,197 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
             position: 'fixed',
             bottom: '30px',
             right: '30px',
-            width: isMobile ? '95%' : '400px',
+            width: `${chatWidth}px`,
             height: `${chatHeight}px`,
             display: 'flex',
             flexDirection: 'column',
-            borderRadius: '10px',
-            boxShadow: 3,
+            borderRadius: '16px',
+            // More pronounced shadow and color
+            boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+            overflow: 'hidden',
+            '& .smooth-scroll': {
+              scrollBehavior: 'smooth',
+            },
           }}
-          onMouseMove={(e) => handleResizeMove(e as unknown as MouseEvent)}
-          onMouseUp={handleResizeEnd}
-          onTouchMove={(e) => handleResizeMove(e as unknown as TouchEvent)}
-          onTouchEnd={handleResizeEnd}
         >
-          {/* Drag Bar */}
+          {/* Single handle at top-right corner */}
           <Box
-            onMouseDown={handleResizeStart}
-            onTouchStart={handleResizeStart}
+            onMouseDown={handleCornerResizeStart}
+            onTouchStart={handleCornerResizeStart}
             sx={{
-              height: '10px',
+              position: 'absolute',
+              width: '20px',
+              height: '20px',
+              top: 0,
+              left: 0,
               backgroundColor: '#E0E0E0',
-              cursor: 'ns-resize',
-              borderTopLeftRadius: '10px',
-              borderTopRightRadius: '10px',
+              cursor: 'nw-resize',
+              zIndex: 999,
+              borderTopLeftRadius: '16px',
             }}
           />
-          {/* Header */}
+          {/* Header with gradient and brand colors + Avatar and subtle "powered by" */}
           <Box
             sx={{
-              backgroundColor: '#F5F5F5',
+              background: 'linear-gradient(to right, #ccefff, #ffffff)',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              p: 2,
+              p: 3,
               borderBottom: '1px solid #E0E0E0',
               position: 'relative',
             }}
           >
-            <Typography variant="h6" fontWeight="bold">
-              VERTA <span style={{ fontSize: '0.75rem', fontWeight: 400 }}>beta</span>
-            </Typography>
-            <Box sx={{ position: 'absolute', right: 15 }}>
-              <IconButton onClick={clearChatHistory}>
+            {/* Bot Avatar for personality */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Avatar sx={{ bgcolor: '#0073E6', width: 30, height: 30, fontSize: '0.9rem' }}>V</Avatar>
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                sx={{
+                  fontFamily: 'Inter, Roboto, sans-serif',
+                  lineHeight: 1.3,
+                }}
+              >
+                VERTA <span style={{ fontSize: '0.75rem', fontWeight: 400 }}>Latest</span>
+              </Typography>
+            </Box>
+            <Box sx={{ position: 'absolute', right: 15, display:'flex', gap:1 }}>
+              <IconButton
+                onClick={clearChatHistory}
+                sx={{
+                  color: '#333',
+                  transition: 'transform 0.2s',
+                  '&:hover': { transform: 'scale(1.1)' },
+                }}
+              >
                 <DeleteOutlineIcon />
               </IconButton>
-              <IconButton onClick={() => setIsChatOpen(false)}>
+              <IconButton
+                onClick={() => setIsChatOpen(false)}
+                sx={{
+                  color: '#333',
+                  transition: 'transform 0.2s',
+                  '&:hover': { transform: 'scale(1.1)' },
+                }}
+              >
                 <CloseIcon />
               </IconButton>
             </Box>
+            {/* Powered by label in subtle font */}
+            <Typography
+              sx={{
+                position: 'absolute',
+                bottom: 5,
+                left: 15,
+                fontSize: '0.7rem',
+                color: '#999',
+                fontFamily: 'Inter, Roboto, sans-serif',
+              }}
+            >
+              Powered by Verta
+            </Typography>
           </Box>
           {/* Chat Messages */}
           <Box
             ref={chatContainerRef}
+            className="smooth-scroll"
             sx={{
               flex: 1,
-              p: 2,
+              p: 3,
               backgroundColor: '#FFFFFF',
               overflowY: 'auto',
               position: 'relative',
             }}
           >
-            {messages.map((msg, index) => (
-              <Box
-                key={index}
-                sx={{
-                  mb: 2,
-                  textAlign: msg.type === 'user' ? 'right' : 'left',
-                }}
-              >
-                <Typography
+            {messages.map((msg, index) => {
+              const isUser = msg.type === 'user';
+              return (
+                <Box
+                  key={index}
                   sx={{
-                    color: msg.type === 'user' ? '#0073E6' : '#333',
-                    fontWeight: 500,
-                    fontSize: '1rem',
-                    backgroundColor: msg.type === 'user' ? '#E3F2FD' : '#F9EBEA',
-                    display: 'inline-block',
-                    borderRadius: '10px',
-                    padding: '8px 12px',
-                    maxWidth: '70%',
+                    mb: 3,
+                    textAlign: isUser ? 'right' : 'left',
                   }}
                 >
-                  {msg.content}
-                </Typography>
-                {msg.type === 'bot' && msg.followupQuestions && msg.followupQuestions.length > 0 && (
-                  <Box>
-                    {msg.followupQuestions.map((question, idx) => (
-                      <Typography
-                        key={idx}
+                  <Typography
+                    sx={{
+                      borderRadius: '12px',
+                      padding: '10px 14px',
+                      // Extend message box width
+                      maxWidth: '90%',
+                      fontSize: '1rem',
+                      lineHeight: 1.4,
+                      fontFamily: 'Inter, Roboto, sans-serif',
+                      backgroundColor: isUser ? '#E3F2FD' : '#FFF7F0',
+                      color: '#333',
+                      display: 'inline-block',
+                      transition: 'transform 0.2s',
+                      '&:hover': { transform: 'scale(1.02)' },
+                      // Add a subtle border for more definition
+                      border: '1px solid #e0e0e0',
+                    }}
+                  >
+                    {msg.content}
+                  </Typography>
+
+                  {/* Feedback Section for Bot Messages */}
+                  {msg.type === 'bot' && msg.run_id && !msg.feedbackSent && (
+                    <Box sx={{ mt: 1, display: 'flex', alignItems: 'center', gap: .5}}>
+                      <IconButton
+                        onClick={() => handleFeedback(true, index)}
                         sx={{
-                          cursor: 'pointer',
-                          color: '#0073E6',
-                          mt: 1,
-                          fontSize: '0.9rem',
+                          color: '#4CAF50',
+                          transition: 'transform 0.2s',
+                          '&:hover': { transform: 'scale(1.1)' },
                         }}
-                        onClick={() => handleFollowUpClick(question)}
                       >
-                        {question}
-                      </Typography>
-                    ))}
-                  </Box>
-                )}
-              </Box>
-            ))}
+                        <ThumbUpIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => handleFeedback(false, index)}
+                        sx={{
+                          color: '#F44336',
+                          transition: 'transform 0.2s',
+                          '&:hover': { transform: 'scale(1.1)' },
+                        }}
+                      >
+                        <ThumbDownIcon />
+                      </IconButton>
+                    </Box>
+                  )}
+
+                  {/* Follow-up Questions as bubble style */}
+                  {msg.type === 'bot' && msg.followupQuestions && msg.followupQuestions.length > 0 && (
+                    <Box sx={{ mt: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      {msg.followupQuestions.map((question, idx) => (
+                        <Box
+                          key={idx}
+                          onClick={() => handleFollowUpClick(question)}
+                          sx={{
+                            cursor: 'pointer',
+                            fontSize: '0.9rem',
+                            fontFamily: 'Inter, Roboto, sans-serif',
+                            color: '#005BB5',
+                            backgroundColor: '#ECF3FF',
+                            borderRadius: '8px',
+                            display: 'inline-block',
+                            padding: '6px 10px',
+                            transition: 'background-color 0.2s',
+                            '&:hover': {
+                              backgroundColor: '#DCE9FF',
+                            },
+                            maxWidth: 'fit-content'
+                          }}
+                        >
+                          {question}
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
+                </Box>
+              );
+            })}
             {isLoading && (
               <Box
                 sx={{
@@ -214,7 +335,38 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
                 }}
               >
                 <CircularProgress size={20} sx={{ mr: 1 }} />
-                <Typography variant="body2">Verta is typing...</Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ fontFamily: 'Inter, Roboto, sans-serif', display:'flex', alignItems:'center' }}
+                >
+                  Verta is typing
+                  <Box
+                    sx={{
+                      ml: 1,
+                      width: '1em',
+                      textAlign: 'left',
+                      display: 'inline-block',
+                      '&::after': {
+                        content: '"..."',
+                        animation: 'dots 1.5s steps(3, end) infinite',
+                      },
+                      '@keyframes dots': {
+                        '0%, 20%': {
+                          color: 'transparent',
+                        },
+                        '40%': {
+                          color: 'black',
+                        },
+                        '60%': {
+                          color: 'transparent',
+                        },
+                        '80%,100%': {
+                          color: 'black',
+                        },
+                      },
+                    }}
+                  />
+                </Typography>
               </Box>
             )}
           </Box>
@@ -229,7 +381,8 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
                 right: 20,
                 backgroundColor: '#FF8C00',
                 color: 'white',
-                '&:hover': { backgroundColor: '#E67E22' },
+                transition: 'transform 0.2s',
+                '&:hover': { backgroundColor: '#E67E22', transform: 'scale(1.1)' },
               }}
             >
               <ArrowDownwardIcon />
@@ -240,7 +393,7 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
             sx={{
               display: 'flex',
               alignItems: 'center',
-              p: 2,
+              p: 3,
               borderTop: '1px solid #E0E0E0',
               backgroundColor: '#FFFFFF',
             }}
@@ -255,6 +408,11 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
                 mr: 1,
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 25,
+                  fontFamily: 'Inter, Roboto, sans-serif',
+                  transition: 'box-shadow 0.2s',
+                  '&:hover': {
+                    boxShadow: '0 0 5px rgba(0,0,0,0.1)',
+                  },
                 },
               }}
             />
@@ -264,8 +422,9 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
                 sx={{
                   backgroundColor: '#0073E6',
                   color: 'white',
-                  '&:hover': { backgroundColor: '#005BB5' },
                   borderRadius: '50%',
+                  transition: 'transform 0.2s',
+                  '&:hover': { backgroundColor: '#005BB5', transform: 'scale(1.1)' },
                 }}
               >
                 <SendIcon />
@@ -288,7 +447,12 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
             <Fab
               color="primary"
               onClick={() => setIsChatOpen(true)}
-              sx={{ backgroundColor: '#0073E6', color: 'white' }}
+              sx={{
+                backgroundColor: '#0073E6',
+                color: 'white',
+                transition: 'transform 0.2s',
+                '&:hover': { backgroundColor: '#005BB5', transform: 'scale(1.1)' },
+              }}
             >
               <ChatBubbleOutlineIcon />
             </Fab>
@@ -299,6 +463,9 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
               fontWeight: 'bold',
               cursor: 'pointer',
               fontSize: isMobile ? '0.8rem' : '1rem',
+              fontFamily: 'Inter, Roboto, sans-serif',
+              transition: 'color 0.2s',
+              '&:hover': { color: '#005BB5' },
             }}
             onClick={() => setIsChatOpen(true)}
           >
@@ -311,7 +478,6 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ userId, parentAsin }) => 
 };
 
 export default ChatbotWidget;
-
 
 
 
